@@ -2,7 +2,11 @@ import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/useAuthStore';
 import { useWorldStore } from '../../stores/useWorldStore';
+import { mockWorlds, mockMessagesMap } from '../../mocks/mockWorlds';
 import styles from './WorldHub.module.css';
+
+/* ── Mock 开关 ── */
+const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 
 /* ── 时间格式化 ── */
 function formatTimeAgo(dateStr: string): string {
@@ -38,7 +42,10 @@ export default function WorldHub() {
   const sealWorld = useWorldStore(s => s.sealWorld);
   const navigate = useNavigate();
 
-  const worlds = allWorlds.filter(w => w.ownerId === user?.id && !w.isSealed);
+  /* ── Mock 模式：使用模拟数据；否则走真实 store ── */
+  const worlds = USE_MOCK
+    ? mockWorlds.filter(w => !w.isSealed)
+    : allWorlds.filter(w => w.ownerId === user?.id && !w.isSealed);
 
   /* ── 搜索 ── */
   const [searchQuery, setSearchQuery] = useState('');
@@ -49,6 +56,9 @@ export default function WorldHub() {
       w => w.name.toLowerCase().includes(q) || w.description.toLowerCase().includes(q)
     );
   }, [worlds, searchQuery]);
+
+  /* ── 是否搜索无结果 ── */
+  const isSearchEmpty = searchQuery.trim().length > 0 && filtered.length === 0;
 
   /* ── Featured 卡片：按 updatedAt 排序，最活跃的在最前 ── */
   const sorted = useMemo(() => {
@@ -67,27 +77,43 @@ export default function WorldHub() {
 
   /* ── 消息弹窗 ── */
   const [msgWorldId, setMsgWorldId] = useState<string | null>(null);
-  const msgWorld = msgWorldId ? allWorlds.find(w => w.id === msgWorldId) : null;
+  /* 修复：Mock 模式下应从 worlds 中查找，否则从 allWorlds 中查找 */
+  const msgWorld = msgWorldId
+    ? (USE_MOCK ? worlds : allWorlds).find(w => w.id === msgWorldId) ?? null
+    : null;
 
-  /* 模拟消息数据（后续对接 API） */
-  const mockMessages: Message[] = msgWorld
-    ? Array.from({ length: msgWorld.unreadCount ?? 0 }, (_, i) => ({
-        id: `${msgWorld.id}-msg-${i}`,
+  /* 消息数据：Mock 模式走 mockMessagesMap，否则走内联生成 */
+  const messages: Message[] = (() => {
+    if (!msgWorld) return [];
+    if (USE_MOCK) {
+      const items = mockMessagesMap[msgWorld.id] ?? [];
+      return items.map(m => ({
+        id: m.id,
         worldId: msgWorld.id,
         worldName: msgWorld.name,
-        content: '这是一条来自共鸣池的留言…',
-        timeAgo: i === 0 ? '刚刚' : `${i}小时前`,
-      }))
-    : [];
+        content: m.content,
+        timeAgo: m.timeAgo,
+      }));
+    }
+    const count = msgWorld.unreadCount ?? 0;
+    if (count === 0) return [];
+    return Array.from({ length: count }, (_, i) => ({
+      id: `${msgWorld.id}-msg-${i}`,
+      worldId: msgWorld.id,
+      worldName: msgWorld.name,
+      content: '这是一条来自共鸣池的留言…',
+      timeAgo: i === 0 ? '刚刚' : `${i}小时前`,
+    }));
+  })();
 
-  /* ── Filter Chip 点击 → 导航 ── */
+  /* ── Filter Chip 点击 → 导航占位页 ── */
   const handleChipClick = useCallback(
     (key: string) => {
-      if (key === 'ash') navigate('/entries');
-      else if (key === 'temple') navigate(`/world/${sorted[0]?.id}/temple`);
+      if (key === 'ash') navigate('/ash');
+      else if (key === 'temple') navigate('/temple');
       else if (key === 'time') navigate('/timecapsule');
     },
-    [navigate, sorted]
+    [navigate]
   );
 
   /* ── 空状态 ── */
@@ -124,6 +150,15 @@ export default function WorldHub() {
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
           />
+          {searchQuery && (
+            <button
+              className={styles.clearBtn}
+              onClick={() => setSearchQuery('')}
+              aria-label="清除搜索"
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: 18 }}>close</span>
+            </button>
+          )}
         </div>
         <div className={styles.chipRow}>
           {FILTER_CHIPS.map(chip => (
@@ -143,103 +178,110 @@ export default function WorldHub() {
         </div>
       </div>
 
+      {/* ── 搜索无结果 ── */}
+      {isSearchEmpty && (
+        <div className={styles.searchEmpty}>
+          <span className={`material-symbols-outlined ${styles.searchEmptyIcon}`}>search_off</span>
+          <p className={styles.searchEmptyText}>未找到相关世界</p>
+          <p className={styles.searchEmptyHint}>试试其他关键词吧</p>
+        </div>
+      )}
+
       {/* ── Bento Grid ── */}
-      <div className={styles.grid}>
-        {/* Featured 大卡 */}
-        {featured && (
-          <div
-            className={`${styles.card} ${styles.cardFeatured}`}
-            onClick={() => navigate(`/world/${featured.id}`)}
-          >
-            <div className={styles.cardHeader}>
-              <div className={styles.cardHeaderLeft}>
-                <span className={styles.featuredTag}>最活跃</span>
-                <h2 className={styles.cardTitleLg}>{featured.name}</h2>
-              </div>
-              <div className={styles.cardHeaderRight}>
-                <span className={styles.cardTime}>{formatTimeAgo(featured.updatedAt)}</span>
-                <div className={styles.cardActions}>
-                  <button
-                    className={styles.iconBtn}
-                    onClick={e => { e.stopPropagation(); setSealTarget(featured.id); }}
-                    title="封存"
-                  >
-                    <span className="material-symbols-outlined">archive</span>
-                  </button>
-                  {featured.unreadCount != null && featured.unreadCount > 0 && (
+      {!isSearchEmpty && (
+        <div className={styles.grid}>
+          {/* Featured 大卡 */}
+          {featured && (
+            <div
+              className={`${styles.card} ${styles.cardFeatured}`}
+              onClick={() => navigate(`/world/${featured.id}`)}
+            >
+              <div className={styles.cardHeader}>
+                <div className={styles.cardHeaderLeft}>
+                  <span className={styles.featuredTag}>最活跃</span>
+                  <h2 className={styles.cardTitleLg}>{featured.name}</h2>
+                </div>
+                <div className={styles.cardHeaderRight}>
+                  <span className={styles.cardTime}>{formatTimeAgo(featured.updatedAt)}</span>
+                  <div className={styles.cardActions}>
+                    <button
+                      className={styles.iconBtn}
+                      onClick={e => { e.stopPropagation(); setSealTarget(featured.id); }}
+                      title="封存"
+                    >
+                      <span className="material-symbols-outlined">archive</span>
+                    </button>
                     <button
                       className={styles.iconBtn}
                       onClick={e => { e.stopPropagation(); setMsgWorldId(featured.id); }}
                       title="消息"
                     >
                       <span className="material-symbols-outlined">chat_bubble</span>
-                      <span className={styles.badge}>{featured.unreadCount}</span>
+                      {(featured.unreadCount ?? 0) > 0 && (
+                        <span className={styles.badge}>{featured.unreadCount}</span>
+                      )}
                     </button>
-                  )}
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className={styles.crystalBall}>
-              {featured.imageUrl ? (
-                <img
-                  className={styles.crystalImg}
-                  src={featured.imageUrl}
-                  alt={featured.name}
-                />
-              ) : (
-                <div className={styles.crystalPlaceholder} style={{ background: featured.color }}>
-                  <span className={styles.crystalEmoji}>{featured.icon || '🔮'}</span>
-                </div>
+              <div className={styles.crystalBall}>
+                {featured.imageUrl ? (
+                  <img className={styles.crystalImg} src={featured.imageUrl} alt={featured.name} />
+                ) : (
+                  <div className={styles.crystalPlaceholder} style={{ background: featured.color }}>
+                    <span className={styles.crystalEmoji}>{featured.icon || '🔮'}</span>
+                  </div>
+                )}
+              </div>
+              {featured.latestExcerpt && (
+                <p className={styles.excerpt}>&ldquo;{featured.latestExcerpt}&rdquo;</p>
               )}
             </div>
-            {featured.latestExcerpt && (
-              <p className={styles.excerpt}>&ldquo;{featured.latestExcerpt}&rdquo;</p>
-            )}
-          </div>
-        )}
+          )}
 
-        {/* 小卡列表 */}
-        {others.map(w => (
-          <div
-            key={w.id}
-            className={styles.card}
-            onClick={() => navigate(`/world/${w.id}`)}
-          >
-            <div className={styles.crystalBallSmall}>
-              {w.imageUrl ? (
-                <img className={styles.crystalImg} src={w.imageUrl} alt={w.name} />
-              ) : (
-                <div className={styles.crystalPlaceholder} style={{ background: w.color }}>
-                  <span className={styles.crystalEmoji}>{w.icon || '🔮'}</span>
-                </div>
-              )}
-            </div>
-            <div className={styles.cardFooter}>
-              <h3 className={styles.cardTitleSm}>{w.name}</h3>
-              <div className={styles.cardActions}>
-                <button
-                  className={styles.iconBtn}
-                  onClick={e => { e.stopPropagation(); setSealTarget(w.id); }}
-                  title="封存"
-                >
-                  <span className="material-symbols-outlined">archive</span>
-                </button>
-                {w.unreadCount != null && w.unreadCount > 0 && (
+          {/* 小卡列表 */}
+          {others.map(w => (
+            <div
+              key={w.id}
+              className={styles.card}
+              onClick={() => navigate(`/world/${w.id}`)}
+            >
+              <div className={styles.crystalBallSmall}>
+                {w.imageUrl ? (
+                  <img className={styles.crystalImg} src={w.imageUrl} alt={w.name} />
+                ) : (
+                  <div className={styles.crystalPlaceholder} style={{ background: w.color }}>
+                    <span className={styles.crystalEmoji}>{w.icon || '🔮'}</span>
+                  </div>
+                )}
+              </div>
+              <div className={styles.cardFooter}>
+                <h3 className={styles.cardTitleSm}>{w.name}</h3>
+                <div className={styles.cardActions}>
+                  <button
+                    className={styles.iconBtn}
+                    onClick={e => { e.stopPropagation(); setSealTarget(w.id); }}
+                    title="封存"
+                  >
+                    <span className="material-symbols-outlined">archive</span>
+                  </button>
                   <button
                     className={styles.iconBtn}
                     onClick={e => { e.stopPropagation(); setMsgWorldId(w.id); }}
                     title="消息"
                   >
                     <span className="material-symbols-outlined">chat_bubble</span>
-                    <span className={styles.badge}>{w.unreadCount}</span>
+                    {(w.unreadCount ?? 0) > 0 && (
+                      <span className={styles.badge}>{w.unreadCount}</span>
+                    )}
                   </button>
-                )}
+                </div>
               </div>
+              <span className={styles.cardTimeSm}>{formatTimeAgo(w.updatedAt)}</span>
             </div>
-            <span className={styles.cardTimeSm}>{formatTimeAgo(w.updatedAt)}</span>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* ── FAB ── */}
       <button
@@ -270,8 +312,8 @@ export default function WorldHub() {
         </div>
       )}
 
-      {/* ── 消息弹窗 ── */}
-      {msgWorldId && mockMessages.length > 0 && (
+      {/* ── 消息弹窗（始终显示，0 条消息时展示「暂无消息」） ── */}
+      {msgWorldId && (
         <div className={styles.overlay} onClick={() => setMsgWorldId(null)}>
           <div className={styles.modal} onClick={e => e.stopPropagation()}>
             <div className={styles.modalHeader}>
@@ -280,24 +322,32 @@ export default function WorldHub() {
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
-            <div className={styles.msgList}>
-              {mockMessages.map(msg => (
-                <div
-                  key={msg.id}
-                  className={styles.msgItem}
-                  onClick={() => {
-                    setMsgWorldId(null);
-                    navigate(`/world/${msg.worldId}`);
-                  }}
-                >
-                  <div className={styles.msgMeta}>
-                    <span className={styles.msgWorldName}>{msg.worldName}</span>
-                    <span className={styles.msgTime}>{msg.timeAgo}</span>
+            {messages.length > 0 ? (
+              <div className={styles.msgList}>
+                {messages.map(msg => (
+                  <div
+                    key={msg.id}
+                    className={styles.msgItem}
+                    onClick={() => {
+                      setMsgWorldId(null);
+                      navigate(`/world/${msg.worldId}`);
+                    }}
+                  >
+                    <div className={styles.msgMeta}>
+                      <span className={styles.msgWorldName}>{msg.worldName}</span>
+                      <span className={styles.msgTime}>{msg.timeAgo}</span>
+                    </div>
+                    <p className={styles.msgContent}>{msg.content}</p>
                   </div>
-                  <p className={styles.msgContent}>{msg.content}</p>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className={styles.msgEmpty}>
+                <span className={`material-symbols-outlined ${styles.msgEmptyIcon}`}>chat_bubble</span>
+                <p className={styles.msgEmptyText}>暂无消息</p>
+                <p className={styles.msgEmptyHint}>当有人留言时会在这里提醒你</p>
+              </div>
+            )}
           </div>
         </div>
       )}

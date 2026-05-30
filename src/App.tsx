@@ -19,6 +19,7 @@ import FriendList from './features/social/FriendList';
 import ResonancePage from './features/social/ResonancePage';
 import SettingsPage from './features/settings/SettingsPage';
 import HelpPage from './features/settings/HelpPage';
+import PlaceholderPage from './features/shared/PlaceholderPage';
 
 export default function App() {
   return (
@@ -44,6 +45,9 @@ export default function App() {
             <Route path="/world/:worldId/entry/new" element={<EntryEditor />} />
             <Route path="/entry/:id" element={<EntryDetail />} />
             <Route path="/entry/:id/burn" element={<BurnView />} />
+            {/* 占位页面 — 待后续开发 */}
+            <Route path="/ash" element={<PlaceholderPage title="灰烬模式" description="已焚毁的日记将在此汇聚成灰…" />} />
+            <Route path="/temple" element={<PlaceholderPage title="记忆圣殿" description="封存的水晶球在此安息…" />} />
           </Route>
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
