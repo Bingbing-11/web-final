@@ -1,0 +1,206 @@
+/* ===== HelpPage 帮助中心 - 暖米色移动端 ===== */
+.page {
+  max-width: 430px;
+  margin: 0 auto;
+  animation: fadeIn 0.3s ease;
+  padding-bottom: 16px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.section {
+  margin-bottom: 32px;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* FAQ accordion */
+.faqItem {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.faqQuestion {
+  padding: 14px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: var(--transition);
+}
+
+.faqQuestion:active {
+  background: var(--bg-hover);
+}
+
+.faqArrow {
+  transition: transform 0.2s ease;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.faqArrow.open {
+  transform: rotate(90deg);
+}
+
+.faqAnswer {
+  padding: 0 16px 14px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  display: none;
+}
+
+.faqAnswer.open {
+  display: block;
+  animation: fadeIn 0.2s ease;
+}
+
+/* Guide cards */
+.guideGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.guideCard {
+  padding: 20px 16px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.guideCard:active {
+  transform: scale(0.97);
+}
+
+.guideIcon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.guideTitle {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.guideDesc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* Feature list */
+.featureItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+
+.featureIcon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.featureInfo {
+  flex: 1;
+}
+
+.featureTitle {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.featureDesc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Onboarding */
+.onboarding {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.onboardingSteps {
+  display: flex;
+  gap: 12px;
+  margin: 24px 0;
+  width: 100%;
+}
+
+.onboardingStep {
+  flex: 1;
+  padding: 16px 12px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+}
+
+.stepNumber {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--primary-dark);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0 auto 8px;
+}
+
+.stepTitle {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.stepDesc {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.completed {
+  opacity: 0.5;
+}
+
+.completed .stepNumber {
+  background: var(--success);
+  color: white;
+}

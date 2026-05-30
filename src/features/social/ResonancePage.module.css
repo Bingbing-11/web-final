@@ -1,0 +1,286 @@
+/* ===== ResonancePage 共鸣池 - 暖米色移动端 ===== */
+.page {
+  animation: fadeIn 0.3s ease;
+  padding-bottom: 16px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* Publish form */
+.publishCard {
+  padding: 20px;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+.publishTitle {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.publishForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.publishRow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.anonToggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.toggleSwitch {
+  width: 36px;
+  height: 20px;
+  border-radius: 10px;
+  background: var(--border-medium);
+  position: relative;
+  transition: var(--transition);
+}
+
+.toggleSwitch.active {
+  background: var(--primary-dark);
+}
+
+.toggleSwitch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: white;
+  transition: var(--transition);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.toggleSwitch.active::after {
+  left: 18px;
+}
+
+/* Flex spacer */
+.publishSpacer {
+  flex: 1;
+}
+
+/* Filter bar */
+.filterBar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.filterChip {
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: var(--transition);
+  background: var(--bg-card);
+}
+
+.filterChip:active {
+  transform: scale(0.97);
+}
+
+.filterChip.active {
+  background: var(--primary-dark);
+  color: var(--text);
+  border-color: var(--primary-dark);
+}
+
+/* Resonance cloud - 单列移动端 */
+.cloud {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0;
+}
+
+.resonanceItem {
+  padding: 16px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  width: 100%;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.4s ease;
+}
+
+.resonanceItem:active {
+  transform: scale(0.99);
+}
+
+.resonanceAccent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--emotion-color, var(--primary-dark));
+}
+
+.resonanceHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding-left: 8px;
+}
+
+.resonanceAuthor {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.resonanceTime {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.resonanceEmotion {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-hover);
+  margin-bottom: 8px;
+  margin-left: 8px;
+}
+
+.emotionDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--emotion-color, var(--text-muted));
+}
+
+.resonanceContent {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text);
+  padding-left: 8px;
+  margin-bottom: 10px;
+}
+
+.resonanceKeywords {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  padding-left: 8px;
+  margin-bottom: 10px;
+}
+
+.resonanceKeyword {
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  background: var(--primary);
+  color: var(--text-secondary);
+}
+
+.resonanceWorld {
+  font-size: 11px;
+  color: var(--text-muted);
+  padding-left: 8px;
+  margin-bottom: 8px;
+}
+
+.reactions {
+  display: flex;
+  gap: 6px;
+  padding-left: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.reactionBtn {
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.reactionBtn:active {
+  transform: scale(0.95);
+}
+
+.reactionBtn.active {
+  border-color: var(--primary-dark);
+  background: var(--primary);
+}
+
+.reactionCount {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.emptyIcon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+/* World select dropdown */
+.worldSelect {
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  font-size: 13px;
+  font-family: var(--font);
+}

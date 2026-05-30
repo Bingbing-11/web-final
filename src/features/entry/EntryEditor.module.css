@@ -1,0 +1,99 @@
+/* ===== EntryEditor 日记编辑 - 暖米色移动端 ===== */
+.page {
+  max-width: 430px;
+  margin: 0 auto;
+  animation: fadeInUp 0.4s ease;
+  padding-bottom: 16px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modeSelector {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.modeOption {
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: var(--transition);
+  background: var(--bg-card);
+  font-weight: 500;
+}
+
+.modeOption:active {
+  transform: scale(0.97);
+}
+
+.modeOption.active {
+  background: var(--primary-dark);
+  color: var(--text);
+  border-color: var(--primary-dark);
+}
+
+.emotionTags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.emotionTag {
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.emotionTag:active {
+  transform: scale(0.97);
+}
+
+.emotionTag.active {
+  border-color: var(--primary-dark);
+  background: var(--primary);
+  font-weight: 500;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 6px 12px;
+  background: var(--primary);
+  border-radius: var(--radius-pill);
+}

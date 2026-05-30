@@ -1,0 +1,194 @@
+.page {
+  animation: fadeIn 0.3s ease;
+}
+
+/* ===== 个人信息卡片（"我的"头部） ===== */
+.profileCard {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
+  border: 1px solid var(--border);
+}
+
+.profileAvatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--primary-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  font-size: 24px;
+  font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.profileInfo { flex: 1; min-width: 0; }
+
+.profileName {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.profileUsername {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.profileJoined {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ===== 编辑行 ===== */
+.editRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ===== 设置分组 ===== */
+.section {
+  margin-bottom: 24px;
+}
+
+.sectionTitle {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sectionIcon { font-size: 16px; }
+
+/* ===== 选项卡片 ===== */
+.optionCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  margin-bottom: 8px;
+  border: 1px solid var(--border);
+  transition: var(--transition-fast);
+}
+.optionCard:first-of-type {
+  border-radius: var(--radius);
+}
+.optionCard:active {
+  background: var(--bg-hover);
+}
+
+.optionInfo { flex: 1; }
+.optionLabel { font-size: 15px; font-weight: 500; color: var(--text); }
+.optionDesc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+/* ===== 开关 ===== */
+.toggle {
+  width: 48px;
+  height: 28px;
+  border-radius: 14px;
+  background: var(--bg-hover);
+  cursor: pointer;
+  position: relative;
+  transition: var(--transition-fast);
+  flex-shrink: 0;
+  border: 1px solid var(--border-medium);
+}
+
+.toggle.active {
+  background: var(--primary-dark);
+  border-color: var(--primary-deeper);
+}
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  transition: var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.toggle.active::after {
+  left: 22px;
+}
+
+/* ===== 夜间模式调度 ===== */
+.scheduleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  margin-bottom: 8px;
+  border: 1px solid var(--border);
+}
+
+.scheduleLabel { font-size: 14px; flex: 1; color: var(--text-secondary); }
+.scheduleColon { color: var(--text-muted); font-size: 14px; }
+.scheduleTime { color: var(--text-muted); font-size: 14px; }
+
+.scheduleInput {
+  width: 48px;
+  padding: 6px;
+  text-align: center;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-xs);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+}
+
+/* ===== 数据操作 ===== */
+.dataCard {
+  padding: 14px 16px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--border);
+}
+
+.dataLabel { font-size: 15px; color: var(--text); }
+
+/* ===== 危险区域 ===== */
+.dangerZone {
+  padding: 20px;
+  border: 1px solid rgba(255, 107, 107, 0.2);
+  border-radius: var(--radius);
+  background: rgba(255, 107, 107, 0.03);
+  margin-top: 24px;
+}
+
+.dangerTitle { font-size: 14px; font-weight: 600; color: var(--danger); margin-bottom: 6px; }
+.dangerDesc { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.5; }
+
+/* ===== 动画 ===== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}

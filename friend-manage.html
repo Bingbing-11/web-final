@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>好友管理 - Crystal Ball World</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Literata:opsz,wght@7..72,400;500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#e4e2e2",
+                        "inverse-primary": "#ccc6b5",
+                        "primary-fixed-dim": "#ccc6b5",
+                        "secondary-fixed": "#dae3f5",
+                        "on-error": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#cbc6bb",
+                        "background": "#fbf9f8",
+                        "surface": "#fbf9f8",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#bec7d8",
+                        "tertiary-container": "#f9f9f9",
+                        "primary-fixed": "#e8e2d0",
+                        "tertiary-fixed": "#e2e2e2",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-tertiary-container": "#717273",
+                        "on-tertiary": "#ffffff",
+                        "primary": "#625f50",
+                        "on-background": "#1b1c1c",
+                        "on-primary-fixed": "#1e1c11",
+                        "outline": "#7a776e",
+                        "inverse-on-surface": "#f2f0f0",
+                        "surface-tint": "#625f50",
+                        "on-surface-variant": "#49473f",
+                        "surface-dim": "#dbdad9",
+                        "on-secondary-container": "#5c6574",
+                        "tertiary": "#5d5f5f",
+                        "error-container": "#ffdad6",
+                        "on-primary-container": "#767263",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "surface-bright": "#fbf9f8",
+                        "surface-container-low": "#f5f3f3",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "secondary": "#565f6e",
+                        "surface-container": "#efeded",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#4a4739",
+                        "surface-container-highest": "#e4e2e2",
+                        "surface-container-high": "#eae8e7",
+                        "on-surface": "#1b1c1c",
+                        "on-secondary-fixed": "#131c29",
+                        "primary-container": "#fff9e6",
+                        "secondary-container": "#dae3f5",
+                        "on-secondary-fixed-variant": "#3e4756",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#303030"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "16px",
+                        "gutter-grid": "16px",
+                        "stack-lg": "32px",
+                        "margin-page": "24px",
+                        "stack-sm": "8px",
+                        "inset-card": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-diary": ["Literata"],
+                        "label-sm": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-md-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-diary": ["17px", {"lineHeight": "30px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #fbf9f8;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+        .friend-item {
+            animation: fadeInUp 0.4s ease both;
+        }
+        .friend-item:nth-child(1) { animation-delay: 0s; }
+        .friend-item:nth-child(2) { animation-delay: 0.05s; }
+        .friend-item:nth-child(3) { animation-delay: 0.1s; }
+        .friend-item:nth-child(4) { animation-delay: 0.15s; }
+        .friend-item:nth-child(5) { animation-delay: 0.2s; }
+        .friend-item:nth-child(6) { animation-delay: 0.25s; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .friend-item.removing {
+            animation: slideOutRight 0.3s ease forwards;
+        }
+        @keyframes slideOutRight {
+            to { opacity: 0; transform: translateX(60px); height: 0; margin: 0; padding: 0; overflow: hidden; }
+        }
+    </style>
+</head>
+<body class="font-body-lg text-on-surface">
+<!-- TopAppBar -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-xl border-none">
+<div class="flex items-center w-full px-margin-page py-4 max-w-[720px] mx-auto">
+<a href="friends.html" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-primary/5 transition-colors active:scale-90">
+<span class="material-symbols-outlined text-on-surface text-[22px]">arrow_back</span>
+</a>
+<h1 class="font-headline-md text-headline-md-mobile text-primary ml-3">好友管理</h1>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="pt-24 pb-32 px-margin-page max-w-[720px] mx-auto min-h-screen">
+<!-- Search Bar -->
+<div class="mb-stack-lg">
+<div class="glass-card flex items-center gap-3 px-5 py-3 rounded-full">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">search</span>
+<input type="text" id="search-input" placeholder="搜索好友..." class="flex-1 bg-transparent outline-none text-on-surface placeholder-on-surface-variant/40 font-body-lg text-[15px]" oninput="filterFriends()">
+</div>
+</div>
+
+<!-- Stats -->
+<div class="flex gap-stack-md mb-stack-lg">
+<div class="glass-card flex-1 px-5 py-4 rounded-lg text-center">
+<span class="font-headline-md text-primary" id="friend-count">6</span>
+<span class="font-label-sm text-on-surface-variant/60 block">位好友</span>
+</div>
+<div class="glass-card flex-1 px-5 py-4 rounded-lg text-center">
+<span class="font-headline-md text-primary">3</span>
+<span class="font-label-sm text-on-surface-variant/60 block">位在线</span>
+</div>
+</div>
+
+<!-- Friend List -->
+<div class="space-y-stack-sm" id="friend-list">
+<!-- Luna -->
+<div class="friend-item glass-card flex items-center justify-between p-4 rounded-lg group" data-name="Luna">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-sm">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmTBtxjuAEn6xTUc_zIDWzAvucQVJN7v1bBbygvZlOl1ulDpp9mly1-7fJTS6xvRJidKeW2p3nYPOLy9OxUjzILADPvznZBuWeWvtJFPxqLXUKOtgA6JAeWmSNviMh4JN375qGi4WNEqY_gKQhrd_KskPcYf6cYVMOALDcSZTb5ZCknS0q_eAOkj4SUSJWmm9BPennJ7_SLzjyl5e55VnpPQQ1ridPbZaiD4whDiXwmZxjMHq1fpYxM0Q4CTpQCwXWjFkNivnDwEg">
+</div>
+<div class="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-400 rounded-full border-2 border-white"></div>
+</div>
+<div>
+<h4 class="font-body-lg text-on-surface font-medium">Luna</h4>
+<p class="text-[12px] text-on-surface-variant/60">Luna的雪山</p>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-error-container/20 transition-colors active:scale-90" onclick="removeFriend(this)">
+<span class="material-symbols-outlined text-on-surface-variant/40 hover:text-error text-[20px] transition-colors">person_remove</span>
+</button>
+</div>
+
+<!-- Kaito -->
+<div class="friend-item glass-card flex items-center justify-between p-4 rounded-lg group" data-name="Kaito">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-sm">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0OdTYMMa0lK8abVeI-3pLqwlYVeFN-AidsNcIhRP5GQnyh-n2r8y7Chx0n014WMzbUYN_yXY1N4WZdqKckbaRJPOevhQ-izHiLZoeCLkr-9Ui7FiwM2ESITMO9eiZB3S2gs8ICX4J1MFbyBN8x1LNdS5IfWQzUAn3aBPQQ6y_PioC1s_nI1CkytsSNmO5_NDcOwjpcJB555QjjjoO-zmK9MKuwFFTqoqQcV8qIeLipoHJQCBKQXT-LWACI3k6cWOac0mDU-oDlX0">
+</div>
+<div class="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-400 rounded-full border-2 border-white"></div>
+</div>
+<div>
+<h4 class="font-body-lg text-on-surface font-medium">Kaito</h4>
+<p class="text-[12px] text-on-surface-variant/60">Kaito的禅意</p>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-error-container/20 transition-colors active:scale-90" onclick="removeFriend(this)">
+<span class="material-symbols-outlined text-on-surface-variant/40 hover:text-error text-[20px] transition-colors">person_remove</span>
+</button>
+</div>
+
+<!-- Elias -->
+<div class="friend-item glass-card flex items-center justify-between p-4 rounded-lg group" data-name="Elias">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-sm">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPGYAYcLkp-MyPshR8W79JoIsCYhuEFxs1ZgutABIF9gZ-i7gqI25CcKpoAVBv3fRjJ5zJ0ROPGdxtwr8Wm2XhfDxqtQ7g63jIvMVhRWnut2XVISmJxMFlscbJTYQTgprmlguv27oX8_AHjmS-nBjc8UCJwOH5MzQltQp8di7ldbJntajH0Et-ZFSv3reKjoB1jcjgXTy57dH0xa4WJYZ_xqCW-5MlIqkZg1MqcVXgRRlCMt4kwtMSqWtH1jj45PwKQVg_jBXXmIg">
+</div>
+</div>
+<div>
+<h4 class="font-body-lg text-on-surface font-medium">Elias</h4>
+<p class="text-[12px] text-on-surface-variant/60">Elias的幻境</p>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-error-container/20 transition-colors active:scale-90" onclick="removeFriend(this)">
+<span class="material-symbols-outlined text-on-surface-variant/40 hover:text-error text-[20px] transition-colors">person_remove</span>
+</button>
+</div>
+
+<!-- Sarah -->
+<div class="friend-item glass-card flex items-center justify-between p-4 rounded-lg group" data-name="Sarah">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-sm">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPDlSBaUgGxSF3ft5PvjnemV6SqibwCwAkqM7CD_Nl1JDXheFeqpim3Hv0IhW62WwWWCf8ZvKAb7q_iwVI8OGhmfrTQLMHOXZiPr5xMxMJFexbH6PuQC_QHCnKTKipBr-bfZYxZFm6IBVr9uFfpldVGI66o0RjD73_6UqVQM1IkzkxA7jVJeA0xaA0gZ5pT17wkG5ssYnzZXbGW8gbaGj9A4_cpzpMY4BI7GErzh5tMf8jk2iOZCkoUUetAe9QkT0W1c4krzzTgBw">
+</div>
+<div class="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-400 rounded-full border-2 border-white"></div>
+</div>
+<div>
+<h4 class="font-body-lg text-on-surface font-medium">Sarah</h4>
+<p class="text-[12px] text-on-surface-variant/60">Sarah的海岸</p>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-error-container/20 transition-colors active:scale-90" onclick="removeFriend(this)">
+<span class="material-symbols-outlined text-on-surface-variant/40 hover:text-error text-[20px] transition-colors">person_remove</span>
+</button>
+</div>
+
+<!-- 旧图书馆 -->
+<div class="friend-item glass-card flex items-center justify-between p-4 rounded-lg group" data-name="旧图书馆">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-sm">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgVzS9L2o7ncFghnnogeFk6_txT49BpZbCuls8B_2uY8bYs29rwD9LWWa_jwrY2z3bkzefJabHXmBvZzvKbzIasE2EGdr9hfrzks8TH785R8buRCa8mMVn-P4twurTTy-Q8dTCsOf-9JIVFX5NF7e6UIwJej-5ORbs5VczMp9USCUkoUassbMZTNrSl14aT3Vj5JLwowdJhrtvQGgiDFgTV9Tkht7qf8cFd2W4JZPzMzgtCT9HcJcY31lC4dBGEiKOlhJRlXFFNkA">
+</div>
+</div>
+<div>
+<h4 class="font-body-lg text-on-surface font-medium">旧图书馆</h4>
+<p class="text-[12px] text-on-surface-variant/60">旧图书馆</p>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-error-container/20 transition-colors active:scale-90" onclick="removeFriend(this)">
+<span class="material-symbols-outlined text-on-surface-variant/40 hover:text-error text-[20px] transition-colors">person_remove</span>
+</button>
+</div>
+
+<!-- Aria -->
+<div class="friend-item glass-card flex items-center justify-between p-4 rounded-lg group" data-name="Aria">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-sm">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALL2ibIwTeKNf7dKD0gMJ882B3fONzxedpLPEcNPeYle_5De9zUxxkwdUARefMCIDfdzHKMowBeAmdLtpdDpCx7lGib-_8pZ8U24Aj_tvtv-Kp0u4hbi3BgBSFobPpH-Y1AigNokky5t3rMhvJeaBKvxNALC5VNNaAueZ5f29fyls0x2F3h4bg8i4zeuXIY9T1CQyEVt9ehmhleyqJ3MjdlSoDiOXh0mxZiCCxyQyoZaHrqrSUMnSwtqV7cpOUysIjqliDcJ1LBZk">
+</div>
+</div>
+<div>
+<h4 class="font-body-lg text-on-surface font-medium">Aria</h4>
+<p class="text-[12px] text-on-surface-variant/60">Aria的花语</p>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-error-container/20 transition-colors active:scale-90" onclick="removeFriend(this)">
+<span class="material-symbols-outlined text-on-surface-variant/40 hover:text-error text-[20px] transition-colors">person_remove</span>
+</button>
+</div>
+</div>
+
+<!-- Add Friend Section -->
+<div class="mt-stack-lg">
+<button class="w-full glass-card flex items-center justify-center gap-3 p-5 rounded-lg hover:bg-white/90 active:scale-[0.98] transition-all group cursor-pointer">
+<span class="material-symbols-outlined text-primary">person_add</span>
+<span class="font-body-lg text-primary font-medium">添加好友</span>
+</button>
+</div>
+</main>
+
+<!-- Navigation Shell (BottomNavBar) -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[720px] flex justify-around items-center px-4 py-3 pb-6 bg-white/60 dark:bg-surface-container/60 backdrop-blur-[24px] z-50 rounded-t-lg shadow-[0px_-10px_30px_rgba(90,90,90,0.05)] border-t border-white/40 dark:border-outline-variant/20">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-white/40 transition-colors active:scale-90 duration-300" href="index.html">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">首页</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-white/40 transition-colors active:scale-90 duration-300" href="resonance-pool.html">
+<span class="material-symbols-outlined">bubble_chart</span>
+<span class="font-label-sm text-label-sm">共鸣</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-white/80 text-primary rounded-full px-4 py-1 shadow-sm active:scale-90 transition-all duration-300" href="friends.html">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-label-sm text-label-sm">好友</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-white/40 transition-colors active:scale-90 duration-300" href="profile.html">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">我的</span>
+</a>
+</nav>
+
+<script>
+        function filterFriends() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            document.querySelectorAll('.friend-item').forEach(item => {
+                const name = item.getAttribute('data-name').toLowerCase();
+                item.style.display = name.includes(query) ? '' : 'none';
+            });
+        }
+
+        function removeFriend(btn) {
+            const item = btn.closest('.friend-item');
+            item.classList.add('removing');
+            setTimeout(() => {
+                item.remove();
+                const count = document.querySelectorAll('.friend-item').length;
+                document.getElementById('friend-count').textContent = count;
+            }, 300);
+        }
+</script>
+</body></html>

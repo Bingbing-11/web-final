@@ -1,0 +1,27 @@
+/* ===== 头像 (圆形) ===== */
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--primary-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 16px;
+  flex-shrink: 0;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.sm { width: 32px; height: 32px; font-size: 13px; }
+.lg { width: 56px; height: 56px; font-size: 22px; }
+.xl { width: 72px; height: 72px; font-size: 28px; }
+
+.img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

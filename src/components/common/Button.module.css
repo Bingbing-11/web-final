@@ -1,0 +1,87 @@
+/* ===== 基础按钮 ===== */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  font-weight: 600;
+  transition: var(--transition-fast);
+  cursor: pointer;
+  border: none;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+.button:active {
+  transform: scale(0.97);
+}
+
+/* ===== 主要按钮 (暖米色) ===== */
+
+.primary {
+  background: var(--primary-dark);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+.primary:active {
+  background: var(--primary-deeper);
+}
+
+/* ===== 次要按钮 ===== */
+
+.secondary {
+  background: var(--bg-card);
+  color: var(--text);
+  border: 1px solid var(--border-medium);
+}
+.secondary:active {
+  background: var(--bg-hover);
+}
+
+/* ===== 强调按钮 (玫红) ===== */
+
+.accent {
+  background: var(--accent);
+  color: white;
+}
+.accent:active {
+  background: var(--accent-dark);
+}
+
+/* ===== 危险按钮 ===== */
+
+.danger {
+  background: var(--danger);
+  color: white;
+}
+.danger:active {
+  background: var(--danger-dark);
+}
+
+/* ===== 幽灵按钮 ===== */
+
+.ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 8px 16px;
+}
+.ghost:active {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+
+/* ===== 尺寸 ===== */
+
+.sm { padding: 6px 16px; font-size: 12px; }
+.lg { padding: 14px 32px; font-size: 16px; }
+
+/* ===== 全宽 ===== */
+
+.fullWidth { width: 100%; }
+
+/* ===== 禁用 ===== */
+
+.disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }

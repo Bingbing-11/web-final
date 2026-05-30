@@ -1,0 +1,152 @@
+import { create } from 'zustand';
+import type { FriendStatus } from '../types/user';
+import * as api from '../lib/api';
+
+export interface FriendRequest {
+  id: string;
+  fromId: string;
+  fromName: string;
+  fromAvatar?: string;
+  toId: string;
+  toName: string;
+  status: FriendStatus;
+  message?: string;
+  createdAt: string;
+}
+
+export interface Friend {
+  id: string;
+  userId: string;
+  friendId: string;
+  friendName: string;
+  friendUsername: string;
+  friendAvatar?: string;
+  addedAt: string;
+  sharedWorlds: string[];
+}
+
+interface FriendState {
+  friends: Friend[];
+  pendingRequests: FriendRequest[];
+  sentRequests: FriendRequest[];
+  isLoading: boolean;
+  fetchFriends: () => Promise<void>;
+  fetchRequests: () => Promise<void>;
+  sendRequest: (fromId: string, fromName: string, toId: string, toName: string, message?: string) => Promise<boolean>;
+  acceptRequest: (requestId: string) => Promise<void>;
+  rejectRequest: (requestId: string) => Promise<void>;
+  removeFriend: (friendshipId: string, _currentUserId: string) => Promise<void>;
+  getFriends: (userId: string) => Friend[];
+  getPendingRequests: (userId: string) => FriendRequest[];
+  getSentRequests: (userId: string) => FriendRequest[];
+  areFriends: (userId: string, friendId: string) => boolean;
+  searchUser: (query: string) => Promise<any | null>;
+}
+
+export const useFriendStore = create<FriendState>()((set, get) => ({
+  friends: [],
+  pendingRequests: [],
+  sentRequests: [],
+  isLoading: false,
+
+  fetchFriends: async () => {
+    try {
+      const res: any = await api.get('/api/friends');
+      if (res.code === 200) {
+        set({ friends: res.data || [] });
+      }
+    } catch {
+      // Silently fail
+    }
+  },
+
+  fetchRequests: async () => {
+    try {
+      const res: any = await api.get('/api/friends/requests');
+      if (res.code === 200) {
+        set({
+          pendingRequests: res.data?.pending || [],
+          sentRequests: res.data?.sent || [],
+        });
+      }
+    } catch {
+      // Silently fail
+    }
+  },
+
+  sendRequest: async (_fromId, _fromName, toId, _toName, message) => {
+    try {
+      const res: any = await api.post('/api/friends/request', { toId, message });
+      if (res.code === 200 || res.code === 201) {
+        const req: FriendRequest = {
+          id: res.data?.id || '',
+          fromId: _fromId,
+          fromName: _fromName,
+          toId,
+          toName: _toName,
+          status: 'pending',
+          message,
+          createdAt: new Date().toISOString(),
+        };
+        set(s => ({ sentRequests: [...s.sentRequests, req] }));
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  },
+
+  acceptRequest: async (requestId) => {
+    try {
+      await api.put(`/api/friends/request/${requestId}/accept`);
+      const req = get().pendingRequests.find(r => r.id === requestId);
+      set(s => ({
+        pendingRequests: s.pendingRequests.filter(r => r.id !== requestId),
+        friends: req
+          ? [...s.friends, {
+              id: '', userId: req.toId, friendId: req.fromId,
+              friendName: req.fromName, friendUsername: '', addedAt: new Date().toISOString(), sharedWorlds: [],
+            }]
+          : s.friends,
+      }));
+    } catch {
+      // Silently fail
+    }
+  },
+
+  rejectRequest: async (requestId) => {
+    try {
+      await api.put(`/api/friends/request/${requestId}/reject`);
+      set(s => ({ pendingRequests: s.pendingRequests.filter(r => r.id !== requestId) }));
+    } catch {
+      // Silently fail
+    }
+  },
+
+  removeFriend: async (friendshipId) => {
+    try {
+      await api.del(`/api/friends/${friendshipId}`);
+      set(s => ({ friends: s.friends.filter(f => f.id !== friendshipId) }));
+    } catch {
+      // Silently fail
+    }
+  },
+
+  getFriends: (userId) => get().friends.filter(f => f.userId === userId),
+  getPendingRequests: (userId) => get().pendingRequests.filter(r => r.toId === userId),
+  getSentRequests: (userId) => get().sentRequests.filter(r => r.fromId === userId),
+  areFriends: (userId, friendId) => get().friends.some(
+    f => (f.userId === userId && f.friendId === friendId) || (f.userId === friendId && f.friendId === userId)
+  ),
+
+  searchUser: async (query: string) => {
+    try {
+      const res: any = await api.get('/api/users/search', { q: query });
+      if (res.code === 200) return res.data;
+      return null;
+    } catch {
+      return null;
+    }
+  },
+}));

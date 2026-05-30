@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Crystal Ball World - Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Literata:opsz,wght@7..72,400;500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Literata:wght@100..900&amp;family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #fbf9f8;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glass-surface {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .nav-active-indicator {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#e4e2e2",
+                        "inverse-primary": "#ccc6b5",
+                        "primary-fixed-dim": "#ccc6b5",
+                        "secondary-fixed": "#dae3f5",
+                        "on-error": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#cbc6bb",
+                        "background": "#fbf9f8",
+                        "surface": "#fbf9f8",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#bec7d8",
+                        "tertiary-container": "#f9f9f9",
+                        "primary-fixed": "#e8e2d0",
+                        "tertiary-fixed": "#e2e2e2",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-tertiary-container": "#717273",
+                        "on-tertiary": "#ffffff",
+                        "primary": "#625f50",
+                        "on-background": "#1b1c1c",
+                        "on-primary-fixed": "#1e1c11",
+                        "outline": "#7a776e",
+                        "inverse-on-surface": "#f2f0f0",
+                        "surface-tint": "#625f50",
+                        "on-surface-variant": "#49473f",
+                        "surface-dim": "#dbdad9",
+                        "on-secondary-container": "#5c6574",
+                        "tertiary": "#5d5f5f",
+                        "error-container": "#ffdad6",
+                        "on-primary-container": "#767263",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "surface-bright": "#fbf9f8",
+                        "surface-container-low": "#f5f3f3",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "secondary": "#565f6e",
+                        "surface-container": "#efeded",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#4a4739",
+                        "surface-container-high": "#eae8e7",
+                        "on-surface": "#1b1c1c",
+                        "on-secondary-fixed": "#131c29",
+                        "primary-container": "#fff9e6",
+                        "secondary-container": "#dae3f5",
+                        "on-secondary-fixed-variant": "#3e4756",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#303030"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "16px",
+                        "gutter-grid": "16px",
+                        "stack-lg": "32px",
+                        "margin-page": "24px",
+                        "stack-sm": "8px",
+                        "inset-card": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-diary": ["Literata"],
+                        "label-sm": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-md-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-diary": ["17px", {"lineHeight": "30px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="font-body-lg text-on-surface bg-background min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 right-0 z-40 bg-surface/80 backdrop-blur-xl transition-all">
+<div class="flex justify-between items-center w-full px-margin-page py-4 max-w-[720px] mx-auto">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface cursor-pointer hover:opacity-70 active:scale-95 transition-all">menu</span>
+<h1 class="font-headline-md text-headline-md-mobile text-primary">水晶球世界</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface cursor-pointer hover:opacity-70 active:scale-95 transition-all">search</span>
+<div class="w-10 h-10 rounded-full border-2 border-primary-container overflow-hidden shadow-sm">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="A soft, professional portrait of a woman with a gentle expression, captured in high-key natural lighting that creates a bright and airy atmosphere. The background is a soft-focus warm beige, maintaining a minimalist and healing aesthetic. The composition is a close-up circle-cropped avatar style suitable for a premium digital diary application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6D9S4onN2Mwlc4z2QqwDTxHEOihJ-437nnhQi3t5hNcpPN6VA3OHcc93ec2EgxzJ0sv0Nx3FPdDD98hVJEJc8WZ4iy25Z_CwrDbcR7gc2jenJQP-mASmOUL0XINl1w8tAs4ozXpvfDdStDCo7zTsZhEmr9pM6Um-Q8_7mbEz9iivzGbO-WFA9tXvqdjWjF8CjPJeNzDlBb6PlliN6YWGogupsY2a2-qzb1uFZ5oJZLk8k-X3-Jcnbo-PTubA0CytYXr_KvyVPWRY"/>
+</div>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32 px-margin-page max-w-[720px] mx-auto min-h-screen">
+<!-- Profile Header Section -->
+<section class="flex flex-col items-center mb-stack-lg animate-in fade-in slide-in-from-bottom-4 duration-700">
+<div class="relative group">
+<div class="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-lg transition-transform duration-500 group-hover:scale-105">
+<img alt="Large User Avatar" class="w-full h-full object-cover" data-alt="A serene and minimalist close-up portrait of a thoughtful person with soft facial features. The lighting is diffused and warm, mimicking golden hour glow against a clean, off-white background. The image evokes a sense of quiet nostalgia and personal sanctuary, fitting for a 'Healing Minimalism' brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaCnOwCGvvjfc_eA1SuK4-_4rlATNjJg_OBYE4Qee1h1opwgJW0Wa4WBoQuCfjWkIU4o9fgjaWkYDjdkohnNyrK2JJ4_pPEBttfTtDu0PwrW99yMxJcDiRRjLpOgfp_ghl2tmk1PkrD2p9J73bP4LH532JqtzyvcT8Z_dkK0kdBWwYrbMPHDyxvVUIrSZrimHDlvZs4cbqYfa2afFtP8eVFgOSoGp-pEzFJC6f2P0P1cc4I3fiBJq6R7q_Ny594oqF59RhX2XH-o4"/>
+</div>
+<div class="absolute bottom-1 right-1 bg-white p-2 rounded-full shadow-md cursor-pointer active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-primary text-[20px]">edit</span>
+</div>
+</div>
+<div class="text-center mt-6">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Evelyn Harper</h2>
+<p class="font-body-lg text-on-surface-variant/60 mt-1">静谧时光收藏家</p>
+</div>
+</section>
+<!-- Stats Bento Grid (Visual Interest) -->
+<div class="grid grid-cols-2 gap-gutter-grid mb-stack-lg">
+<div class="glass-surface p-inset-card rounded-lg flex flex-col items-center justify-center text-center">
+<span class="font-headline-md text-primary">124</span>
+<span class="font-label-sm text-on-surface-variant/60">回忆</span>
+</div>
+<div class="glass-surface p-inset-card rounded-lg flex flex-col items-center justify-center text-center">
+<span class="font-headline-md text-primary">42</span>
+<span class="font-label-sm text-on-surface-variant/60">天连续记录</span>
+</div>
+</div>
+<!-- Menu Items List -->
+<nav class="space-y-stack-sm">
+<!-- Settings -->
+<a class="glass-surface flex items-center justify-between p-5 rounded-lg hover:bg-white/90 active:scale-[0.98] transition-all group" href="#">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container">settings</span>
+</div>
+<span class="font-body-lg text-on-surface">设置</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant/40 group-hover:translate-x-1 transition-transform">chevron_right</span>
+</a>
+<!-- Tutorial -->
+<a class="glass-surface flex items-center justify-between p-5 rounded-lg hover:bg-white/90 active:scale-[0.98] transition-all group" href="#">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container">auto_stories</span>
+</div>
+<span class="font-body-lg text-on-surface">新手教程</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant/40 group-hover:translate-x-1 transition-transform">chevron_right</span>
+</a>
+<!-- Privacy Policy -->
+<a class="glass-surface flex items-center justify-between p-5 rounded-lg hover:bg-white/90 active:scale-[0.98] transition-all group" href="#">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container">verified_user</span>
+</div>
+<span class="font-body-lg text-on-surface">隐私政策</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant/40 group-hover:translate-x-1 transition-transform">chevron_right</span>
+</a>
+<!-- Log Out -->
+<button class="w-full glass-surface flex items-center justify-between p-5 rounded-lg hover:bg-error-container/10 active:scale-[0.98] transition-all group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-error-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-error">logout</span>
+</div>
+<span class="font-body-lg text-error">退出登录</span>
+</div>
+<span class="material-symbols-outlined text-error/40 group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+</nav>
+<div class="mt-stack-lg text-center opacity-30 select-none">
+<span class="font-label-sm">版本 2.4.0 • 用心打造</span>
+</div>
+</main>
+<!-- NavigationDrawer (Deep Memory Side Anchor) -->
+<aside class="fixed right-4 top-1/2 -translate-y-1/2 z-40">
+<div class="flex flex-col items-center gap-stack-lg bg-white/80 backdrop-blur-xl rounded-full py-6 w-16 border border-white/40 shadow-lg">
+<div class="flex flex-col items-center gap-stack-md">
+<button class="text-on-surface-variant/40 hover:text-primary transition-all active:rotate-12 duration-300 flex flex-col items-center gap-1 group">
+<span class="material-symbols-outlined">history</span>
+</button>
+<button class="text-on-surface-variant/40 hover:text-primary transition-all active:rotate-12 duration-300 flex flex-col items-center gap-1 group">
+<span class="material-symbols-outlined">local_fire_department</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Navigation Shell (BottomNavBar) -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[720px] flex justify-around items-center px-4 py-3 pb-6 bg-white/60 dark:bg-surface-container/60 backdrop-blur-[24px] z-50 rounded-t-lg shadow-[0px_-10px_30px_rgba(90,90,90,0.05)] border-t border-white/40 dark:border-outline-variant/20">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-tertiary-fixed-variant hover:bg-white/40 transition-colors active:scale-90 duration-300" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">首页</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-tertiary-fixed-variant hover:bg-white/40 transition-colors active:scale-90 duration-300" href="#">
+<span class="material-symbols-outlined">bubble_chart</span>
+<span class="font-label-sm text-label-sm">共鸣</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-tertiary-fixed-variant hover:bg-white/40 transition-colors active:scale-90 duration-300" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-sm text-label-sm">好友</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-white/80 dark:bg-primary-container text-primary dark:text-on-primary-container rounded-full px-4 py-1 shadow-sm active:scale-90 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-sm text-label-sm">我的</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interaction for scroll depth awareness
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.classList.add('shadow-sm', 'py-3');
+                header.classList.remove('py-4');
+            } else {
+                header.classList.remove('shadow-sm', 'py-3');
+                header.classList.add('py-4');
+            }
+        });
+
+        // Add subtle hover effect for glass cards
+        document.querySelectorAll('.glass-surface').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+    </script>
+</body></html>

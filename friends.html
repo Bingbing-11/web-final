@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Friends World - Crystal Ball</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Literata:opsz,wght@7..72,400;500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#e4e2e2",
+                        "inverse-primary": "#ccc6b5",
+                        "primary-fixed-dim": "#ccc6b5",
+                        "secondary-fixed": "#dae3f5",
+                        "on-error": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#cbc6bb",
+                        "background": "#fbf9f8",
+                        "surface": "#fbf9f8",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#bec7d8",
+                        "tertiary-container": "#f9f9f9",
+                        "primary-fixed": "#e8e2d0",
+                        "tertiary-fixed": "#e2e2e2",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-tertiary-container": "#717273",
+                        "on-tertiary": "#ffffff",
+                        "primary": "#625f50",
+                        "on-background": "#1b1c1c",
+                        "on-primary-fixed": "#1e1c11",
+                        "outline": "#7a776e",
+                        "inverse-on-surface": "#f2f0f0",
+                        "surface-tint": "#625f50",
+                        "on-surface-variant": "#49473f",
+                        "surface-dim": "#dbdad9",
+                        "on-secondary-container": "#5c6574",
+                        "tertiary": "#5d5f5f",
+                        "error-container": "#ffdad6",
+                        "on-primary-container": "#767263",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "surface-bright": "#fbf9f8",
+                        "surface-container-low": "#f5f3f3",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "secondary": "#565f6e",
+                        "surface-container": "#efeded",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#4a4739",
+                        "surface-container-highest": "#e4e2e2",
+                        "surface-container-high": "#eae8e7",
+                        "on-surface": "#1b1c1c",
+                        "on-secondary-fixed": "#131c29",
+                        "primary-container": "#fff9e6",
+                        "secondary-container": "#dae3f5",
+                        "on-secondary-fixed-variant": "#3e4756",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#303030"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "16px",
+                        "gutter-grid": "16px",
+                        "stack-lg": "32px",
+                        "margin-page": "24px",
+                        "stack-sm": "8px",
+                        "inset-card": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-diary": ["Literata"],
+                        "label-sm": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-md-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-diary": ["17px", {"lineHeight": "30px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #fbf9f8;
+            color: #1b1c1c;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .crystal-sphere {
+            position: relative;
+            border-radius: 50%;
+            overflow: hidden;
+            aspect-ratio: 1/1;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
+            box-shadow: inset 0 0 40px rgba(255,255,255,0.5), 0 10px 30px rgba(90,90,90,0.05);
+        }
+        .crystal-sphere:hover {
+            transform: scale(1.05) translateY(-8px);
+        }
+        .crystal-sphere::after {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 15%;
+            width: 30%;
+            height: 30%;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 80%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .halo-pulse {
+            position: absolute;
+            top: -6px;
+            left: -6px;
+            right: -6px;
+            bottom: -6px;
+            border-radius: 50%;
+            border: 2px solid rgba(98, 95, 80, 0.3);
+            animation: halo-glow 3s infinite ease-in-out;
+        }
+        @keyframes halo-glow {
+            0% { transform: scale(1); opacity: 0.2; }
+            50% { transform: scale(1.08); opacity: 0.6; border-color: rgba(98, 95, 80, 0.6); }
+            100% { transform: scale(1); opacity: 0.2; }
+        }
+        .notification-glow {
+            animation: pulse-glow 2s infinite ease-in-out;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        .floating-fab {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(24px);
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+        .friend-card {
+            transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.4s;
+        }
+        .friend-card.entering {
+            transform: scale(1.15);
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body class="font-body-lg text-on-surface">
+<!-- TopAppBar -->
+<nav class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[720px] z-40 px-margin-page py-4 flex justify-between items-center bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-xl border-none">
+<div class="flex items-center gap-stack-md">
+<span class="material-symbols-outlined text-on-surface hover:opacity-70 transition-opacity cursor-pointer">menu</span>
+<h1 class="font-headline-md text-headline-md-mobile text-primary">水晶球世界</h1>
+</div>
+<div class="flex items-center gap-stack-md">
+<span class="material-symbols-outlined text-on-surface hover:opacity-70 transition-opacity cursor-pointer">search</span>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="pt-24 pb-32 px-margin-page max-w-[720px] mx-auto min-h-screen">
+<!-- Friends Actions Section -->
+<header class="mb-stack-lg flex flex-col gap-stack-md">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-md text-headline-md text-on-surface">好友领域</h2>
+<div class="flex gap-stack-md">
+<button onclick="location.href='friend-manage.html'" class="glass-card px-4 py-2 rounded-full flex items-center gap-2 hover:bg-white/90 transition-all active:scale-95 cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">settings</span>
+<span class="font-label-sm text-label-sm">管理</span>
+</button>
+</div>
+</div>
+<p class="font-body-lg text-on-surface-variant/80">窥探挚友们的小小世界。</p>
+</header>
+<!-- Friends Bento Grid -->
+<div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+<!-- Friend 1: Luna -->
+<div class="friend-card flex flex-col items-center gap-3 group cursor-pointer" onclick="navigateToFriend('Luna的雪山','https://lh3.googleusercontent.com/aida-public/AB6AXuCmTBtxjuAEn6xTUc_zIDWzAvucQVJN7v1bBbygvZlOl1ulDpp9mly1-7fJTS6xvRJidKeW2p3nYPOLy9OxUjzILADPvznZBuWeWvtJFPxqLXUKOtgA6JAeWmSNviMh4JN375qGi4WNEqY_gKQhrd_KskPcYf6cYVMOALDcSZTb5ZCknS0q_eAOkj4SUSJWmm9BPennJ7_SLzjyl5e55VnpPQQ1ridPbZaiD4whDiXwmZxjMHq1fpYxM0Q4CTpQCwXWjFkNivnDwEg')">
+<div class="relative w-full">
+<div class="halo-pulse"></div>
+<div class="crystal-sphere relative w-full border border-white/40">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmTBtxjuAEn6xTUc_zIDWzAvucQVJN7v1bBbygvZlOl1ulDpp9mly1-7fJTS6xvRJidKeW2p3nYPOLy9OxUjzILADPvznZBuWeWvtJFPxqLXUKOtgA6JAeWmSNviMh4JN375qGi4WNEqY_gKQhrd_KskPcYf6cYVMOALDcSZTb5ZCknS0q_eAOkj4SUSJWmm9BPennJ7_SLzjyl5e55VnpPQQ1ridPbZaiD4whDiXwmZxjMHq1fpYxM0Q4CTpQCwXWjFkNivnDwEg">
+<div class="absolute top-3 right-3 w-3 h-3 bg-primary rounded-full notification-glow shadow-[0_0_8px_rgba(98,95,80,0.6)]"></div>
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 bg-primary/20 backdrop-blur-md px-2 py-0.5 rounded-full">
+<span class="text-[10px] font-bold text-primary tracking-widest uppercase">有更新</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-center">
+<span class="font-label-sm text-on-surface group-hover:text-primary transition-colors">Luna的雪山</span>
+</div>
+</div>
+<!-- Friend 2: Kaito -->
+<div class="friend-card flex flex-col items-center gap-3 group cursor-pointer" onclick="navigateToFriend('Kaito的禅意','https://lh3.googleusercontent.com/aida-public/AB6AXuD0OdTYMMa0lK8abVeI-3pLqwlYVeFN-AidsNcIhRP5GQnyh-n2r8y7Chx0n014WMzbUYN_yXY1N4WZdqKckbaRJPOevhQ-izHiLZoeCLkr-9Ui7FiwM2ESITMO9eiZB3S2gs8ICX4J1MFbyBN8x1LNdS5IfWQzUAn3aBPQQ6y_PioC1s_nI1CkytsSNmO5_NDcOwjpcJB555QjjjoO-zmK9MKuwFFTqoqQcV8qIeLipoHJQCBKQXT-LWACI3k6cWOac0mDU-oDlX0')">
+<div class="crystal-sphere relative w-full border border-white/40">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0OdTYMMa0lK8abVeI-3pLqwlYVeFN-AidsNcIhRP5GQnyh-n2r8y7Chx0n014WMzbUYN_yXY1N4WZdqKckbaRJPOevhQ-izHiLZoeCLkr-9Ui7FiwM2ESITMO9eiZB3S2gs8ICX4J1MFbyBN8x1LNdS5IfWQzUAn3aBPQQ6y_PioC1s_nI1CkytsSNmO5_NDcOwjpcJB555QjjjoO-zmK9MKuwFFTqoqQcV8qIeLipoHJQCBKQXT-LWACI3k6cWOac0mDU-oDlX0">
+</div>
+<div class="flex flex-col items-center">
+<span class="font-label-sm text-on-surface group-hover:text-primary transition-colors">Kaito的禅意</span>
+</div>
+</div>
+<!-- Friend 3: Elias -->
+<div class="friend-card flex flex-col items-center gap-3 group cursor-pointer" onclick="navigateToFriend('Elias的幻境','https://lh3.googleusercontent.com/aida-public/AB6AXuAPGYAYcLkp-MyPshR8W79JoIsCYhuEFxs1ZgutABIF9gZ-i7gqI25CcKpoAVBv3fRjJ5zJ0ROPGdxtwr8Wm2XhfDxqtQ7g63jIvMVhRWnut2XVISmJxMFlscbJTYQTgprmlguv27oX8_AHjmS-nBjc8UCJwOH5MzQltQp8di7ldbJntajH0Et-ZFSv3reKjoB1jcjgXTy57dH0xa4WJYZ_xqCW-5MlIqkZg1MqcVXgRRlCMt4kwtMSqWtH1jj45PwKQVg_jBXXmIg')">
+<div class="crystal-sphere relative w-full border border-white/40">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPGYAYcLkp-MyPshR8W79JoIsCYhuEFxs1ZgutABIF9gZ-i7gqI25CcKpoAVBv3fRjJ5zJ0ROPGdxtwr8Wm2XhfDxqtQ7g63jIvMVhRWnut2XVISmJxMFlscbJTYQTgprmlguv27oX8_AHjmS-nBjc8UCJwOH5MzQltQp8di7ldbJntajH0Et-ZFSv3reKjoB1jcjgXTy57dH0xa4WJYZ_xqCW-5MlIqkZg1MqcVXgRRlCMt4kwtMSqWtH1jj45PwKQVg_jBXXmIg">
+</div>
+<div class="flex flex-col items-center">
+<span class="font-label-sm text-on-surface group-hover:text-primary transition-colors">Elias的幻境</span>
+</div>
+</div>
+<!-- Friend 4: Sarah -->
+<div class="friend-card flex flex-col items-center gap-3 group cursor-pointer" onclick="navigateToFriend('Sarah的海岸','https://lh3.googleusercontent.com/aida-public/AB6AXuBPDlSBaUgGxSF3ft5PvjnemV6SqibwCwAkqM7CD_Nl1JDXheFeqpim3Hv0IhW62WwWWCf8ZvKAb7q_iwVI8OGhmfrTQLMHOXZiPr5xMxMJFexbH6PuQC_QHCnKTKipBr-bfZYxZFm6IBVr9uFfpldVGI66o0RjD73_6UqVQM1IkzkxA7jVJeA0xaA0gZ5pT17wkG5ssYnzZXbGW8gbaGj9A4_cpzpMY4BI7GErzh5tMf8jk2iOZCkoUUetAe9QkT0W1c4krzzTgBw')">
+<div class="crystal-sphere relative w-full border border-white/40">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPDlSBaUgGxSF3ft5PvjnemV6SqibwCwAkqM7CD_Nl1JDXheFeqpim3Hv0IhW62WwWWCf8ZvKAb7q_iwVI8OGhmfrTQLMHOXZiPr5xMxMJFexbH6PuQC_QHCnKTKipBr-bfZYxZFm6IBVr9uFfpldVGI66o0RjD73_6UqVQM1IkzkxA7jVJeA0xaA0gZ5pT17wkG5ssYnzZXbGW8gbaGj9A4_cpzpMY4BI7GErzh5tMf8jk2iOZCkoUUetAe9QkT0W1c4krzzTgBw">
+</div>
+<div class="flex flex-col items-center">
+<span class="font-label-sm text-on-surface group-hover:text-primary transition-colors">Sarah的海岸</span>
+</div>
+</div>
+<!-- Friend 5: 旧图书馆 -->
+<div class="friend-card flex flex-col items-center gap-3 group cursor-pointer" onclick="navigateToFriend('旧图书馆','https://lh3.googleusercontent.com/aida-public/AB6AXuBgVzS9L2o7ncFghnnogeFk6_txT49BpZbCuls8B_2uY8bYs29rwD9LWWa_jwrY2z3bkzefJabHXmBvZzvKbzIasE2EGdr9hfrzks8TH785R8buRCa8mMVn-P4twurTTy-Q8dTCsOf-9JIVFX5NF7e6UIwJej-5ORbs5VczMp9USCUkoUassbMZTNrSl14aT3Vj5JLwowdJhrtvQGgiDFgTV9Tkht7qf8cFd2W4JZPzMzgtCT9HcJcY31lC4dBGEiKOlhJRlXFFNkA')">
+<div class="crystal-sphere relative w-full border border-white/40 opacity-70 scale-95 grayscale-[0.2]">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgVzS9L2o7ncFghnnogeFk6_txT49BpZbCuls8B_2uY8bYs29rwD9LWWa_jwrY2z3bkzefJabHXmBvZzvKbzIasE2EGdr9hfrzks8TH785R8buRCa8mMVn-P4twurTTy-Q8dTCsOf-9JIVFX5NF7e6UIwJej-5ORbs5VczMp9USCUkoUassbMZTNrSl14aT3Vj5JLwowdJhrtvQGgiDFgTV9Tkht7qf8cFd2W4JZPzMzgtCT9HcJcY31lC4dBGEiKOlhJRlXFFNkA">
+</div>
+<div class="flex flex-col items-center">
+<span class="font-label-sm text-on-surface-variant group-hover:text-primary transition-colors">旧图书馆</span>
+</div>
+</div>
+<!-- Friend 6: Aria -->
+<div class="friend-card flex flex-col items-center gap-3 group cursor-pointer" onclick="navigateToFriend('Aria的花语','https://lh3.googleusercontent.com/aida-public/AB6AXuALL2ibIwTeKNf7dKD0gMJ882B3fONzxedpLPEcNPeYle_5De9zUxxkwdUARefMCIDfdzHKMowBeAmdLtpdDpCx7lGib-_8pZ8U24Aj_tvtv-Kp0u4hbi3BgBSFobPpH-Y1AigNokky5t3rMhvJeaBKvxNALC5VNNaAueZ5f29fyls0x2F3h4bg8i4zeuXIY9T1CQyEVt9ehmhleyqJ3MjdlSoDiOXh0mxZiCCxyQyoZaHrqrSUMnSwtqV7cpOUysIjqliDcJ1LBZk')">
+<div class="crystal-sphere relative w-full border border-white/40">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALL2ibIwTeKNf7dKD0gMJ882B3fONzxedpLPEcNPeYle_5De9zUxxkwdUARefMCIDfdzHKMowBeAmdLtpdDpCx7lGib-_8pZ8U24Aj_tvtv-Kp0u4hbi3BgBSFobPpH-Y1AigNokky5t3rMhvJeaBKvxNALC5VNNaAueZ5f29fyls0x2F3h4bg8i4zeuXIY9T1CQyEVt9ehmhleyqJ3MjdlSoDiOXh0mxZiCCxyQyoZaHrqrSUMnSwtqV7cpOUysIjqliDcJ1LBZk">
+</div>
+<div class="flex flex-col items-center">
+<span class="font-label-sm text-on-surface group-hover:text-primary transition-colors">Aria的花语</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Navigation Shell (BottomNavBar) -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[720px] flex justify-around items-center px-4 py-3 pb-6 bg-white/60 dark:bg-surface-container/60 backdrop-blur-[24px] z-50 rounded-t-lg shadow-[0px_-10px_30px_rgba(90,90,90,0.05)] border-t border-white/40 dark:border-outline-variant/20">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-tertiary-fixed-variant hover:bg-white/40 transition-colors active:scale-90 duration-300" href="index.html">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">首页</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-tertiary-fixed-variant hover:bg-white/40 transition-colors active:scale-90 duration-300" href="resonance-pool.html">
+<span class="material-symbols-outlined">bubble_chart</span>
+<span class="font-label-sm text-label-sm">共鸣</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-white/80 dark:bg-primary-container text-primary dark:text-on-primary-container rounded-full px-4 py-1 shadow-sm active:scale-90 transition-all duration-300" href="friends.html">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-label-sm text-label-sm">好友</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-tertiary-fixed-variant hover:bg-white/40 transition-colors active:scale-90 duration-300" href="profile.html">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">我的</span>
+</a>
+</nav>
+<script>
+        function navigateToFriend(name, img) {
+            // 缩放动画后跳转
+            const card = event.currentTarget;
+            card.classList.add('entering');
+            setTimeout(() => {
+                window.location.href = 'friend-world-detail.html?name=' + encodeURIComponent(name) + '&img=' + encodeURIComponent(img);
+            }, 400);
+        }
+
+        // Soft parallax for desktop
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => {
+                const moveX = (e.clientX - window.innerWidth / 2) * 0.005;
+                const moveY = (e.clientY - window.innerHeight / 2) * 0.005;
+                document.querySelectorAll('.crystal-sphere img').forEach(img => {
+                    img.style.transform = `scale(1.1) translate(${moveX}px, ${moveY}px)`;
+                });
+            });
+        }
+</script>
+</body></html>

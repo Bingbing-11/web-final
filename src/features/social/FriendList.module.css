@@ -1,0 +1,452 @@
+/* ===== FriendList 好友 - 暖米色移动端 ===== */
+.page {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  background-color: var(--bg);
+}
+
+/* 浮动光晕 */
+.atmoDeco1 {
+  position: fixed;
+  top: 25%;
+  left: -20px;
+  width: 96px;
+  height: 96px;
+  background: rgba(245, 230, 200, 0.3);
+  border-radius: 50%;
+  filter: blur(48px);
+  pointer-events: none;
+}
+
+.atmoDeco2 {
+  position: fixed;
+  bottom: 25%;
+  right: -20px;
+  width: 128px;
+  height: 128px;
+  background: rgba(255, 138, 138, 0.15);
+  border-radius: 50%;
+  filter: blur(48px);
+  pointer-events: none;
+}
+
+/* 主内容区 */
+.main {
+  padding: 16px 20px 120px;
+  max-width: 430px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* 搜索栏 */
+.searchSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.searchBar {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.searchInputWrap {
+  flex: 1;
+  background: var(--bg-hover);
+  border-radius: var(--radius-pill);
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.searchInputIcon {
+  font-size: 18px;
+  user-select: none;
+  color: var(--text-secondary);
+}
+
+.searchInput {
+  background: transparent;
+  border: none;
+  outline: none;
+  width: 100%;
+  font-family: var(--font);
+  font-size: 14px;
+  color: var(--text);
+}
+
+.searchInput::placeholder {
+  color: var(--text-muted);
+}
+
+.searchSubmit {
+  background: var(--primary-dark);
+  color: var(--text);
+  padding: 8px 20px;
+  border-radius: var(--radius-pill);
+  border: none;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.searchSubmit:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.searchSubmit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 区域标题 */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.sectionBadge {
+  background: var(--accent);
+  color: white;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  margin-left: 8px;
+}
+
+.sectionCount {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* 好友请求列表 */
+.requestsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.requestItem {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  animation: fadeInUp 0.4s ease forwards;
+  animation-delay: var(--delay, 0s);
+  opacity: 0;
+}
+
+.requestLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.requestAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--primary);
+  object-fit: cover;
+}
+
+.requestInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.requestName {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.requestMeta {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.requestActions {
+  display: flex;
+  gap: 8px;
+}
+
+.actionBtn {
+  padding: 8px;
+  border-radius: 50%;
+  background: var(--bg-hover);
+  border: none;
+  cursor: pointer;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.actionBtn:active {
+  transform: scale(0.95);
+}
+
+.actionBtnDanger:active {
+  background: var(--danger);
+  color: white;
+}
+
+.actionBtnIcon {
+  font-size: 18px;
+  user-select: none;
+}
+
+/* 好友列表 */
+.friendGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.friendCard {
+  padding: 16px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  transition: var(--transition);
+}
+
+.friendCard:active {
+  transform: scale(0.99);
+}
+
+.friendRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.friendLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.friendAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  border: 2px solid var(--primary);
+}
+
+.friendInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.friendNameRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.friendName {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.friendEditBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  border-radius: 4px;
+  transition: color 0.2s;
+}
+
+.friendEditBtn:active {
+  color: var(--text);
+}
+
+.friendEditIcon {
+  font-size: 14px;
+  user-select: none;
+}
+
+.friendRemark {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.friendHoverActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.friendActionBtn {
+  padding: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+
+.friendActionBtn:active {
+  color: var(--danger);
+}
+
+.friendActionChat:active {
+  color: var(--text);
+}
+
+.friendActionIcon {
+  font-size: 18px;
+  user-select: none;
+}
+
+/* 反馈提示 */
+.feedback {
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+}
+
+.feedbackError {
+  color: var(--danger);
+  background: rgba(255, 107, 107, 0.1);
+}
+
+.feedbackSuccess {
+  color: var(--success);
+  background: rgba(107, 203, 119, 0.1);
+}
+
+/* 空状态 */
+.empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.emptyIcon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  user-select: none;
+}
+
+/* 已发送请求 */
+.sentItem {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  animation: fadeInUp 0.4s ease forwards;
+  animation-delay: var(--delay, 0s);
+  opacity: 0;
+}
+
+.sentLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sentAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--bg-hover);
+  object-fit: cover;
+}
+
+.sentName {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.sentTime {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.sentRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sentStatus {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--primary);
+  color: var(--text-secondary);
+}
+
+.cancelBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 4px 8px;
+  border-radius: var(--radius-xs);
+  transition: color 0.2s;
+}
+
+.cancelBtn:active {
+  color: var(--danger);
+}
+
+/* 动画 */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,217 @@
+/* ===== PermissionsPage 权限管理 - 暖米色移动端 ===== */
+.page {
+  max-width: 430px;
+  margin: 0 auto;
+  animation: fadeIn 0.3s ease;
+  padding-bottom: 16px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.section {
+  margin-bottom: 24px;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.memberItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+
+.memberItem:active {
+  background: var(--bg-hover);
+}
+
+.memberInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.memberName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.memberSince {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.roleBadge {
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.roleOwner {
+  background: var(--primary);
+  color: var(--text);
+}
+
+.roleEditor {
+  background: rgba(107, 203, 119, 0.15);
+  color: var(--success-dark);
+}
+
+.roleViewer {
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+}
+
+.roleActions {
+  display: flex;
+  gap: 4px;
+}
+
+.roleSelect {
+  padding: 4px 8px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  font-size: 13px;
+  color: var(--text);
+}
+
+/* Invite section */
+.inviteCard {
+  padding: 16px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  border: 2px dashed var(--border);
+  text-align: center;
+}
+
+.inviteText {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.inviteRow {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+/* Visibility */
+.visibilityCard {
+  padding: 16px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+}
+
+.visibilityOption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.visibilityOption:last-child {
+  border-bottom: none;
+}
+
+.visibilityLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.visibilityDesc {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Toggle switch */
+.toggleSwitch {
+  width: 44px;
+  height: 24px;
+  border-radius: 12px;
+  background: var(--border-medium);
+  position: relative;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.toggleSwitch.active {
+  background: var(--primary-dark);
+}
+
+.toggleSwitch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  transition: var(--transition);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.toggleSwitch.active::after {
+  left: 22px;
+}
+
+.empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* Friend invite list */
+.friendInviteList {
+  margin-top: 12px;
+  text-align: left;
+}
+
+.friendInviteItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.friendInviteItem:last-child {
+  border-bottom: none;
+}
+
+.friendInviteName {
+  font-size: 13px;
+  color: var(--text);
+}

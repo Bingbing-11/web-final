@@ -1,0 +1,359 @@
+/* ===== 页面容器（暖米色渐变背景） ===== */
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% -20%, var(--primary) 0%, var(--bg) 60%);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.main {
+  width: 100%;
+  max-width: 430px;
+  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ===== 水晶球头部 ===== */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 32px;
+  animation: fadeInSlide 1s ease forwards;
+}
+
+.crystalWrap {
+  width: 96px;
+  height: 96px;
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.crystalGlow {
+  position: absolute;
+  inset: 0;
+  background: var(--primary);
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.6;
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+
+.crystalImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  position: relative;
+  z-index: 10;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
+}
+
+.title {
+  font-family: 'Literata', serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 40px;
+  letter-spacing: -0.02em;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.subtitle {
+  font-family: 'Literata', serif;
+  font-size: 17px;
+  line-height: 30px;
+  color: var(--text-secondary);
+  text-align: center;
+  font-style: italic;
+  margin-top: 8px;
+}
+
+/* ===== 玻璃拟态卡片 ===== */
+.card {
+  max-width: 430px;
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  box-shadow: 0px 10px 30px rgba(90, 90, 90, 0.05);
+  animation: fadeInZoom 0.7s ease 0.2s forwards;
+  opacity: 0;
+}
+
+/* ===== 表单 ===== */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.labelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 8px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  padding-left: 8px;
+}
+
+.forgotLink {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.forgotLink:hover {
+  color: var(--text);
+}
+
+.input {
+  width: 100%;
+  height: 56px;
+  padding: 0 24px;
+  background: var(--primary);
+  border: none;
+  border-radius: 32px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 18px;
+  line-height: 28px;
+  color: var(--text);
+  transition: var(--transition);
+  box-sizing: border-box;
+}
+
+.input::placeholder {
+  color: var(--text-muted);
+}
+
+.input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg-card), 0 0 0 4px var(--primary-dark);
+}
+
+/* 密码输入框容器 */
+.passwordWrap {
+  position: relative;
+}
+
+.passwordWrap .input {
+  padding-right: 48px;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.passwordToggle:hover {
+  color: var(--text);
+}
+
+.iconSm {
+  font-size: 20px;
+  line-height: 1;
+}
+
+/* ===== 错误提示 ===== */
+.error {
+  color: var(--danger);
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  padding: 8px 16px;
+  background: rgba(255, 107, 107, 0.1);
+  border-radius: 16px;
+  margin-top: -4px;
+}
+
+/* ===== 登录按钮 ===== */
+.submitBtn {
+  width: 100%;
+  height: 56px;
+  margin-top: 8px;
+  background: var(--text);
+  color: var(--text-inverse);
+  font-family: var(--font);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 28px;
+  border: none;
+  border-radius: 32px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: var(--transition);
+}
+
+.submitBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.submitBtn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.submitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ===== 分隔线 ===== */
+.divider {
+  position: relative;
+  margin: 32px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dividerLine {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+}
+
+.dividerLine::before {
+  content: '';
+  width: 100%;
+  border-top: 1px solid var(--border);
+}
+
+.dividerText {
+  position: relative;
+  padding: 0 16px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(16px);
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  line-height: 24px;
+}
+
+/* ===== 社交登录按钮 ===== */
+.socialRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.socialBtn {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--bg-hover);
+  border: 1px solid var(--border);
+  border-radius: 32px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.socialBtn:hover {
+  background: var(--bg-hover);
+  opacity: 0.8;
+}
+
+.socialIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.socialLabel {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.05em;
+  color: var(--text);
+}
+
+/* ===== 底部链接 ===== */
+.footer {
+  margin-top: 32px;
+  font-family: 'Literata', serif;
+  font-size: 17px;
+  line-height: 30px;
+  color: var(--text-secondary);
+  text-align: center;
+  animation: fadeInSlide 1s ease 0.5s forwards;
+  opacity: 0;
+}
+
+.footerLink {
+  color: var(--text);
+  font-weight: 700;
+  text-decoration: none;
+  margin-left: 4px;
+  transition: var(--transition);
+}
+
+.footerLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ===== 动画 ===== */
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInZoom {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

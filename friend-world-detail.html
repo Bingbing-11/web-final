@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>好友世界 - Crystal Ball World</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Literata:opsz,wght@7..72,400;500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#e4e2e2",
+                        "inverse-primary": "#ccc6b5",
+                        "primary-fixed-dim": "#ccc6b5",
+                        "secondary-fixed": "#dae3f5",
+                        "on-error": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#cbc6bb",
+                        "background": "#fbf9f8",
+                        "surface": "#fbf9f8",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#bec7d8",
+                        "tertiary-container": "#f9f9f9",
+                        "primary-fixed": "#e8e2d0",
+                        "tertiary-fixed": "#e2e2e2",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-tertiary-container": "#717273",
+                        "on-tertiary": "#ffffff",
+                        "primary": "#625f50",
+                        "on-background": "#1b1c1c",
+                        "on-primary-fixed": "#1e1c11",
+                        "outline": "#7a776e",
+                        "inverse-on-surface": "#f2f0f0",
+                        "surface-tint": "#625f50",
+                        "on-surface-variant": "#49473f",
+                        "surface-dim": "#dbdad9",
+                        "on-secondary-container": "#5c6574",
+                        "tertiary": "#5d5f5f",
+                        "error-container": "#ffdad6",
+                        "on-primary-container": "#767263",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "surface-bright": "#fbf9f8",
+                        "surface-container-low": "#f5f3f3",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "secondary": "#565f6e",
+                        "surface-container": "#efeded",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#4a4739",
+                        "surface-container-highest": "#e4e2e2",
+                        "surface-container-high": "#eae8e7",
+                        "on-surface": "#1b1c1c",
+                        "on-secondary-fixed": "#131c29",
+                        "primary-container": "#fff9e6",
+                        "secondary-container": "#dae3f5",
+                        "on-secondary-fixed-variant": "#3e4756",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#303030"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "16px",
+                        "gutter-grid": "16px",
+                        "stack-lg": "32px",
+                        "margin-page": "24px",
+                        "stack-sm": "8px",
+                        "inset-card": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-diary": ["Literata"],
+                        "label-sm": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-md-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-diary": ["17px", {"lineHeight": "30px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #fbf9f8;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .crystal-hero {
+            position: relative;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: inset 0 0 60px rgba(255,255,255,0.5), 0 20px 50px rgba(90,90,90,0.08);
+        }
+        .crystal-hero::after {
+            content: '';
+            position: absolute;
+            top: 8%;
+            left: 12%;
+            width: 40%;
+            height: 40%;
+            background: radial-gradient(circle, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 80%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .halo-ring {
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            right: -8px;
+            bottom: -8px;
+            border-radius: 2rem;
+            border: 2px solid rgba(98, 95, 80, 0.2);
+            animation: halo-breathe 4s infinite ease-in-out;
+        }
+        @keyframes halo-breathe {
+            0%, 100% { transform: scale(1); opacity: 0.15; }
+            50% { transform: scale(1.02); opacity: 0.4; }
+        }
+        .entry-card {
+            animation: fadeInUp 0.5s ease both;
+        }
+        .entry-card:nth-child(1) { animation-delay: 0.1s; }
+        .entry-card:nth-child(2) { animation-delay: 0.2s; }
+        .entry-card:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="font-body-lg text-on-surface">
+<!-- TopAppBar -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-xl border-none">
+<div class="flex items-center w-full px-margin-page py-4 max-w-[720px] mx-auto">
+<a href="friends.html" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-primary/5 transition-colors active:scale-90">
+<span class="material-symbols-outlined text-on-surface text-[22px]">arrow_back</span>
+</a>
+<h1 class="font-headline-md text-headline-md-mobile text-primary ml-3" id="page-title">好友世界</h1>
+<div class="ml-auto flex items-center gap-3">
+<button class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-primary/5 transition-colors active:scale-90">
+<span class="material-symbols-outlined text-on-surface text-[20px]">notifications</span>
+</button>
+<button class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-primary/5 transition-colors active:scale-90">
+<span class="material-symbols-outlined text-on-surface text-[20px]">share</span>
+</button>
+</div>
+</div>
+</nav>
+
+<!-- Main Content -->
+<main class="pt-24 pb-32 px-margin-page max-w-[720px] mx-auto min-h-screen">
+<!-- Crystal Hero -->
+<div class="relative mb-stack-lg">
+<div class="halo-ring"></div>
+<div class="crystal-hero w-full aspect-[4/3]">
+<img id="crystal-img" class="w-full h-full object-cover" src="" alt="好友水晶球">
+<div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+</div>
+</div>
+
+<!-- Friend Info -->
+<section class="flex items-center gap-4 mb-stack-lg">
+<div class="w-14 h-14 rounded-full overflow-hidden border-2 border-white shadow-md">
+<img id="avatar-img" class="w-full h-full object-cover" src="" alt="">
+</div>
+<div class="flex-1">
+<h2 class="font-headline-md text-on-surface" id="friend-name">好友</h2>
+<p class="font-label-sm text-on-surface-variant/60" id="friend-world-label">的世界</p>
+</div>
+<button class="glass-card px-4 py-2 rounded-full flex items-center gap-2 hover:bg-white/90 transition-all active:scale-95">
+<span class="material-symbols-outlined text-[18px] text-primary">auto_awesome</span>
+<span class="font-label-sm text-primary">共鸣</span>
+</button>
+</section>
+
+<!-- Stats -->
+<div class="grid grid-cols-3 gap-gutter-grid mb-stack-lg">
+<div class="glass-card p-4 rounded-lg text-center">
+<span class="font-headline-md text-primary">18</span>
+<span class="font-label-sm text-on-surface-variant/60 block">回忆</span>
+</div>
+<div class="glass-card p-4 rounded-lg text-center">
+<span class="font-headline-md text-primary">7</span>
+<span class="font-label-sm text-on-surface-variant/60 block">天更新</span>
+</div>
+<div class="glass-card p-4 rounded-lg text-center">
+<span class="font-headline-md text-primary">92%</span>
+<span class="font-label-sm text-on-surface-variant/60 block">共鸣度</span>
+</div>
+</div>
+
+<!-- Recent Entries -->
+<h3 class="font-headline-md-mobile text-on-surface mb-stack-sm">近期动态</h3>
+<div class="space-y-stack-sm">
+<!-- Entry 1 -->
+<div class="entry-card glass-card p-5 rounded-lg">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-primary text-[18px]">auto_awesome</span>
+<span class="font-label-sm text-on-surface-variant/60">3小时前</span>
+<span class="ml-auto text-[11px] text-primary bg-primary/10 px-2 py-0.5 rounded-full">平静</span>
+</div>
+<p class="font-body-diary text-on-surface leading-relaxed">"今天在雪山脚下散步，看到了最美的日落。那一刻，所有的疲惫都消散在金色的光芒中。"</p>
+</div>
+<!-- Entry 2 -->
+<div class="entry-card glass-card p-5 rounded-lg">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-primary text-[18px]">auto_awesome</span>
+<span class="font-label-sm text-on-surface-variant/60">昨天</span>
+<span class="ml-auto text-[11px] text-primary bg-primary/10 px-2 py-0.5 rounded-full">感恩</span>
+</div>
+<p class="font-body-diary text-on-surface leading-relaxed">"收到了一封来自远方的手写信，在这个数字化的时代，这样的温暖格外珍贵。"</p>
+</div>
+<!-- Entry 3 -->
+<div class="entry-card glass-card p-5 rounded-lg">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-primary text-[18px]">auto_awesome</span>
+<span class="font-label-sm text-on-surface-variant/60">2天前</span>
+<span class="ml-auto text-[11px] text-primary bg-primary/10 px-2 py-0.5 rounded-full">思念</span>
+</div>
+<p class="font-body-diary text-on-surface leading-relaxed">"窗外的雨声让我想起了去年这个时候的旅行。时间过得真快啊。"</p>
+</div>
+</div>
+</main>
+
+<!-- Navigation Shell (BottomNavBar) -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[720px] flex justify-around items-center px-4 py-3 pb-6 bg-white/60 dark:bg-surface-container/60 backdrop-blur-[24px] z-50 rounded-t-lg shadow-[0px_-10px_30px_rgba(90,90,90,0.05)] border-t border-white/40 dark:border-outline-variant/20">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-white/40 transition-colors active:scale-90 duration-300" href="index.html">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">首页</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-white/40 transition-colors active:scale-90 duration-300" href="resonance-pool.html">
+<span class="material-symbols-outlined">bubble_chart</span>
+<span class="font-label-sm text-label-sm">共鸣</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-white/80 text-primary rounded-full px-4 py-1 shadow-sm active:scale-90 transition-all duration-300" href="friends.html">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-label-sm text-label-sm">好友</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-white/40 transition-colors active:scale-90 duration-300" href="profile.html">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">我的</span>
+</a>
+</nav>
+
+<script>
+        const params = new URLSearchParams(window.location.search);
+        const friendName = params.get('name') || '好友的世界';
+        const friendImg = params.get('img') || '';
+
+        document.getElementById('page-title').textContent = friendName;
+        document.getElementById('friend-name').textContent = friendName;
+        document.getElementById('friend-world-label').textContent = '的世界';
+        document.getElementById('crystal-img').src = friendImg;
+        document.getElementById('avatar-img').src = friendImg;
+        document.title = friendName + ' - Crystal Ball World';
+</script>
+</body></html>

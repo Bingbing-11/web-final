@@ -1,0 +1,127 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  /* 暖米色设计系统 */
+  --primary: #FFF9E6;
+  --primary-dark: #F5E6C8;
+  --primary-deeper: #E8D5B0;
+  --secondary: #A7B0C1;
+  --secondary-dark: #8E97A8;
+  --accent: #FF8A8A;
+  --accent-dark: #E07070;
+  --danger: #FF6B6B;
+  --danger-dark: #E05555;
+  --warning: #FFD93D;
+  --success: #6BCB77;
+  --success-dark: #2d8a4e;
+  --info: #74B9FF;
+
+  /* 背景 & 表面 */
+  --bg: #F5F3F0;
+  --bg-card: #FFFFFF;
+  --bg-hover: #EDEAE6;
+  --bg-inset: #FAFAF8;
+
+  /* 文字 */
+  --text: #1C1C1E;
+  --text-secondary: #5A5A5A;
+  --text-muted: #8A8A8A;
+  --text-inverse: #FFFFFF;
+
+  /* 边框 & 阴影 */
+  --border: rgba(0, 0, 0, 0.06);
+  --border-medium: rgba(0, 0, 0, 0.1);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.12);
+
+  /* 圆角 */
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius: 20px;
+  --radius-lg: 28px;
+  --radius-pill: 9999px;
+
+  /* 动画 */
+  --transition: all 0.25s ease;
+  --transition-fast: all 0.15s ease;
+  --transition-slow: all 0.35s ease;
+
+  /* 字体 */
+  --font: 'Plus Jakarta Sans', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+/* ===== 全局重置 ===== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body, #root {
+  height: 100%;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== 链接 ===== */
+
+a {
+  color: var(--text);
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+a:hover {
+  opacity: 0.7;
+}
+
+/* ===== 表单元素 ===== */
+
+button {
+  font-family: var(--font);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
+  -webkit-appearance: none;
+}
+
+input, textarea, select {
+  font-family: var(--font);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* ===== 选区 ===== */
+
+::selection {
+  background: var(--primary-dark);
+  color: var(--text);
+}
+
+/* ===== 滚动条 ===== */
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 2px;
+  opacity: 0.3;
+}
+
+/* ===== 移动端安全区域 ===== */
+
+body {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}

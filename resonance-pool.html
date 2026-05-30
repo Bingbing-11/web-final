@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en" style="">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Resonance Pool - Crystal Ball World</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Literata:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#e4e2e2",
+                        "inverse-primary": "#ccc6b5",
+                        "primary-fixed-dim": "#ccc6b5",
+                        "secondary-fixed": "#dae3f5",
+                        "on-error": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#cbc6bb",
+                        "background": "#fbf9f8",
+                        "surface": "#fbf9f8",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#bec7d8",
+                        "tertiary-container": "#f9f9f9",
+                        "primary-fixed": "#e8e2d0",
+                        "tertiary-fixed": "#e2e2e2",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-tertiary-container": "#717273",
+                        "on-tertiary": "#ffffff",
+                        "primary": "#625f50",
+                        "on-background": "#1b1c1c",
+                        "on-primary-fixed": "#1e1c11",
+                        "outline": "#7a776e",
+                        "inverse-on-surface": "#f2f0f0",
+                        "surface-tint": "#625f50",
+                        "on-surface-variant": "#49473f",
+                        "surface-dim": "#dbdad9",
+                        "on-secondary-container": "#5c6574",
+                        "tertiary": "#5d5f5f",
+                        "error-container": "#ffdad6",
+                        "on-primary-container": "#767263",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "surface-bright": "#fbf9f8",
+                        "surface-container-low": "#f5f3f3",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "secondary": "#565f6e",
+                        "surface-container": "#efeded",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#4a4739",
+                        "surface-container-highest": "#e4e2e2",
+                        "surface-container-high": "#eae8e7",
+                        "on-surface": "#1b1c1c",
+                        "on-secondary-fixed": "#131c29",
+                        "primary-container": "#fff9e6",
+                        "secondary-container": "#dae3f5",
+                        "on-secondary-fixed-variant": "#3e4756",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#303030"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "16px",
+                        "gutter-grid": "16px",
+                        "stack-lg": "32px",
+                        "margin-page": "24px",
+                        "stack-sm": "8px",
+                        "inset-card": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-diary": ["Literata"],
+                        "label-sm": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-md-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-diary": ["17px", {"lineHeight": "30px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #fff9e6;
+            overflow-x: hidden;
+        }
+
+        .resonance-node {
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+            cursor: pointer;
+            z-index: 20;
+        }
+
+        .resonance-node:hover {
+            transform: scale(1.1);
+        }
+
+        .story-cluster {
+            height: 540px;
+            position: relative;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .pulse-glow {
+            animation: pulse 4s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(98, 95, 80, 0.1); }
+            70% { box-shadow: 0 0 0 15px rgba(98, 95, 80, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(98, 95, 80, 0); }
+        }
+
+        .line-connector {
+            stroke: rgba(98, 95, 80, 0.4);
+            stroke-dasharray: 4, 4;
+            animation: dash 30s linear infinite;
+        }
+
+        @keyframes dash {
+            to { stroke-dashoffset: -100; }
+        }
+
+        .cluster-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.15;
+            z-index: 0;
+        }
+
+        .back-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.2s ease, transform 0.15s ease;
+        }
+
+        .back-btn:hover {
+            background-color: rgba(98, 95, 80, 0.08);
+        }
+
+        .back-btn:active {
+            transform: scale(0.92);
+        }
+    </style>
+</head>
+<body class="font-body-lg text-on-surface" style="background-color: #fff9e6; overflow-x: hidden;">
+<!-- TopAppBar -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-xl border-none">
+    <div class="flex justify-between items-center w-full px-margin-page py-4 max-w-[720px] mx-auto">
+        <div class="flex items-center gap-2">
+            <!-- 返回按钮 -->
+            <a href="javascript:history.back()" class="back-btn">
+                <span class="material-symbols-outlined text-on-surface text-[22px]">arrow_back</span>
+            </a>
+            <h1 class="font-headline-md text-headline-md-mobile text-primary">Crystal Ball World</h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <button class="material-symbols-outlined text-on-surface hover:opacity-70 transition-opacity active:scale-95 transition-transform" data-icon="search">search</button>
+        </div>
+    </div>
+</nav>
+
+<!-- Resonance Canvas (Scrollable) -->
+<main class="pt-24 pb-32 px-margin-page max-w-[720px] mx-auto">
+    <div class="flex flex-col items-center mb-12 text-center">
+        <h2 class="font-headline-md text-headline-md-mobile text-primary mb-2">共鸣池</h2>
+        <p class="font-label-sm text-on-surface-variant/60 uppercase tracking-widest">与你频率相同的灵魂相遇</p>
+    </div>
+    <div class="space-y-4" id="scroll-container">
+        <!-- Cluster 1: Your Story (Original but updated) -->
+        <section class="story-cluster" id="cluster-0">
+            <div class="cluster-bg">
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary-container rounded-full blur-[100px]"></div>
+            </div>
+            <svg class="absolute inset-0 w-full h-full pointer-events-none cluster-lines" id="lines-0"></svg>
+            <div class="relative z-10 w-44 h-44 glass-panel rounded-full flex flex-col items-center justify-center p-6 text-center shadow-[0px_10px_30px_rgba(90,90,90,0.05)] pulse-glow cursor-default center-node">
+                <div class="absolute -top-1 right-2 bg-primary text-white text-[10px] px-2 py-0.5 rounded-full uppercase font-bold tracking-tighter">你的故事</div>
+                <span class="material-symbols-outlined text-primary text-4xl mb-2" data-icon="auto_awesome">auto_awesome</span>
+                <p class="font-body-diary text-on-surface leading-tight line-clamp-3">"我想完成项目开发……"</p>
+            </div>
+            <div class="resonance-node absolute top-12 left-10 w-20 h-20 glass-panel rounded-full flex items-center justify-center shadow-lg float-animation" onclick="toggleDetails('林深...')" style="animation-delay: 0s;">
+                <p class="text-[11px] text-on-surface font-medium">林深...</p>
+            </div>
+            <div class="resonance-node absolute top-24 right-8 w-22 h-22 glass-panel rounded-full flex items-center justify-center shadow-lg float-animation" onclick="toggleDetails('知夏...')" style="animation-delay: -1.5s;">
+                <p class="text-[11px] text-on-surface font-medium">知夏...</p>
+            </div>
+            <div class="resonance-node absolute bottom-20 left-12 w-18 h-18 glass-panel rounded-full flex items-center justify-center shadow-lg float-animation" onclick="toggleDetails('浅笑...')" style="animation-delay: -3s;">
+                <p class="text-[11px] text-on-surface font-medium">浅笑...</p>
+            </div>
+            <div class="resonance-node absolute bottom-12 right-16 w-24 h-24 glass-panel rounded-full flex items-center justify-center shadow-lg float-animation" onclick="toggleDetails('Mia')" style="animation-delay: -4.5s;">
+                <p class="text-[11px] text-on-surface font-medium">Mia</p>
+            </div>
+        </section>
+
+        <!-- Cluster 2: "想要把现在的瞬间永远留住..." -->
+        <section class="story-cluster" id="cluster-1">
+            <div class="cluster-bg">
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-secondary-container rounded-full blur-[100px]"></div>
+            </div>
+            <svg class="absolute inset-0 w-full h-full pointer-events-none cluster-lines" id="lines-1"></svg>
+            <div class="relative z-10 w-44 h-44 glass-panel rounded-full flex flex-col items-center justify-center p-6 text-center shadow-[0px_10px_30px_rgba(90,90,90,0.05)] cursor-default center-node">
+                <span class="material-symbols-outlined text-secondary text-3xl mb-2" data-icon="camera">camera</span>
+                <p class="font-body-diary text-on-surface leading-tight line-clamp-3">"想要把现在的瞬间永远留住..."</p>
+            </div>
+            <div class="resonance-node absolute top-16 left-12 w-20 h-20 glass-panel rounded-full flex items-center justify-center shadow-lg float-animation" onclick="toggleDetails('莫失...')" style="animation-delay: -1s;">
+                <p class="text-[11px] text-on-surface font-medium">莫失...</p>
+            </div>
+            <div class="resonance-node absolute top-10 right-20 w-18 h-18 glass-panel rounded-full flex items-center justify-center shadow-lg float-animation" onclick="toggleDetails('年华...')" style="animation-delay: -2s;">
+                <p class="text-[11px] text-on-surface font-medium">年华...</p>
+            </div>
+            <div class="resonance-node absolute bottom-24 right-10 w-22 h-22 glass-panel rounded-full flex items-center justify-center shadow-lg float-animation" onclick="toggleDetails('旧城...')" style="animation-delay: -0.5s;">
+                <p class="text-[11px] text-on-surface font-medium">旧城...</p>
+            </div>
+        </section>
+
+        <!-- Cluster 3: "雨后的草木香气真好闻..." -->
+        <section class="story-cluster" id="cluster-2">
+            <div class="cluster-bg">
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-tertiary-container rounded-full blur-[100px]"></div>
+            </div>
+            <svg class="absolute inset-0 w-full h-full pointer-events-none cluster-lines" id="lines-2"></svg>
+            <div class="relative z-10 w-44 h-44 glass-panel rounded-full flex flex-col items-center justify-center p-6 text-center shadow-[0px_10px_30px_rgba(90,90,90,0.05)] cursor-default center-node">
+                <span class="material-symbols-outlined text-tertiary text-3xl mb-2" data-icon="nature_people">nature_people</span>
+                <p class="font-body-diary text-on-surface leading-tight line-clamp-3">"雨后的草木香气真好闻..."</p>
+            </div>
+            <div class="resonance-node absolute top-20 right-14 w-20 h-20 glass-panel rounded-full flex items-center justify-center shadow-lg float-animation" onclick="toggleDetails('微雨...')" style="animation-delay: -3s;">
+                <p class="text-[11px] text-on-surface font-medium">微雨...</p>
+            </div>
+            <div class="resonance-node absolute bottom-16 left-16 w-24 h-24 glass-panel rounded-full flex items-center justify-center shadow-lg float-animation" onclick="toggleDetails('夏至...')" style="animation-delay: -4s;">
+                <p class="text-[11px] text-on-surface font-medium">夏至...</p>
+            </div>
+            <div class="resonance-node absolute bottom-32 right-20 w-18 h-18 glass-panel rounded-full flex items-center justify-center shadow-lg float-animation" onclick="toggleDetails('清风...')" style="animation-delay: -2.5s;">
+                <p class="text-[11px] text-on-surface font-medium">清风...</p>
+            </div>
+        </section>
+    </div>
+</main>
+
+<!-- Detail Modal -->
+<div class="fixed inset-0 z-[60] bg-black/10 backdrop-blur-sm flex items-end justify-center px-4 pb-24 transition-all duration-500 opacity-0 pointer-events-none" id="detail-modal">
+    <div class="w-full max-w-[500px] glass-panel rounded-xl p-6 shadow-2xl transition-transform duration-500 translate-y-20" id="modal-content">
+        <div class="flex justify-between items-start mb-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full overflow-hidden bg-primary-fixed">
+                    <img class="w-full h-full object-cover" id="modal-avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIRBoUA0bPEilKu-qlAoBNsBcXfqEcBPQ9NrNELrznwr7vSyxk7Ch5AJi8_6beHgySSacAgMSAfTz5Z0HOgVdAKQfb5Vx8ISHzu00sf7A1e_04_Mv8xQJiFKdQtsO4hwGb_4UoGkmXGMyUuuXxx-DJ_UrmOM6XclfkhlXD9hsDPZnhAAdlbkFVhnn5Hk8ED3wWmvVQe4BhA-1p5HqoYzknyHSPeZV7oKhX692na25Om3gaB64Vn752B9F3DLCL77D0xuWvXoyOOFs"/>
+                </div>
+                <div>
+                    <h4 class="font-bold text-on-surface" id="modal-user">知夏...</h4>
+                    <p class="text-[11px] text-on-surface-variant/60" id="modal-date">Resonating 98%</p>
+                </div>
+            </div>
+            <button class="material-symbols-outlined text-on-surface-variant" data-icon="close" onclick="closeDetails()">close</button>
+        </div>
+        <p class="font-body-diary text-on-surface text-lg leading-relaxed italic" id="modal-text">"夏天快结束了，但我的项目才刚刚开始。希望我能一切顺利。"</p>
+        <div class="mt-6 flex items-center gap-4">
+            <button id="like-btn" onclick="toggleLike()" class="w-12 h-12 flex items-center justify-center glass-panel rounded-full text-on-surface-variant hover:bg-white active:scale-90 transition-all cursor-pointer">
+                <span class="material-symbols-outlined transition-all duration-300" id="like-icon" style="font-variation-settings: 'FILL' 0;">favorite</span>
+            </button>
+            <span class="text-sm text-on-surface-variant" id="like-count"></span>
+        </div>
+    </div>
+</div>
+
+<!-- Navigation Shell (BottomNavBar) -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[720px] flex justify-around items-center px-4 py-3 pb-6 bg-white/60 dark:bg-surface-container/60 backdrop-blur-[24px] z-50 rounded-t-lg shadow-[0px_-10px_30px_rgba(90,90,90,0.05)] border-t border-white/40 dark:border-outline-variant/20">
+    <a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-tertiary-fixed-variant hover:bg-white/40 transition-colors active:scale-90 duration-300" href="#">
+        <span class="material-symbols-outlined">home</span>
+        <span class="font-label-sm text-label-sm">首页</span>
+    </a>
+    <a class="flex flex-col items-center justify-center bg-white/80 dark:bg-primary-container text-primary dark:text-on-primary-container rounded-full px-4 py-1 shadow-sm active:scale-90 transition-all duration-300" href="#">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bubble_chart</span>
+        <span class="font-label-sm text-label-sm">共鸣</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-tertiary-fixed-variant hover:bg-white/40 transition-colors active:scale-90 duration-300" href="#">
+        <span class="material-symbols-outlined">group</span>
+        <span class="font-label-sm text-label-sm">好友</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-tertiary-fixed-variant hover:bg-white/40 transition-colors active:scale-90 duration-300" href="#">
+        <span class="material-symbols-outlined">person</span>
+        <span class="font-label-sm text-label-sm">我的</span>
+    </a>
+</nav>
+
+<script>
+        function drawConnectors() {
+            const clusters = document.querySelectorAll('.story-cluster');
+
+            clusters.forEach(cluster => {
+                const svg = cluster.querySelector('.cluster-lines');
+                const centerNode = cluster.querySelector('.center-node');
+                const nodes = cluster.querySelectorAll('.resonance-node');
+
+                svg.innerHTML = '';
+                const rectCenter = centerNode.getBoundingClientRect();
+                const canvasRect = svg.getBoundingClientRect();
+
+                const x1 = rectCenter.left + rectCenter.width / 2 - canvasRect.left;
+                const y1 = rectCenter.top + rectCenter.height / 2 - canvasRect.top;
+
+                nodes.forEach(node => {
+                    const rectNode = node.getBoundingClientRect();
+                    const x2 = rectNode.left + rectNode.width / 2 - canvasRect.left;
+                    const y2 = rectNode.top + rectNode.height / 2 - canvasRect.top;
+
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', x1);
+                    line.setAttribute('y1', y1);
+                    line.setAttribute('x2', x2);
+                    line.setAttribute('y2', y2);
+                    line.setAttribute('class', 'line-connector');
+                    svg.appendChild(line);
+                });
+            });
+        }
+
+        const mockData = {
+            '林深...': { text: "在这个快节奏的城市里，能有一刻的心流真是奢侈。我在为此努力。", date: "Resonating 74%", img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=100" },
+            '知夏...': { text: "夏天快结束了，但我的项目才刚刚开始。希望我能一切顺利。", date: "Resonating 98%", img: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=100" },
+            '浅笑...': { text: "加油！我完成的那一刻所有的疲惫都会消失的。", date: "Resonating 62%", img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&q=80&w=100" },
+            'Mia': { text: "我想快点做完项目，但我家猫似乎并不同意...", date: "Resonating 82%", img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=100" },
+            '莫失...': { text: "这一瞬间的美好，确实值得永远珍藏。照片有时候不够，要用心去记。", date: "Resonating 85%", img: "https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&q=80&w=100" },
+            '年华...': { text: "时间流逝得很快，留住瞬间最好的方式就是全情投入。", date: "Resonating 70%", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=100" },
+            '旧城...': { text: "怀旧的人总是想留住一切，我就是这样的人。", date: "Resonating 91%", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100" },
+            '微雨...': { text: "那种潮湿又清新的味道，是夏天最温柔的馈赠。", date: "Resonating 88%", img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=100" },
+            '夏至...': { text: "刚刚下过一场雨，空气里全是泥土的芬芳。", date: "Resonating 94%", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100" },
+            '清风...': { text: "雨后闭上眼，仿佛我能闻到那股香气。自然总是能治愈一切。", date: "Resonating 76%", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100" }
+        };
+
+        // 点赞状态
+        let isLiked = false;
+        let likeNum = 0;
+
+        function toggleLike() {
+            isLiked = !isLiked;
+            likeNum += isLiked ? 1 : -1;
+            const icon = document.getElementById('like-icon');
+            const btn = document.getElementById('like-btn');
+            const count = document.getElementById('like-count');
+
+            if (isLiked) {
+                icon.style.fontVariationSettings = "'FILL' 1";
+                btn.classList.remove('text-on-surface-variant');
+                btn.classList.add('text-red-500');
+                btn.style.transform = 'scale(1.2)';
+                setTimeout(() => { btn.style.transform = ''; }, 200);
+            } else {
+                icon.style.fontVariationSettings = "'FILL' 0";
+                btn.classList.remove('text-red-500');
+                btn.classList.add('text-on-surface-variant');
+            }
+            count.textContent = likeNum > 0 ? likeNum : '';
+        }
+
+        function toggleDetails(nickname) {
+            const data = mockData[nickname];
+            if (!data) return;
+
+            // 重置点赞状态
+            isLiked = false;
+            likeNum = 0;
+            document.getElementById('like-icon').style.fontVariationSettings = "'FILL' 0";
+            document.getElementById('like-btn').classList.remove('text-red-500');
+            document.getElementById('like-btn').classList.add('text-on-surface-variant');
+            document.getElementById('like-count').textContent = '';
+
+            const modal = document.getElementById('detail-modal');
+            const content = document.getElementById('modal-content');
+
+            document.getElementById('modal-user').innerText = nickname;
+            document.getElementById('modal-text').innerText = `"${data.text}"`;
+            document.getElementById('modal-date').innerText = data.date;
+            document.getElementById('modal-avatar').src = data.img;
+
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            content.classList.remove('translate-y-20');
+        }
+
+        function closeDetails() {
+            const modal = document.getElementById('detail-modal');
+            const content = document.getElementById('modal-content');
+
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            content.classList.add('translate-y-20');
+        }
+
+        window.addEventListener('load', drawConnectors);
+        window.addEventListener('resize', drawConnectors);
+
+        // Simple parallax effect
+        window.addEventListener('scroll', () => {
+            const scrollPos = window.scrollY;
+            document.querySelectorAll('.cluster-bg').forEach((bg, index) => {
+                bg.style.transform = `translateY(${scrollPos * 0.1 * (index + 1)}px)`;
+            });
+        });
+</script>
+</body>
+</html>

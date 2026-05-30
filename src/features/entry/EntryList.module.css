@@ -1,0 +1,28 @@
+/* ===== EntryList 全部日记 - 暖米色移动端 ===== */
+.page {
+  animation: fadeIn 0.3s ease;
+  padding-bottom: 16px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.search {
+  margin-bottom: 16px;
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
