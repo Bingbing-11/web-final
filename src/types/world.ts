@@ -11,6 +11,10 @@ export interface World {
   updatedAt: string;
   entryCount: number;
   permissions: WorldPermission[];
+  /* 设计稿新增字段 */
+  unreadCount?: number;
+  latestExcerpt?: string;
+  imageUrl?: string;
 }
 
 export interface WorldPermission {

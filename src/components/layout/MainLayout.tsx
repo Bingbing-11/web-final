@@ -3,14 +3,14 @@ import { useAuthStore } from '../../stores/useAuthStore';
 import styles from './MainLayout.module.css';
 
 const TAB_ITEMS = [
-  { to: '/', label: '世界', icon: '🌐', end: true },
-  { to: '/resonance', label: '共鸣池', icon: '✨', end: false },
-  { to: '/friends', label: '好友', icon: '👥', end: false },
-  { to: '/settings', label: '我的', icon: '👤', end: false },
-];
+  { to: '/', label: '首页', icon: 'home', end: true },
+  { to: '/resonance', label: '共鸣', icon: 'bubble_chart', end: false },
+  { to: '/friends', label: '好友', icon: 'group', end: false },
+  { to: '/settings', label: '我的', icon: 'person', end: false },
+] as const;
 
 const ROUTE_TITLES: Record<string, string> = {
-  '/': '我的世界',
+  '/': '水晶球世界',
   '/timecapsule': '时光机',
   '/friends': '好友',
   '/resonance': '共鸣池',
@@ -81,8 +81,17 @@ export default function MainLayout() {
             end={tab.end}
             className={({ isActive }) => `${styles.tabItem} ${isActive ? styles.tabActive : ''}`}
           >
-            <span className={styles.tabIcon}>{tab.icon}</span>
-            <span className={styles.tabLabel}>{tab.label}</span>
+            {({ isActive }) => (
+              <>
+                <span
+                  className={`material-symbols-outlined ${styles.tabIcon}`}
+                  style={isActive ? { fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24" } : undefined}
+                >
+                  {tab.icon}
+                </span>
+                <span className={styles.tabLabel}>{tab.label}</span>
+              </>
+            )}
           </NavLink>
         ))}
       </nav>
