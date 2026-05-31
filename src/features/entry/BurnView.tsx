@@ -23,6 +23,8 @@ const ASH_COLORS = [
   '#FD79A8', '#FFEAA7', '#DFE6E9', '#B2BEC3',
 ];
 
+const isMobile = () => window.innerWidth <= 430;
+
 function useAshCanvas(active: boolean) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const ashesRef = useRef<Ash[]>([]);
@@ -55,20 +57,31 @@ function useAshCanvas(active: boolean) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    const dpr = isMobile()
+      ? Math.min(window.devicePixelRatio || 1, 1.5)
+      : (window.devicePixelRatio || 1);
+
     const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(dpr, dpr);
     };
     resize();
     window.addEventListener('resize', resize);
 
     let frame = 0;
     const tick = () => {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.scale(dpr, dpr);
+
       frame++;
 
-      // 持续生成灰烬
-      if (frame < 180) spawn(Math.floor(3 + Math.random() * 4));
+      const spawnCount = isMobile()
+        ? Math.floor(1 + Math.random() * 2)
+        : Math.floor(3 + Math.random() * 4);
+      if (frame < 180) spawn(spawnCount);
 
       const ash = ashesRef.current;
       for (let i = ash.length - 1; i >= 0; i--) {
@@ -76,11 +89,11 @@ function useAshCanvas(active: boolean) {
         a.life++;
         a.x += a.vx + Math.sin(a.life * 0.02) * 0.3;
         a.y += a.vy;
-        a.vy += 0.01; // gravity
+        a.vy += 0.01;
         a.rotation += a.rotSpeed;
         a.opacity = Math.max(0, a.opacity - 0.003);
 
-        if (a.life > a.maxLife || a.y > canvas.height + 20 || a.opacity <= 0) {
+        if (a.life > a.maxLife || a.y > window.innerHeight + 20 || a.opacity <= 0) {
           ash.splice(i, 1);
           continue;
         }
@@ -101,13 +114,12 @@ function useAshCanvas(active: boolean) {
         ctx.restore();
       }
 
-      // 底部灰烬堆积
       if (frame > 60) {
-        const gradient = ctx.createLinearGradient(0, canvas.height - 40, 0, canvas.height);
+        const gradient = ctx.createLinearGradient(0, window.innerHeight - 40, 0, window.innerHeight);
         gradient.addColorStop(0, 'rgba(139, 111, 71, 0)');
         gradient.addColorStop(1, `rgba(139, 111, 71, ${Math.min(0.15, (frame - 60) * 0.001)})`);
         ctx.fillStyle = gradient;
-        ctx.fillRect(0, canvas.height - 40, canvas.width, 40);
+        ctx.fillRect(0, window.innerHeight - 40, window.innerWidth, 40);
       }
 
       rafRef.current = requestAnimationFrame(tick);
@@ -143,8 +155,9 @@ export default function BurnView() {
   const [visibleParagraphs, setVisibleParagraphs] = useState(0);
   const [timeLeft, setTimeLeft] = useState(60);
   const [burning, setBurning] = useState(false);
-  const [burnPhase, setBurnPhase] = useState(0); // 0=idle, 1=igniting, 2=shattering, 3=done
+  const [burnPhase, setBurnPhase] = useState(0);
   const [glowY, setGlowY] = useState(-100);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const textContainerRef = useRef<HTMLDivElement>(null);
 
@@ -153,7 +166,6 @@ export default function BurnView() {
     return entry.content.split(/\n+/).filter(p => p.trim());
   }, [entry]);
 
-  // 逐段显示
   useEffect(() => {
     if (burning || !paragraphs.length) return;
     const timer = setInterval(() => {
@@ -165,7 +177,6 @@ export default function BurnView() {
     return () => clearInterval(timer);
   }, [paragraphs, burning]);
 
-  // 倒计时
   useEffect(() => {
     if (burning) return;
     const timer = setInterval(() => {
@@ -174,17 +185,18 @@ export default function BurnView() {
     return () => clearInterval(timer);
   }, [burning]);
 
-  // 生成文字碎片
   const shards = useMemo(() => {
     if (burnPhase < 2) return [];
     const result: TextShard[] = [];
     let shardId = 0;
     const text = paragraphs.join('');
+    const mobile = isMobile();
+    const maxShards = mobile ? 80 : 200;
+    const step = Math.max(1, Math.floor(text.length / maxShards));
     for (let i = 0; i < text.length; i++) {
       const char = text[i];
       if (char.trim() === '') continue;
-      // 判断中文字符宽度更大
-      const isCN = /[\u4e00-\u9fff\u3000-\u303f\uff00-\uffef]/.test(char);
+      if (mobile && i % step !== 0 && result.length > maxShards) continue;
       result.push({
         id: shardId++,
         char,
@@ -195,19 +207,23 @@ export default function BurnView() {
         scale: 0.2 + Math.random() * 0.6,
         duration: 2.5 + Math.random() * 2,
       });
+      if (result.length >= maxShards) break;
     }
     return result;
   }, [burnPhase, paragraphs]);
 
-  // 灰烬 Canvas
   const ashCanvasRef = useAshCanvas(burnPhase >= 1);
 
-  // BURN 按钮点击
-  const handleBurn = useCallback(() => {
-    setBurning(true);
-    setBurnPhase(1); // 点燃阶段
+  const vibrate = useCallback((ms: number) => {
+    try { (navigator as any).vibrate?.(ms); } catch { /* ignore */ }
+  }, []);
 
-    // 火焰光带从上往下移动
+  const executeBurn = useCallback(() => {
+    setShowConfirm(false);
+    setBurning(true);
+    setBurnPhase(1);
+    vibrate(50);
+
     let startY = 0;
     const glowInterval = setInterval(() => {
       startY += 3;
@@ -215,47 +231,54 @@ export default function BurnView() {
       if (startY > window.innerHeight) clearInterval(glowInterval);
     }, 16);
 
-    // 1.2秒后开始碎裂
-    setTimeout(() => {
-      setBurnPhase(2);
-    }, 1200);
+    setTimeout(() => setBurnPhase(2), 1200);
 
-    // 5秒后导航
     setTimeout(async () => {
       setBurnPhase(3);
       if (id) await burnEntry(id);
       setTimeout(() => navigate('/'), 600);
     }, 5000);
-  }, [id, burnEntry, navigate]);
+  }, [id, burnEntry, navigate, vibrate]);
 
-  if (!entry) return <div>日记不存在</div>;
+  const handleBurnClick = useCallback(() => {
+    setShowConfirm(true);
+  }, []);
+
+  const handleCancel = useCallback(() => {
+    setShowConfirm(false);
+  }, []);
+
+  if (!entry) return <div className={styles.page}><div>日记不存在</div></div>;
 
   const progress = ((60 - timeLeft) / 60) * 100;
 
   return (
     <div className={`${styles.page} ${burnPhase >= 2 ? styles.shattering : ''}`}>
-      {/* 灰烬粒子 Canvas */}
       <canvas ref={ashCanvasRef} className={styles.ashCanvas} />
 
-      {/* 火焰光带 */}
+      {/* 台灯区域 */}
+      <div className={styles.lampArea}>
+        <div className={styles.lampGlow} />
+        <div className={styles.lampCone} />
+        <span className={`material-symbols-outlined ${styles.lampIcon}`} data-icon="lamp">
+          table_lamp
+        </span>
+      </div>
+
       {burnPhase >= 1 && burnPhase < 3 && (
         <div className={styles.glowLine} style={{ top: `${glowY}px` }} />
       )}
 
-      {/* 暗角遮罩 */}
       <div className={styles.vignette} />
 
-      {/* 文字内容区域 */}
       <div className={styles.textArea} ref={textContainerRef}>
         {burnPhase < 2 ? (
-          // 正常显示段落
           paragraphs.slice(0, visibleParagraphs).map((p, i) => (
             <p key={i} className={styles.paragraph} style={{ animationDelay: `${i * 0.6}s` }}>
               {p}
             </p>
           ))
         ) : (
-          // 碎片化显示：每个字符变成独立的碎片
           <div className={styles.shardContainer}>
             {shards.map(s => (
               <span
@@ -267,7 +290,7 @@ export default function BurnView() {
                   '--tx': `${s.tx}px`,
                   '--ty': `${s.ty}px`,
                   '--rotate': `${s.rotate}deg`,
-                  '--scale': s.scale,
+                  '--scale': String(s.scale),
                 } as React.CSSProperties}
               >
                 {s.char}
@@ -277,14 +300,13 @@ export default function BurnView() {
         )}
       </div>
 
-      {/* 底部操作区 */}
       {!burning && (
         <div className={styles.controls}>
           <div className={styles.timerText}>阅读倒计时 {timeLeft}s</div>
           <div className={styles.progressBar}>
             <div className={styles.progressFill} style={{ width: `${progress}%` }} />
           </div>
-          <button className={styles.burnBtn} onClick={handleBurn}>
+          <button className={styles.burnBtn} onClick={handleBurnClick}>
             <span className={styles.burnBtnIcon}>🔥</span>
             <span>BURN</span>
           </button>
@@ -292,7 +314,6 @@ export default function BurnView() {
         </div>
       )}
 
-      {/* 焚毁中提示 */}
       {burnPhase >= 1 && burnPhase < 3 && (
         <div className={styles.burningLabel}>
           <span className={styles.burningIcon}>🔥</span>
@@ -300,9 +321,24 @@ export default function BurnView() {
         </div>
       )}
 
-      {/* 底部灰烬堆积 */}
       {burnPhase >= 2 && (
         <div className={styles.ashPile} />
+      )}
+
+      {/* 确认弹窗 */}
+      {showConfirm && (
+        <div className={styles.confirmOverlay} onClick={handleCancel}>
+          <div className={styles.confirmBox} onClick={e => e.stopPropagation()}>
+            <div className={styles.confirmTitle}>确认焚烧？</div>
+            <div className={styles.confirmDesc}>
+              日记「{entry.title || '无标题'}」焚毁后将无法恢复，确定要继续吗？
+            </div>
+            <div className={styles.confirmActions}>
+              <button className={styles.confirmCancel} onClick={handleCancel}>取消</button>
+              <button className={styles.confirmBurn} onClick={executeBurn}>焚烧</button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

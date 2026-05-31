@@ -1,14 +1,54 @@
-/* ===== WorldDetail 世界详情 - 暖米色移动端 ===== */
+/* ===== WorldDetail 世界详情 - 暖白治愈风 ===== */
 
 .page {
   animation: fadeIn 0.3s ease;
-  max-width: 430px;
-  margin: 0 auto;
-  padding: 0 16px 100px;
 }
 
-.header {
+/* ── 搜索栏 ── */
+.searchWrap {
+  position: relative;
   margin-bottom: 20px;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 18px;
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 10px 16px 10px 42px;
+  font-size: 14px;
+  color: var(--text);
+  transition: var(--transition-fast);
+}
+.searchInput::placeholder {
+  color: var(--text-muted);
+}
+.searchInput:focus {
+  border-color: var(--primary-dark);
+  box-shadow: 0 0 0 3px rgba(255, 249, 230, 0.5);
+}
+
+/* ── 世界头部信息 ── */
+.worldHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.worldInfo {
+  flex: 1;
+  min-width: 0;
 }
 
 .worldName {
@@ -20,69 +60,368 @@
   gap: 8px;
 }
 
+.sealedLabel {
+  font-size: 11px;
+  color: var(--danger);
+  font-weight: 500;
+  padding: 2px 8px;
+  background: rgba(255, 107, 107, 0.1);
+  border-radius: var(--radius-pill);
+}
+
 .worldDesc {
-  font-size: 14px;
-  color: var(--text-secondary);
+  font-size: 13px;
+  color: var(--text-muted);
   margin-top: 4px;
   line-height: 1.5;
-}
-
-/* ===== 水晶球区域 ===== */
-.crystalSection {
-  width: 100%;
-  height: 280px;
-  border-radius: var(--radius-lg);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  margin-bottom: 20px;
-  background: linear-gradient(135deg, var(--primary-deeper), var(--primary-dark));
-  box-shadow: var(--shadow);
-  border: 1px solid var(--border);
 }
 
-/* ===== 操作按钮 ===== */
+/* ── 操作按钮区 ── */
 .actions {
   display: flex;
-  gap: 10px;
-  margin-bottom: 24px;
+  gap: 8px;
+  margin-bottom: 20px;
   overflow-x: auto;
-  padding-bottom: 4px;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
 .actions::-webkit-scrollbar {
   display: none;
 }
 
-/* ===== 分区标题 ===== */
+.actionBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.actionBtnPrimary {
+  background: var(--primary);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+.actionBtnPrimary:active {
+  transform: scale(0.95);
+  background: var(--primary-dark);
+}
+
+.actionBtnSecondary {
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.actionBtnSecondary:active {
+  transform: scale(0.95);
+  background: var(--bg-hover);
+}
+
+/* ── 分区标题 ── */
 .sectionTitle {
   font-size: 15px;
   font-weight: 600;
   color: var(--text);
   margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-/* ===== 已封存标签 ===== */
-.sealedLabel {
+.sectionCount {
   font-size: 12px;
-  color: var(--danger);
-  font-weight: 500;
+  font-weight: 400;
+  color: var(--text-muted);
 }
 
-/* ===== 条目列表（单列） ===== */
-.entryList {
+/* ── 时间线 ── */
+.timeline {
+  position: relative;
+  padding-left: 28px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--primary-dark), var(--border));
+}
+
+/* ── 日记卡片（时间线条目）── */
+.diaryCard {
+  position: relative;
+  margin-bottom: 20px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.diaryDot {
+  position: absolute;
+  left: -24px;
+  top: 8px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 2px solid var(--primary-dark);
+  box-shadow: 0 0 0 4px rgba(255, 249, 230, 0.4);
+  z-index: 2;
+}
+
+.diaryDotBurned {
+  background: var(--text-muted);
+  border-color: var(--text-muted);
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.04);
+}
+
+.diaryTime {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  letter-spacing: 0.02em;
+}
+
+.diaryBody {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: 0px 10px 30px rgba(90, 90, 90, 0.05);
+  transition: var(--transition-fast);
+  cursor: pointer;
+}
+
+.diaryBody:active {
+  transform: scale(0.98);
+  box-shadow: 0px 5px 15px rgba(90, 90, 90, 0.08);
+}
+
+/* ── 日记正文（截断）── */
+.diaryContent {
+  font-family: 'Literata', 'Georgia', serif;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  position: relative;
+}
+
+.diaryContentTruncated {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.diaryExpandHint {
+  font-size: 12px;
+  color: var(--primary-dark);
+  font-weight: 500;
+  margin-top: 8px;
+  font-family: var(--font);
+}
+
+/* ── 日记图片（非绝对定位）── */
+.diaryImages {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.diaryImage {
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--bg-hover);
+}
+
+.diaryImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: var(--transition);
+}
+
+/* ── 日记底部互动 ── */
+.diaryFooter {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.diaryCommentBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-inset);
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  transition: var(--transition-fast);
+}
+
+.diaryCommentBtn:active {
+  transform: scale(0.95);
+  background: var(--bg-hover);
+}
+
+/* ── 灰烬/封存日记 ── */
+.diaryBodyFaded {
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  opacity: 0.6;
+  cursor: default;
+}
+
+.diaryContentFaded {
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+/* ── 日记弹框 ── */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: overlayIn 0.25s ease;
+}
+
+.modalSheet {
+  width: 100%;
+  max-width: 430px;
+  max-height: 85vh;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  animation: sheetUp 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  overflow: hidden;
 }
 
-/* ===== 空状态 ===== */
-.empty {
-  text-align: center;
-  padding: 32px 16px;
+.modalHandle {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border-medium);
+  margin: 10px auto 0;
+  flex-shrink: 0;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px 10px;
+  flex-shrink: 0;
+}
+
+.modalTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.modalClose {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--bg-hover);
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 18px;
+  transition: var(--transition-fast);
+}
+.modalClose:active {
+  transform: scale(0.9);
+  background: var(--border-medium);
 }
 
-/* ===== 底部导航 ===== */
+.modalBody {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 20px 20px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.modalDate {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.modalContent {
+  font-family: 'Literata', 'Georgia', serif;
+  font-size: 16px;
+  line-height: 1.9;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.modalImages {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.modalImage {
+  width: 100%;
+  max-height: 240px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--bg-hover);
+}
+
+.modalImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modalEmotion {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--primary);
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+/* ── 底部快捷操作 ── */
 .bottomNav {
   display: flex;
   gap: 10px;
@@ -90,8 +429,40 @@
   justify-content: center;
 }
 
-/* ===== 动画 ===== */
+/* ── 空状态 ── */
+.empty {
+  text-align: center;
+  padding: 40px 16px;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.emptyIcon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+/* ── 搜索无结果 ── */
+.searchEmpty {
+  text-align: center;
+  padding: 32px 16px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* ── 动画 ── */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes sheetUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
 }

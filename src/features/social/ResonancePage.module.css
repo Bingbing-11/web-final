@@ -1,286 +1,441 @@
-/* ===== ResonancePage 共鸣池 - 暖米色移动端 ===== */
+/* ===== ResonancePage 共鸣池 - 星系集群深空主题 ===== */
+
+/* ── 页面 ── */
 .page {
-  animation: fadeIn 0.3s ease;
-  padding-bottom: 16px;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.title {
-  font-size: 24px;
-  font-weight: 700;
-}
-
-.subtitle {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-top: 4px;
-}
-
-/* Publish form */
-.publishCard {
-  padding: 20px;
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border);
-  margin-bottom: 24px;
-}
-
-.publishTitle {
-  font-size: 15px;
-  font-weight: 600;
-  margin-bottom: 12px;
-}
-
-.publishForm {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.publishRow {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.anonToggle {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: var(--text-secondary);
-  cursor: pointer;
-}
-
-.toggleSwitch {
-  width: 36px;
-  height: 20px;
-  border-radius: 10px;
-  background: var(--border-medium);
-  position: relative;
-  transition: var(--transition);
-}
-
-.toggleSwitch.active {
-  background: var(--primary-dark);
-}
-
-.toggleSwitch::after {
-  content: '';
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: white;
-  transition: var(--transition);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-.toggleSwitch.active::after {
-  left: 18px;
-}
-
-/* Flex spacer */
-.publishSpacer {
-  flex: 1;
-}
-
-/* Filter bar */
-.filterBar {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-  align-items: center;
-}
-
-.filterChip {
-  padding: 6px 14px;
-  border-radius: var(--radius-pill);
-  font-size: 13px;
-  border: 1px solid var(--border);
-  cursor: pointer;
-  transition: var(--transition);
-  background: var(--bg-card);
-}
-
-.filterChip:active {
-  transform: scale(0.97);
-}
-
-.filterChip.active {
-  background: var(--primary-dark);
-  color: var(--text);
-  border-color: var(--primary-dark);
-}
-
-/* Resonance cloud - 单列移动端 */
-.cloud {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 0;
-}
-
-.resonanceItem {
-  padding: 16px;
-  background: var(--bg-card);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border);
-  width: 100%;
-  transition: var(--transition);
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0f0a1e 0%, #1a1035 30%, #0d0b1a 100%);
+  padding: 0 20px 40px;
+  color: #e0dce8;
+  animation: pageIn 0.4s ease;
   position: relative;
   overflow: hidden;
-  animation: fadeInUp 0.4s ease;
 }
 
-.resonanceItem:active {
-  transform: scale(0.99);
+/* ── 全局动态星空（页面级背景） ── */
+.globalStars {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
 }
 
-.resonanceAccent {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  background: var(--emotion-color, var(--primary-dark));
-}
-
-.resonanceHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  padding-left: 8px;
-}
-
-.resonanceAuthor {
+/* ── 页面描述 ── */
+.pageDesc {
+  text-align: center;
   font-size: 13px;
-  font-weight: 500;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0 0 24px;
+  padding-top: 4px;
+  position: relative;
+  z-index: 1;
 }
 
-.resonanceTime {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-.resonanceEmotion {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 12px;
-  padding: 2px 10px;
-  border-radius: var(--radius-pill);
-  background: var(--bg-hover);
-  margin-bottom: 8px;
-  margin-left: 8px;
-}
-
-.emotionDot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--emotion-color, var(--text-muted));
-}
-
-.resonanceContent {
-  font-size: 14px;
-  line-height: 1.7;
-  color: var(--text);
-  padding-left: 8px;
-  margin-bottom: 10px;
-}
-
-.resonanceKeywords {
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-  padding-left: 8px;
-  margin-bottom: 10px;
-}
-
-.resonanceKeyword {
-  padding: 2px 10px;
-  border-radius: var(--radius-pill);
-  font-size: 11px;
-  background: var(--primary);
-  color: var(--text-secondary);
-}
-
-.resonanceWorld {
-  font-size: 11px;
-  color: var(--text-muted);
-  padding-left: 8px;
-  margin-bottom: 8px;
-}
-
-.reactions {
-  display: flex;
-  gap: 6px;
-  padding-left: 8px;
-  padding-top: 10px;
-  border-top: 1px solid var(--border);
-  flex-wrap: wrap;
-}
-
-.reactionBtn {
-  padding: 4px 10px;
-  border-radius: var(--radius-pill);
-  font-size: 14px;
-  border: 1px solid var(--border);
-  background: var(--bg-card);
-  cursor: pointer;
-  transition: var(--transition);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.reactionBtn:active {
-  transform: scale(0.95);
-}
-
-.reactionBtn.active {
-  border-color: var(--primary-dark);
-  background: var(--primary);
-}
-
-.reactionCount {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
+/* ── Empty ── */
 .empty {
   text-align: center;
-  padding: 60px 20px;
-  color: var(--text-muted);
+  padding: 80px 20px;
+  color: rgba(255, 255, 255, 0.35);
   font-size: 14px;
+  line-height: 2;
+  position: relative;
+  z-index: 1;
 }
 
 .emptyIcon {
-  font-size: 48px;
-  margin-bottom: 12px;
+  font-size: 56px;
+  margin-bottom: 16px;
 }
 
-/* World select dropdown */
-.worldSelect {
-  padding: 6px 12px;
-  border-radius: var(--radius-pill);
-  border: 1px solid var(--border);
-  background: var(--bg-card);
-  color: var(--text);
+/* ── Cluster list ── */
+.clusterList {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ══════════════════════════════════════════
+   星系集群
+   ══════════════════════════════════════════ */
+.cluster {
+  position: relative;
+  width: 100%;
+  height: 340px;
+  border-radius: 24px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(255, 255, 255, 0.01) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+/* ── Canvas 动态星空 ── */
+.starCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── SVG 连线 ── */
+.connectorSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ══════════════════════════════════════════
+   中央节点
+   ══════════════════════════════════════════ */
+.centerNode {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  border-width: 2px;
+  border-style: solid;
+  z-index: 3;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 10px;
+  gap: 2px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: centerPulse 3s ease-in-out infinite;
+  box-shadow:
+    0 0 20px hsla(var(--hue, 220), 60%, 50%, 0.35),
+    0 0 40px hsla(var(--hue, 220), 60%, 50%, 0.15);
+}
+
+/* 中央节点光晕 */
+.centerNode::after {
+  content: '';
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  border: 1px solid hsla(var(--hue, 220), 50%, 55%, 0.2);
+  animation: haloPulse 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.centerNode:active {
+  transform: translate(-50%, -50%) scale(0.92);
+}
+
+/* 中央标签 "我的故事" */
+.centerLabel {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.centerText {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+  line-height: 1.35;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}
+
+/* ══════════════════════════════════════════
+   卫星节点
+   ══════════════════════════════════════════ */
+.satNode {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border-width: 1.5px;
+  border-style: solid;
+  z-index: 3;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  transition: transform 0.2s ease;
+  animation: satFloat 4s ease-in-out infinite;
+  animation-delay: var(--float-delay, 0s);
+}
+
+.satNode:active {
+  transform: translate(-50%, -50%) scale(0.88);
+}
+
+.satText {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.75);
+  text-align: center;
+  line-height: 1.25;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* ── 集群信息标签 ── */
+.clusterInfo {
+  position: absolute;
+  bottom: 12px;
+  left: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  z-index: 4;
+}
+
+.emotionTag {
   font-size: 13px;
-  font-family: var(--font);
+  font-weight: 600;
+}
+
+.keyword {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.3);
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ══════════════════════════════════════════
+   居中弹框
+   ══════════════════════════════════════════ */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 24px;
+  animation: fadeIn 0.2s ease;
+}
+
+.modalCard {
+  background: linear-gradient(135deg, #1e1640 0%, #161030 100%);
+  border-radius: 20px;
+  border-top: 3px solid;
+  padding: 24px;
+  width: 100%;
+  max-width: 320px;
+  position: relative;
+  animation: scaleIn 0.25s ease;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.modalClose {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 18px;
+}
+
+.modalClose:active {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.modalEmotion {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.modalAuthor {
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 16px;
+}
+
+.modalContent {
+  font-size: 14px;
+  line-height: 1.85;
+  color: rgba(255, 255, 255, 0.88);
+  margin-bottom: 16px;
+}
+
+.modalWorld {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 6px;
+}
+
+/* ── 弹框底部 ── */
+.modalFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modalTime {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+/* ══════════════════════════════════════════
+   ❤️ 共鸣按钮
+   ══════════════════════════════════════════ */
+.resonanceBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.resonanceBtn:active {
+  transform: scale(0.92);
+}
+
+.resonanceIcon {
+  font-size: 14px;
+  line-height: 1;
+  transition: transform 0.25s ease;
+}
+
+.resonanceLabel {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 500;
+}
+
+.resonanceCount {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 600;
+  min-width: 12px;
+  text-align: center;
+}
+
+/* 已共鸣状态 */
+.resonanceLiked {
+  border-color: rgba(255, 107, 129, 0.3);
+  background: rgba(255, 107, 129, 0.08);
+}
+
+.resonanceLiked .resonanceLabel {
+  color: rgba(255, 150, 170, 0.85);
+}
+
+.resonanceLiked .resonanceCount {
+  color: rgba(255, 150, 170, 0.7);
+}
+
+/* 点赞爆发动画 */
+.resonanceBurst .resonanceIcon {
+  animation: heartBurst 0.6s ease;
+}
+
+/* ══════════════════════════════════════════
+   动画
+   ══════════════════════════════════════════ */
+@keyframes pageIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 中央节点脉冲 */
+@keyframes centerPulse {
+  0%, 100% {
+    filter: brightness(1);
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    filter: brightness(1.12);
+    transform: translate(-50%, -50%) scale(1.03);
+  }
+}
+
+/* 中央光晕脉冲 */
+@keyframes haloPulse {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(1.15);
+  }
+}
+
+/* 卫星节点浮动 */
+@keyframes satFloat {
+  0%, 100% {
+    transform: translate(-50%, -50%) translateY(0);
+  }
+  50% {
+    transform: translate(-50%, -50%) translateY(-4px);
+  }
+}
+
+/* ❤️ 爆发动画 */
+@keyframes heartBurst {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.5);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  75% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
 }

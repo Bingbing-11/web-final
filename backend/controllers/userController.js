@@ -50,4 +50,48 @@ async function updateProfile(req, res, next) {
   }
 }
 
-module.exports = { searchUser, updateProfile };
+// GET /api/users/stats
+async function getStats(req, res, next) {
+  try {
+    const userId = req.user.id;
+
+    // 总条目数
+    const [memoriesRow] = await execute(
+      "SELECT COUNT(*) as total FROM entries WHERE user_id = ? AND status != 'deleted'",
+      [userId]
+    );
+    const memoriesCount = memoriesRow.total;
+
+    // 查询所有有记录的不同日期（倒序），用于计算连续天数
+    const dateRows = await execute(
+      "SELECT DISTINCT DATE(created_at) as entry_date FROM entries WHERE user_id = ? AND status != 'deleted' ORDER BY entry_date DESC",
+      [userId]
+    );
+
+    // 计算从今天向前的连续记录天数
+    let streakDays = 0;
+    if (dateRows.length > 0) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      for (let i = 0; i < dateRows.length; i++) {
+        const expected = new Date(today);
+        expected.setDate(expected.getDate() - i);
+        const rowDate = new Date(dateRows[i].entry_date);
+        rowDate.setHours(0, 0, 0, 0);
+
+        if (rowDate.getTime() === expected.getTime()) {
+          streakDays++;
+        } else {
+          break;
+        }
+      }
+    }
+
+    success(res, { memoriesCount, streakDays });
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { searchUser, updateProfile, getStats };

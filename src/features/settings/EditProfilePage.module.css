@@ -1,0 +1,297 @@
+/* ===== 页面容器 ===== */
+.page {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 20px 40px;
+  animation: fadeIn 0.3s ease;
+  position: relative;
+}
+
+/* ===== 深夜模式暗角遮罩 ===== */
+.nightOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 44;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 35%,
+    rgba(30, 25, 20, 0.15) 55%,
+    rgba(30, 25, 20, 0.35) 75%,
+    rgba(20, 15, 10, 0.5) 100%
+  );
+  transition: opacity 0.8s ease;
+  opacity: 1;
+}
+
+/* ===== 关闭按钮 ===== */
+.closeBtn {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  border: 1px solid var(--border);
+  z-index: 10;
+}
+.closeBtn:active {
+  transform: scale(0.9);
+}
+
+.closeBtn svg {
+  width: 20px;
+  height: 20px;
+  color: var(--text);
+}
+
+/* ===== 标题 ===== */
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 32px;
+  margin-top: 32px;
+}
+
+/* ===== 头像区域 ===== */
+.avatarSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.avatarRing {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  padding: 4px;
+  background: linear-gradient(135deg, var(--primary-dark), var(--accent), var(--primary-deeper));
+  box-shadow: 0 0 24px rgba(245, 230, 200, 0.3);
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--bg);
+}
+
+.avatarPlaceholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary-deeper));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52px;
+  font-weight: 700;
+  color: var(--text);
+  border: 3px solid var(--bg);
+}
+
+/* ===== 操作列表 ===== */
+.actionList {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.actionItem {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  width: 100%;
+}
+.actionItem:active {
+  transform: scale(0.97);
+  background: var(--bg-hover);
+}
+
+.actionIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.actionIcon svg {
+  width: 20px;
+  height: 20px;
+  color: var(--text-secondary);
+}
+
+.actionLabel {
+  flex: 1;
+  text-align: left;
+}
+
+.actionArrow {
+  width: 18px;
+  height: 18px;
+  color: var(--text-muted);
+  opacity: 0.4;
+}
+
+/* ===== 昵称编辑弹窗 ===== */
+.nicknameOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeInOverlay 0.2s ease;
+}
+
+.nicknameSheet {
+  width: calc(100% - 48px);
+  max-width: 360px;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: scaleIn 0.25s ease;
+}
+
+.nicknameSheetTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: center;
+}
+
+.nicknameInput {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid var(--border-medium);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 16px;
+  font-family: var(--font);
+  text-align: center;
+  transition: var(--transition-fast);
+}
+.nicknameInput:focus {
+  border-color: var(--primary-deeper);
+  outline: none;
+}
+
+.nicknameActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.nicknameCancel {
+  flex: 1;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: var(--transition-fast);
+}
+.nicknameCancel:active { transform: scale(0.97); }
+
+.nicknameSave {
+  flex: 1;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  background: var(--text);
+  color: var(--text-inverse);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: var(--transition-fast);
+}
+.nicknameSave:active {
+  transform: scale(0.97);
+  opacity: 0.8;
+}
+.nicknameSave:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ===== Toast ===== */
+.toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  padding: 12px 24px;
+  background: var(--success);
+  color: #fff;
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  animation: toastIn 0.3s ease, toastOut 0.3s ease 2s forwards;
+  white-space: nowrap;
+}
+
+.toastError {
+  background: var(--danger);
+}
+
+/* ===== 动画 ===== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-12px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@keyframes toastOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}

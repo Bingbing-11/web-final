@@ -1,411 +1,257 @@
-/* ===== FriendList 好友 - 暖米色移动端 ===== */
+/* ===== FriendList 好友 - 暖白治愈风水晶球 ===== */
+
 .page {
-  position: relative;
-  z-index: 10;
   min-height: 100vh;
-  background-color: var(--bg);
+  animation: pageIn 0.3s ease;
+  position: relative;
+  z-index: 1;
 }
 
-/* 浮动光晕 */
-.atmoDeco1 {
-  position: fixed;
-  top: 25%;
-  left: -20px;
-  width: 96px;
-  height: 96px;
-  background: rgba(245, 230, 200, 0.3);
-  border-radius: 50%;
-  filter: blur(48px);
-  pointer-events: none;
-}
-
-.atmoDeco2 {
-  position: fixed;
-  bottom: 25%;
-  right: -20px;
-  width: 128px;
-  height: 128px;
-  background: rgba(255, 138, 138, 0.15);
-  border-radius: 50%;
-  filter: blur(48px);
-  pointer-events: none;
-}
-
-/* 主内容区 */
-.main {
-  padding: 16px 20px 120px;
-  max-width: 430px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-}
-
-/* 搜索栏 */
+/* ── 搜索区域 ── */
 .searchSection {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 1;
 }
 
 .searchBar {
-  padding: 12px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: var(--bg-card);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
+  gap: 8px;
+  position: relative;
 }
 
 .searchInputWrap {
   flex: 1;
-  background: var(--bg-hover);
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchInputIcon {
+  position: absolute;
+  left: 14px;
+  font-size: 16px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   border-radius: var(--radius-pill);
+  padding: 10px 16px 10px 40px;
+  font-size: 14px;
+  color: var(--text);
+  transition: var(--transition-fast);
+}
+.searchInput::placeholder {
+  color: var(--text-muted);
+}
+.searchInput:focus {
+  border-color: var(--primary-dark);
+  box-shadow: 0 0 0 3px rgba(255, 249, 230, 0.5);
+}
+
+.searchSubmit {
+  padding: 10px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--primary);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-fast);
+}
+.searchSubmit:active {
+  transform: scale(0.95);
+  background: var(--primary-dark);
+}
+.searchSubmit:disabled {
+  opacity: 0.5;
+}
+
+/* ── 反馈提示 ── */
+.feedback {
+  margin-top: 8px;
   padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  animation: slideDown 0.25s ease;
+}
+
+.feedbackError {
+  background: rgba(255, 107, 107, 0.1);
+  color: var(--danger-dark);
+}
+
+.feedbackSuccess {
+  background: rgba(107, 203, 119, 0.1);
+  color: var(--success-dark);
+}
+
+/* ── 好友请求/已发送（可折叠） ── */
+.requestSection {
+  margin-bottom: 20px;
+}
+
+.sectionToggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+.sectionToggle:active {
+  transform: scale(0.98);
+}
+
+.sectionToggleLeft {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.searchInputIcon {
-  font-size: 18px;
-  user-select: none;
-  color: var(--text-secondary);
-}
-
-.searchInput {
-  background: transparent;
-  border: none;
-  outline: none;
-  width: 100%;
-  font-family: var(--font);
-  font-size: 14px;
-  color: var(--text);
-}
-
-.searchInput::placeholder {
-  color: var(--text-muted);
-}
-
-.searchSubmit {
-  background: var(--primary-dark);
-  color: var(--text);
-  padding: 8px 20px;
-  border-radius: var(--radius-pill);
-  border: none;
-  font-family: var(--font);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-  white-space: nowrap;
-}
-
-.searchSubmit:active:not(:disabled) {
-  transform: scale(0.97);
-}
-
-.searchSubmit:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* 区域标题 */
-.sectionHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 4px;
-}
-
-.sectionTitle {
+.sectionToggleIcon {
   font-size: 16px;
+}
+
+.sectionToggleTitle {
+  font-size: 14px;
   font-weight: 600;
   color: var(--text);
 }
 
 .sectionBadge {
-  background: var(--accent);
-  color: white;
-  font-size: 10px;
-  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--primary);
+  color: var(--text);
+  padding: 1px 8px;
   border-radius: var(--radius-pill);
-  margin-left: 8px;
 }
 
-.sectionCount {
-  font-size: 12px;
-  font-weight: 500;
+.sectionToggleArrow {
+  font-size: 10px;
   color: var(--text-muted);
+  transition: transform 0.25s ease;
 }
 
-/* 好友请求列表 */
-.requestsList {
+.sectionToggleArrowOpen {
+  transform: rotate(180deg);
+}
+
+/* ── 请求列表 ── */
+.requestList, .sentList {
+  margin-top: 8px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
-.requestItem {
-  padding: 16px;
+.requestItem, .sentItem {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 10px 12px;
   background: var(--bg-card);
-  border-radius: var(--radius);
   border: 1px solid var(--border);
-  animation: fadeInUp 0.4s ease forwards;
+  border-radius: var(--radius-sm);
+  animation: fadeInUp 0.3s ease;
   animation-delay: var(--delay, 0s);
-  opacity: 0;
+  animation-fill-mode: both;
 }
 
-.requestLeft {
+.requestLeft, .sentLeft {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
 }
 
 .requestAvatar {
-  width: 44px;
-  height: 44px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: var(--primary);
   object-fit: cover;
+  flex-shrink: 0;
 }
 
 .requestInfo {
-  display: flex;
-  flex-direction: column;
+  min-width: 0;
 }
 
 .requestName {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text);
+  display: block;
 }
 
 .requestMeta {
   font-size: 12px;
   color: var(--text-muted);
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .requestActions {
   display: flex;
-  gap: 8px;
+  gap: 6px;
+  flex-shrink: 0;
 }
 
 .actionBtn {
-  padding: 8px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: var(--bg-hover);
-  border: none;
-  cursor: pointer;
-  color: var(--text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: var(--transition);
+  transition: var(--transition-fast);
 }
-
 .actionBtn:active {
-  transform: scale(0.95);
+  transform: scale(0.9);
 }
 
-.actionBtnDanger:active {
-  background: var(--danger);
-  color: white;
+.actionBtnAccept {
+  background: rgba(107, 203, 119, 0.15);
 }
 
-.actionBtnIcon {
-  font-size: 18px;
-  user-select: none;
-}
-
-/* 好友列表 */
-.friendGrid {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.friendCard {
-  padding: 16px;
-  background: var(--bg-card);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  transition: var(--transition);
-}
-
-.friendCard:active {
-  transform: scale(0.99);
-}
-
-.friendRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.friendLeft {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.friendAvatar {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-sm);
-  object-fit: cover;
-  border: 2px solid var(--primary);
-}
-
-.friendInfo {
-  display: flex;
-  flex-direction: column;
-}
-
-.friendNameRow {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.friendName {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.friendEditBtn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  padding: 2px;
-  border-radius: 4px;
-  transition: color 0.2s;
-}
-
-.friendEditBtn:active {
-  color: var(--text);
-}
-
-.friendEditIcon {
-  font-size: 14px;
-  user-select: none;
-}
-
-.friendRemark {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.friendHoverActions {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.friendActionBtn {
-  padding: 8px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-sm);
-  transition: var(--transition);
-}
-
-.friendActionBtn:active {
-  color: var(--danger);
-}
-
-.friendActionChat:active {
-  color: var(--text);
-}
-
-.friendActionIcon {
-  font-size: 18px;
-  user-select: none;
-}
-
-/* 反馈提示 */
-.feedback {
-  font-size: 12px;
-  font-weight: 500;
-  text-align: center;
-  padding: 8px 16px;
-  border-radius: var(--radius-pill);
-}
-
-.feedbackError {
-  color: var(--danger);
+.actionBtnReject {
   background: rgba(255, 107, 107, 0.1);
 }
 
-.feedbackSuccess {
-  color: var(--success);
-  background: rgba(107, 203, 119, 0.1);
-}
-
-/* 空状态 */
-.empty {
-  text-align: center;
-  padding: 40px 20px;
-  color: var(--text-muted);
+.actionBtnIcon {
   font-size: 14px;
 }
 
-.emptyIcon {
-  font-size: 48px;
-  margin-bottom: 12px;
-  user-select: none;
-}
-
-/* 已发送请求 */
-.sentItem {
-  padding: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--bg-card);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  animation: fadeInUp 0.4s ease forwards;
-  animation-delay: var(--delay, 0s);
-  opacity: 0;
-}
-
-.sentLeft {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
 .sentAvatar {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: var(--bg-hover);
-  object-fit: cover;
+  flex-shrink: 0;
 }
 
 .sentName {
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
   color: var(--text);
 }
 
 .sentTime {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
@@ -413,40 +259,339 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
 }
 
 .sentStatus {
-  font-size: 11px;
-  font-weight: 500;
-  padding: 4px 12px;
-  border-radius: var(--radius-pill);
-  background: var(--primary);
-  color: var(--text-secondary);
+  font-size: 12px;
+  color: var(--text-muted);
 }
 
 .cancelBtn {
-  background: none;
-  border: none;
-  cursor: pointer;
   font-size: 12px;
-  color: var(--text-muted);
-  padding: 4px 8px;
-  border-radius: var(--radius-xs);
-  transition: color 0.2s;
-}
-
-.cancelBtn:active {
   color: var(--danger);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 107, 107, 0.08);
+  transition: var(--transition-fast);
+}
+.cancelBtn:active {
+  transform: scale(0.95);
 }
 
-/* 动画 */
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* ── 好友水晶球网格 ── */
+.sectionLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  letter-spacing: 0.02em;
+}
+
+.sphereGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px 20px;
+}
+
+/* ── 单个水晶球 ── */
+.sphereItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sphereWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  margin-bottom: 10px;
+}
+
+/* 光晕脉冲 */
+.sphereHalo {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 249, 230, 0.6);
+  animation: haloBreath 3s infinite ease-in-out;
+  pointer-events: none;
+}
+
+/* 水晶球主体 */
+.sphere {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0px 10px 30px rgba(90, 90, 90, 0.08);
+  transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1), box-shadow 0.3s ease;
+  position: relative;
+}
+
+/* 高光伪元素 */
+.sphere::before {
+  content: '';
+  position: absolute;
+  top: 8%;
+  left: 15%;
+  width: 35%;
+  height: 20%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 70%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* 有光环的水晶球加粗阴影 */
+.sphereItem:has(.sphereHalo) .sphere {
+  box-shadow: 0px 10px 30px rgba(90, 90, 90, 0.12);
+  ring: 4px solid rgba(255, 255, 255, 0.5);
+}
+
+/* 按下效果 */
+.sphereItem:active .sphere {
+  transform: scale(0.93);
+  box-shadow: 0px 5px 15px rgba(90, 90, 90, 0.1);
+}
+
+/* 脉冲动画（点击时触发） */
+.spherePulse {
+  animation: spherePulse 0.45s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+.sphereContent {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+/* 渐变覆盖层 */
+.sphereContent::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.08), transparent);
+  pointer-events: none;
+  border-radius: 0 0 50% 50%;
+}
+
+.sphereAvatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.sphereEmoji {
+  font-size: 32px;
+  line-height: 1;
+}
+
+/* ── 好友名 ── */
+.sphereName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sphereRemark {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 2px;
+}
+
+/* ── 管理弹窗 ── */
+.manageOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: overlayIn 0.2s ease;
+}
+
+.manageSheet {
+  width: 100%;
+  max-width: 430px;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: 20px;
+  animation: sheetUp 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.manageHandle {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border-medium);
+  margin: 0 auto 16px;
+}
+
+.manageName {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.manageActions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.manageBtn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 8px;
+  border-radius: var(--radius);
+  background: var(--bg-inset);
+  transition: var(--transition-fast);
+}
+.manageBtn:active {
+  transform: scale(0.95);
+  background: var(--bg-hover);
+}
+
+.manageBtnIcon {
+  font-size: 20px;
+}
+
+.manageBtnLabel {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.manageBtnDanger {
+  background: rgba(255, 107, 107, 0.06);
+}
+.manageBtnDanger:active {
+  background: rgba(255, 107, 107, 0.12);
+}
+
+.manageClose {
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--radius);
+  background: var(--bg-hover);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: var(--transition-fast);
+}
+.manageClose:active {
+  transform: scale(0.98);
+}
+
+/* ── 底部提示 ── */
+.bottomHint {
+  margin-top: 32px;
+  text-align: center;
+  padding-bottom: 8px;
+}
+
+.bottomHintText {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.bottomDots {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.bottomDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+/* ── 空状态 ── */
+.empty {
+  text-align: center;
+  padding: 40px 16px;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.emptyIcon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+/* ── 动画 ── */
+@keyframes pageIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes haloBreath {
+  0% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.02); }
+  100% { opacity: 0.4; transform: scale(1); }
+}
+
+@keyframes spherePulse {
+  0% { transform: scale(0.93); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes sheetUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
 }

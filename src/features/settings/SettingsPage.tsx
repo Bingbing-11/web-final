@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useThemeStore } from '../../stores/useThemeStore';
 import { useAuthStore } from '../../stores/useAuthStore';
 import Input from '../../components/common/Input';
@@ -19,7 +19,7 @@ export default function SettingsPage() {
     }
   };
 
-  const handleExport = useCallback(() => {
+  const handleExport = () => {
     const data: Record<string, unknown> = {};
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
@@ -34,7 +34,7 @@ export default function SettingsPage() {
     a.download = `private-world-backup-${new Date().toISOString().split('T')[0]}.json`;
     a.click();
     URL.revokeObjectURL(url);
-  }, []);
+  };
 
   const handleClearCache = () => {
     if (confirm('确定要清除水晶球缓存吗？')) {
@@ -103,11 +103,11 @@ export default function SettingsPage() {
           <div className={styles.scheduleRow}>
             <span className={styles.scheduleLabel}>时间范围</span>
             <input className={styles.scheduleInput} type="number" min={0} max={23} value={nightModeStart} onChange={e => handleStart(e.target.value)} />
-            <span className={styles.scheduleColon}>:</span>
-            <span className={styles.scheduleTime}>00 — </span>
+            <span style={{ color: 'var(--text-muted)' }}>:</span>
+            <span style={{ color: 'var(--text-muted)' }}>00 — </span>
             <input className={styles.scheduleInput} type="number" min={0} max={23} value={nightModeEnd} onChange={e => handleEnd(e.target.value)} />
-            <span className={styles.scheduleColon}>:</span>
-            <span className={styles.scheduleTime}>00</span>
+            <span style={{ color: 'var(--text-muted)' }}>:</span>
+            <span style={{ color: 'var(--text-muted)' }}>00</span>
           </div>
         )}
       </div>

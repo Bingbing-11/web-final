@@ -2,21 +2,31 @@ import { create } from 'zustand';
 import type { User } from '../types/user';
 import * as api from '../lib/api';
 
+interface ProfileStats {
+  memoriesCount: number;
+  streakDays: number;
+}
+
 interface AuthState {
   currentUser: User | null;
   isLoggedIn: boolean;
   isLoading: boolean;
+  profileStats: ProfileStats | null;
+  statsLoading: boolean;
   login: (username: string, password: string) => Promise<boolean>;
   register: (username: string, nickname: string, password: string) => Promise<{ ok: boolean; message?: string }>;
   logout: () => Promise<void>;
   updateProfile: (updates: Partial<User>) => Promise<void>;
   checkAuth: () => Promise<void>;
+  fetchStats: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()((set, get) => ({
   currentUser: api.tokenManager.getUser(),
   isLoggedIn: !!api.tokenManager.get(),
   isLoading: false,
+  profileStats: null,
+  statsLoading: false,
 
   login: async (username: string, password: string) => {
     try {
@@ -42,7 +52,6 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       }
       return { ok: false, message: res.message || '注册失败，请稍后再试' };
     } catch (err: any) {
-      // 后端返回的错误对象 { code, message }
       if (err && err.message) {
         return { ok: false, message: err.message };
       }
@@ -57,7 +66,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       // Ignore logout API errors
     }
     api.tokenManager.clear();
-    set({ currentUser: null, isLoggedIn: false });
+    set({ currentUser: null, isLoggedIn: false, profileStats: null });
   },
 
   updateProfile: async (updates: Partial<User>) => {
@@ -94,6 +103,20 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       set({ currentUser: null, isLoggedIn: false });
     } finally {
       set({ isLoading: false });
+    }
+  },
+
+  fetchStats: async () => {
+    set({ statsLoading: true });
+    try {
+      const res: any = await api.get('/api/users/stats');
+      if (res.code === 200 && res.data) {
+        set({ profileStats: res.data });
+      }
+    } catch {
+      // Silently fail
+    } finally {
+      set({ statsLoading: false });
     }
   },
 }));
