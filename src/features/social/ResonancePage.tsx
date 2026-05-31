@@ -245,8 +245,11 @@ export default function ResonancePage() {
       {/* 全局动态星空 */}
       <div className={styles.globalStars} id="global-stars-mount" />
 
-      {/* 页面描述 */}
-      <p className={styles.pageDesc}>相似的故事，在这里汇聚成星</p>
+      {/* 页面标题 */}
+      <div className={styles.pageHeader}>
+        <h2 className={styles.pageTitle}>共鸣池</h2>
+        <p className={styles.pageSubtitle}>与你频率相同的灵魂相遇</p>
+      </div>
 
       {/* Cluster list */}
       {clusters.length === 0 ? (
@@ -313,7 +316,8 @@ function StarCluster({
 
   const cx = containerSize.w / 2;
   const cy = containerSize.h / 2;
-  const orbitRadius = Math.min(cx, cy) * 0.58;
+  /* 轨道半径：小屏适当收缩防溢出 */
+  const orbitRadius = Math.min(cx, cy) * (containerSize.w < 380 ? 0.5 : 0.55);
 
   /* 卫星节点位置 */
   const satPositions = useMemo(() => {

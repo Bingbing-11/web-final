@@ -19,15 +19,28 @@
   pointer-events: none;
 }
 
-/* ── 页面描述 ── */
-.pageDesc {
+/* ── 页面标题 ── */
+.pageHeader {
   text-align: center;
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.4);
-  margin: 0 0 24px;
-  padding-top: 4px;
+  padding: 0 0 24px;
   position: relative;
   z-index: 1;
+}
+
+.pageTitle {
+  font-size: 22px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.92);
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+}
+
+.pageSubtitle {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 500;
 }
 
 /* ── Empty ── */
@@ -61,7 +74,7 @@
 .cluster {
   position: relative;
   width: 100%;
-  height: 340px;
+  height: 320px;
   border-radius: 24px;
   background: linear-gradient(
     135deg,
@@ -70,6 +83,20 @@
   );
   border: 1px solid rgba(255, 255, 255, 0.06);
   overflow: hidden;
+}
+
+/* 小屏缩小集群高度 */
+@media (max-height: 700px) {
+  .cluster {
+    height: 280px;
+  }
+}
+
+@media (max-width: 380px) {
+  .cluster {
+    height: 290px;
+    border-radius: 20px;
+  }
 }
 
 /* ── Canvas 动态星空 ── */
@@ -98,8 +125,8 @@
 .centerNode {
   position: absolute;
   transform: translate(-50%, -50%);
-  width: 92px;
-  height: 92px;
+  width: 88px;
+  height: 88px;
   border-radius: 50%;
   border-width: 2px;
   border-style: solid;
@@ -122,7 +149,7 @@
 .centerNode::after {
   content: '';
   position: absolute;
-  inset: -14px;
+  inset: -12px;
   border-radius: 50%;
   border: 1px solid hsla(var(--hue, 220), 50%, 55%, 0.2);
   animation: haloPulse 3s ease-in-out infinite;
@@ -131,6 +158,18 @@
 
 .centerNode:active {
   transform: translate(-50%, -50%) scale(0.92);
+}
+
+/* 小屏缩小中央节点 */
+@media (max-width: 380px) {
+  .centerNode {
+    width: 76px;
+    height: 76px;
+    padding: 6px 8px;
+  }
+  .centerNode::after {
+    inset: -10px;
+  }
 }
 
 /* 中央标签 "我的故事" */
@@ -159,8 +198,8 @@
 .satNode {
   position: absolute;
   transform: translate(-50%, -50%);
-  width: 52px;
-  height: 52px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   border-width: 1.5px;
   border-style: solid;
@@ -169,7 +208,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6px;
+  padding: 5px;
   transition: transform 0.2s ease;
   animation: satFloat 4s ease-in-out infinite;
   animation-delay: var(--float-delay, 0s);
@@ -188,6 +227,18 @@
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+}
+
+@media (max-width: 380px) {
+  .satNode {
+    width: 44px;
+    height: 44px;
+    padding: 4px;
+  }
+  .satText {
+    font-size: 9px;
+    -webkit-line-clamp: 1;
+  }
 }
 
 /* ── 集群信息标签 ── */
@@ -238,10 +289,18 @@
   border-top: 3px solid;
   padding: 24px;
   width: 100%;
-  max-width: 320px;
+  max-width: 340px;
   position: relative;
   animation: scaleIn 0.25s ease;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 380px) {
+  .modalCard {
+    max-width: calc(100vw - 40px);
+    padding: 20px;
+    border-radius: 16px;
+  }
 }
 
 .modalClose {
