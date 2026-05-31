@@ -3,24 +3,19 @@
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
-  max-width: 720px;
-  margin: 0 auto;
+  width: 100%;
   position: relative;
 }
 
-/* ── Top Header ────────────────────────────────────────────── */
+/* ── Top Header（仅首页显示） ───────────────────────────── */
 .topBar {
   position: fixed;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
   z-index: 50;
   width: 100%;
-  max-width: 720px;
-  padding: 16px var(--page-margin);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  padding: 16px 0;
   transition: var(--transition);
   background: rgba(251, 249, 248, 0.85);
   backdrop-filter: blur(20px);
@@ -28,8 +23,19 @@
 }
 
 .topBar.scrolled {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.92);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* 居中限宽内层：标题 + 右侧+按钮 */
+.topBarInner {
+  max-width: 720px;
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--page-margin);
 }
 
 .title {
@@ -39,94 +45,70 @@
   letter-spacing: -0.01em;
 }
 
-.menuBtn {
-  width: 40px;
-  height: 40px;
+/* 右侧+按钮：绝对定位在内层右侧 */
+.addBtn {
+  position: absolute;
+  right: var(--page-margin);
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  color: var(--text);
+  border: none;
+  cursor: pointer;
+  background: rgba(98, 95, 80, 0.1);
+  color: var(--primary);
   transition: var(--transition);
 }
-.menuBtn:hover { background: rgba(0, 0, 0, 0.04); }
-.menuBtn:active { transform: scale(0.95); }
-
-.searchBtn {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  color: var(--text);
-  transition: var(--transition);
-}
-.searchBtn:hover { background: rgba(0, 0, 0, 0.04); }
+.addBtn:hover { background: rgba(98, 95, 80, 0.18); }
+.addBtn:active { transform: scale(0.92); }
 
 /* ── Main Content ──────────────────────────────────────────── */
 .main {
   flex: 1;
   padding: 88px var(--page-margin) 140px;
   width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
-/* ── FAB ───────────────────────────────────────────────────── */
-.fab {
-  position: fixed;
-  bottom: 120px;
-  right: max(calc((100% - 720px) / 2 + var(--page-margin)), calc(var(--page-margin) + 8px));
-  z-index: 50;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  box-shadow: 0 4px 20px rgba(90, 90, 90, 0.08);
-  transition: var(--transition);
-  font-size: 28px;
-  color: #5A5A5A;
+/* 非首页：不需要顶部栏留白 */
+.mainNoTop {
+  padding-top: 24px;
 }
-.fab:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 28px rgba(90, 90, 90, 0.12);
-}
-.fab:active { transform: scale(0.95); }
-.fab:hover span { transform: rotate(90deg); }
-.fab span { transition: transform 0.5s var(--transition); }
 
-/* ── Bottom Navigation ─────────────────────────────────────── */
+/* ── Bottom Navigation（浮动药丸式 + 文字标签） ─────────── */
 .bottomNav {
   position: fixed;
-  bottom: 24px;
+  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  padding: 8px;
-  width: calc(100% - 48px);
-  max-width: 400px;
-  border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.6);
+  padding: 10px 16px;
+  width: 100%;
+  max-width: 720px;
+  border-radius: 24px 24px 0 0;
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--glass-border);
-  box-shadow: 0px 10px 30px rgba(90, 90, 90, 0.05);
+  border-top: 1px solid var(--glass-border);
+  box-shadow: 0 -4px 20px rgba(90, 90, 90, 0.06);
 }
 
 .navItem {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+  gap: 2px;
+  min-width: 56px;
+  padding: 4px 8px;
+  border-radius: 16px;
   color: rgba(73, 71, 63, 0.4);
   transition: var(--transition);
   text-decoration: none;
@@ -139,12 +121,23 @@
 }
 .navItem:active { transform: scale(0.9); }
 
+/* 激活态：蓝色光晕效果 */
 .navItem.active {
-  color: var(--primary);
-  background: var(--primary-container);
+  color: #4FC3F7;
+  background: rgba(79, 195, 247, 0.05);
   font-variation-settings: 'FILL' 1;
+  box-shadow: 0 0 20px 2px rgba(79, 195, 247, 0.25);
 }
 
+/* 导航文字标签 */
 .navLabel {
-  display: none;
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+.navItem.active .navLabel {
+  color: #4FC3F7;
+  font-weight: 600;
 }
