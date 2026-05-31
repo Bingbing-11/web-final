@@ -7,6 +7,7 @@ export default function MainLayout() {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const isHome = location.pathname === '/';
+  const isDarkPage = ['/resonance', '/burn'].some(p => location.pathname.startsWith(p));
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -34,7 +35,7 @@ export default function MainLayout() {
       </main>
 
       {/* ── Bottom Navigation ── */}
-      <nav className={styles.bottomNav}>
+      <nav className={`${styles.bottomNav} ${isDarkPage ? styles.darkNav : ''}`}>
         <NavLink to="/" end className={({ isActive }) =>
           `${styles.navItem} ${isActive ? styles.active : ''}`
         }>

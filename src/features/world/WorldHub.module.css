@@ -79,6 +79,12 @@
   flex-direction: column;
   gap: 12px;
   margin-bottom: 20px;
+  position: sticky;
+  top: 52px;
+  z-index: 40;
+  background: var(--bg);
+  padding: 12px 0;
+  transition: box-shadow 0.2s ease;
 }
 
 .searchBar {

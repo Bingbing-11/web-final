@@ -19,28 +19,30 @@
   pointer-events: none;
 }
 
-/* ── 页面标题 ── */
+/* ── 页面标题（固定导航栏式） ── */
 .pageHeader {
   text-align: center;
-  padding: 0 0 24px;
-  position: relative;
-  z-index: 1;
+  margin: 0 -20px;
+  padding: 16px 20px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 45;
+  background: linear-gradient(180deg, #0f0a1e 60%, transparent 100%);
 }
 
 .pageTitle {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   color: rgba(255, 255, 255, 0.92);
-  letter-spacing: -0.01em;
-  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
 }
 
 .pageSubtitle {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.35);
   letter-spacing: 0.06em;
-  text-transform: uppercase;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 /* ── Empty ── */
