@@ -46,12 +46,14 @@
   color: var(--text);
   transition: var(--transition-fast);
 }
+
 .searchInput::placeholder {
   color: var(--text-muted);
 }
+
 .searchInput:focus {
   border-color: var(--primary-dark);
-  box-shadow: 0 0 0 3px rgba(255, 249, 230, 0.5);
+  box-shadow: 0 0 0 3px rgba(98, 95, 80, 0.15);
 }
 
 .searchSubmit {
@@ -65,10 +67,12 @@
   box-shadow: var(--shadow-sm);
   transition: var(--transition-fast);
 }
+
 .searchSubmit:active {
   transform: scale(0.95);
   background: var(--primary-dark);
 }
+
 .searchSubmit:disabled {
   opacity: 0.5;
 }
@@ -83,7 +87,7 @@
 }
 
 .feedbackError {
-  background: rgba(255, 107, 107, 0.1);
+  background: rgba(186, 26, 26, 0.08);
   color: var(--danger-dark);
 }
 
@@ -109,6 +113,7 @@
   transition: var(--transition-fast);
   -webkit-tap-highlight-color: transparent;
 }
+
 .sectionToggle:active {
   transform: scale(0.98);
 }
@@ -149,14 +154,16 @@
 }
 
 /* ── 请求列表 ── */
-.requestList, .sentList {
+.requestList,
+.sentList {
   margin-top: 8px;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.requestItem, .sentItem {
+.requestItem,
+.sentItem {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -169,7 +176,8 @@
   animation-fill-mode: both;
 }
 
-.requestLeft, .sentLeft {
+.requestLeft,
+.sentLeft {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -220,6 +228,7 @@
   justify-content: center;
   transition: var(--transition-fast);
 }
+
 .actionBtn:active {
   transform: scale(0.9);
 }
@@ -229,7 +238,7 @@
 }
 
 .actionBtnReject {
-  background: rgba(255, 107, 107, 0.1);
+  background: rgba(186, 26, 26, 0.08);
 }
 
 .actionBtnIcon {
@@ -272,9 +281,10 @@
   color: var(--danger);
   padding: 4px 10px;
   border-radius: var(--radius-pill);
-  background: rgba(255, 107, 107, 0.08);
+  background: rgba(186, 26, 26, 0.06);
   transition: var(--transition-fast);
 }
+
 .cancelBtn:active {
   transform: scale(0.95);
 }
@@ -309,12 +319,15 @@
   margin-bottom: 10px;
 }
 
-/* 光晕脉冲 */
+/* 光晕脉冲 —— 暖金亮光 */
 .sphereHalo {
   position: absolute;
-  inset: -4px;
+  inset: -6px;
   border-radius: 50%;
-  border: 2px solid rgba(255, 249, 230, 0.6);
+  border: 2.5px solid rgba(200, 180, 100, 0.8);
+  box-shadow:
+    0 0 12px 2px rgba(200, 180, 100, 0.35),
+    inset 0 0 8px 1px rgba(200, 180, 100, 0.15);
   animation: haloBreath 3s infinite ease-in-out;
   pointer-events: none;
 }
@@ -330,28 +343,17 @@
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.4);
   box-shadow: 0px 10px 30px rgba(90, 90, 90, 0.08);
-  transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1), box-shadow 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
   position: relative;
-}
-
-/* 高光伪元素 */
-.sphere::before {
-  content: '';
-  position: absolute;
-  top: 8%;
-  left: 15%;
-  width: 35%;
-  height: 20%;
-  border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 70%);
-  pointer-events: none;
-  z-index: 3;
 }
 
 /* 有光环的水晶球加粗阴影 */
 .sphereItem:has(.sphereHalo) .sphere {
-  box-shadow: 0px 10px 30px rgba(90, 90, 90, 0.12);
-  ring: 4px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0px 10px 30px rgba(200, 180, 100, 0.18);
+  box-shadow + box-shadow; /* 不支持则忽略 */
+  outline: 4px solid rgba(200, 180, 100, 0.45);
+  outline-offset: -1px;
+  border-radius: 50%;
 }
 
 /* 按下效果 */
@@ -479,6 +481,7 @@
   background: var(--bg-inset);
   transition: var(--transition-fast);
 }
+
 .manageBtn:active {
   transform: scale(0.95);
   background: var(--bg-hover);
@@ -495,10 +498,11 @@
 }
 
 .manageBtnDanger {
-  background: rgba(255, 107, 107, 0.06);
+  background: rgba(186, 26, 26, 0.06);
 }
+
 .manageBtnDanger:active {
-  background: rgba(255, 107, 107, 0.12);
+  background: rgba(186, 26, 26, 0.12);
 }
 
 .manageClose {
@@ -511,6 +515,7 @@
   color: var(--text-secondary);
   transition: var(--transition-fast);
 }
+
 .manageClose:active {
   transform: scale(0.98);
 }
@@ -558,6 +563,25 @@
   margin-bottom: 12px;
 }
 
+/* ── 管理按钮（顶部栏右侧） ── */
+.manageBtn {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.manageBtn:active {
+  opacity: 0.6;
+  transform: scale(0.96);
+}
+
 /* ── 动画 ── */
 @keyframes pageIn {
   from { opacity: 0; }
@@ -565,9 +589,9 @@
 }
 
 @keyframes haloBreath {
-  0% { opacity: 0.4; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.02); }
-  100% { opacity: 0.4; transform: scale(1); }
+  0% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.03); }
+  100% { opacity: 0.5; transform: scale(1); }
 }
 
 @keyframes spherePulse {

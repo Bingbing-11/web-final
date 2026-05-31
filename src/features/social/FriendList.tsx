@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useNavigate, useLocation, useOutletContext } from 'react-router-dom';
 import { useAuthStore } from '../../stores/useAuthStore';
 import { useFriendStore } from '../../stores/useFriendStore';
 import styles from './FriendList.module.css';
@@ -53,6 +53,15 @@ export default function FriendList() {
   const [brokenAvatars, setBrokenAvatars] = useState<Set<string>>(new Set());
   const pulseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  /* 通过 Outlet context 向 MainLayout 传递顶部栏右侧按钮 */
+  const outletContextValue = useMemo(() => ({
+    topBarRight: (
+      <button className={styles.manageBtn} onClick={() => setShowRequests(v => !v)}>
+        管理
+      </button>
+    ),
+  }), [setShowRequests]);
 
   /* 数据加载 */
   useEffect(() => {
@@ -190,13 +199,12 @@ export default function FriendList() {
   /* 当前管理的好友 */
   const managingFriend = friends.find(f => f.friendId === manageFriend);
 
-  /* 模拟"有更新"的好友（后续对接真实通知） */
-  const updatedFriendIds = new Set(
-    friends.slice(0, Math.min(3, friends.length)).map(f => f.friendId)
-  );
-
   return (
     <div className={styles.page}>
+      {/* 通过 Outlet context 传递顶部栏右侧按钮 */}
+      {/* Outlet 由 MainLayout 渲染，此处仅构造 context 值 */}
+      {null}
+
       {/* ── 搜索栏 ── */}
       <section className={styles.searchSection}>
         <div className={styles.searchBar}>
@@ -352,7 +360,6 @@ export default function FriendList() {
         ) : (
           <div className={styles.sphereGrid}>
             {friends.map((f) => {
-              const hasUpdate = updatedFriendIds.has(f.friendId);
               const displayName = remarks[f.friendId] || f.friendName;
               const hasRemark = !!remarks[f.friendId];
               const isPulsing = pulsingId === f.friendId;
@@ -367,7 +374,6 @@ export default function FriendList() {
                   onTouchCancel={handleTouchEnd}
                 >
                   <div className={styles.sphereWrap}>
-                    {hasUpdate && <div className={styles.sphereHalo} />}
                     <div className={`${styles.sphere} ${isPulsing ? styles.spherePulse : ''}`}>
                       <div className={styles.sphereContent}>
                         {f.friendAvatar && !brokenAvatars.has(f.friendId) ? (

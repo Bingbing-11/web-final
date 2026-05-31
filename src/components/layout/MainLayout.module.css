@@ -27,15 +27,63 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
-/* 居中限宽内层：标题 + 右侧+按钮 */
+/* ── 非首页固定顶部栏 ─────────────────────── */
+.subTopBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: rgba(251, 249, 248, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* 限宽内层 */
 .topBarInner {
   max-width: 720px;
   margin: 0 auto;
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 56px;
   padding: 0 var(--page-margin);
+  position: relative;
+}
+
+/* 子页面标题 */
+.subTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+/* 顶部栏右侧操作区 */
+.topBarRight {
+  position: absolute;
+  right: var(--page-margin);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topBarRightBtn {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+.topBarRightBtn:active {
+  opacity: 0.6;
+  transform: scale(0.96);
 }
 
 .title {
