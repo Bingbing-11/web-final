@@ -1,0 +1,281 @@
+/* ===== 水晶球容器 ===== */
+
+.orbContainer {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.orbSmall {
+  --orb-scale: 0.65;
+}
+
+.orbContainer:not(.orbSmall) {
+  --orb-scale: 1;
+}
+
+/* ── 发光底座 ── */
+
+.orbBase {
+  width: calc(75% * var(--orb-scale));
+  height: calc(20px * var(--orb-scale));
+  border-radius: 50%;
+  filter: blur(10px);
+  margin-bottom: calc(-10px * var(--orb-scale));
+  opacity: 0.8;
+  animation: baseGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes baseGlow {
+  from { opacity: 0.6; filter: blur(8px); transform: scale(0.95); }
+  to { opacity: 0.95; filter: blur(12px); transform: scale(1.05); }
+}
+
+/* ── 球体外壳 ── */
+
+.orbShell {
+  position: relative;
+  width: calc(100% * var(--orb-scale));
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  overflow: hidden;
+  /* 玻璃球体：更强的外发光 + 内部折射 */
+  box-shadow:
+    /* 外部柔和投影 */
+    0 12px 40px rgba(0, 0, 0, 0.15),
+    0 6px 16px rgba(0, 0, 0, 0.1),
+    /* 底部暖光 */
+    0 16px 32px -6px rgba(255, 200, 120, 0.2),
+    /* 顶部冷光 */
+    0 -4px 20px rgba(255, 255, 255, 0.15),
+    /* 内部阴影 - 模拟玻璃厚度 */
+    inset 0 -6px 16px rgba(0, 0, 0, 0.2),
+    inset 0 6px 16px rgba(255, 255, 255, 0.35),
+    inset -3px -3px 10px rgba(0, 0, 0, 0.12),
+    inset 3px 3px 10px rgba(255, 255, 255, 0.25);
+  animation: orbBreathe 6s ease-in-out infinite;
+}
+
+@keyframes orbBreathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+/* ── 内部场景 ── */
+
+.orbScene {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+/* 地面/雪地 */
+.orbGround {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 45%;
+  border-radius: 50% 50% 0 0;
+  filter: blur(1px);
+}
+
+/* 中心建筑 */
+.orbCenter {
+  position: absolute;
+  bottom: 22%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.orbHouse {
+  width: calc(32px * var(--orb-scale));
+  height: calc(24px * var(--orb-scale));
+  border-radius: 2px 2px 0 0;
+  position: relative;
+  opacity: 0.85;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.orbRoof {
+  position: absolute;
+  top: calc(-14px * var(--orb-scale));
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: calc(20px * var(--orb-scale)) solid transparent;
+  border-right: calc(20px * var(--orb-scale)) solid transparent;
+  border-bottom: calc(16px * var(--orb-scale)) solid rgba(255, 255, 255, 0.9);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}
+
+.orbWindow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(10px * var(--orb-scale));
+  height: calc(10px * var(--orb-scale));
+  background: rgba(255, 240, 200, 0.9);
+  border-radius: 1px;
+  box-shadow: 0 0 8px rgba(255, 220, 150, 0.6), inset 0 0 4px rgba(255, 200, 100, 0.4);
+  animation: windowGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes windowGlow {
+  from { box-shadow: 0 0 6px rgba(255, 220, 150, 0.4), inset 0 0 3px rgba(255, 200, 100, 0.3); }
+  to { box-shadow: 0 0 12px rgba(255, 220, 150, 0.8), inset 0 0 6px rgba(255, 200, 100, 0.5); }
+}
+
+/* 两侧装饰树 */
+.orbTreeLeft,
+.orbTreeRight {
+  position: absolute;
+  bottom: 18%;
+  width: 0;
+  height: 0;
+  border-left: calc(10px * var(--orb-scale)) solid transparent;
+  border-right: calc(10px * var(--orb-scale)) solid transparent;
+  border-bottom: calc(22px * var(--orb-scale)) solid;
+  opacity: 0.7;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.orbTreeLeft {
+  left: 22%;
+  transform: scale(0.85);
+}
+
+.orbTreeRight {
+  right: 22%;
+  transform: scale(0.75);
+}
+
+/* ── 飘雪粒子 ── */
+
+.orbParticles {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  left: var(--px);
+  top: var(--py);
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  opacity: 0;
+  animation: snowfall var(--duration) linear var(--delay) infinite;
+  filter: blur(0.3px);
+  box-shadow: 0 0 3px currentColor;
+}
+
+@keyframes snowfall {
+  0% {
+    opacity: 0;
+    transform: translateY(0) translateX(0);
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(calc(80px * var(--orb-scale))) translateX(calc(15px * var(--orb-scale)));
+  }
+}
+
+/* ── 玻璃折射层 ── */
+
+.orbGlass {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  /* 玻璃表面：更透明，让内部场景清晰可见 */
+  background:
+    /* 左上主高光 - 更强的弧形反光 */
+    radial-gradient(ellipse at 22% 18%, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.2) 30%, transparent 55%),
+    /* 右上边缘光 */
+    radial-gradient(ellipse at 82% 12%, rgba(255, 255, 255, 0.35) 0%, transparent 25%),
+    /* 中心透亮 - 减少遮挡 */
+    radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+    /* 底部暗区 - 模拟玻璃厚度 */
+    radial-gradient(ellipse at 50% 100%, rgba(0, 0, 0, 0.12) 0%, transparent 45%),
+    /* 左侧边缘折射 */
+    radial-gradient(ellipse at 0% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 20%),
+    /* 右侧边缘折射 */
+    radial-gradient(ellipse at 100% 50%, rgba(255, 255, 255, 0.08) 0%, transparent 15%);
+}
+
+.orbHighlightMain {
+  position: absolute;
+  top: 6%;
+  left: 10%;
+  width: 32%;
+  height: 22%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.3) 40%, transparent 100%);
+  border-radius: 50%;
+  filter: blur(4px);
+  transform: rotate(-20deg);
+}
+
+.orbHighlightSec {
+  position: absolute;
+  top: 4%;
+  right: 16%;
+  width: 14%;
+  height: 10%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, transparent 100%);
+  border-radius: 50%;
+  filter: blur(3px);
+}
+
+.orbReflect {
+  position: absolute;
+  bottom: 8%;
+  left: 25%;
+  width: 50%;
+  height: 12%;
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
+  border-radius: 50%;
+  filter: blur(5px);
+}
+
+.orbRim {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* ── 图标覆盖 ── */
+
+.orbIcon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.orbIcon span {
+  font-size: calc(28px * var(--orb-scale));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  opacity: 0.9;
+}

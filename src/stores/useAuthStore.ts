@@ -109,6 +109,17 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   fetchStats: async () => {
     set({ statsLoading: true });
     try {
+      /* Mock 模式：直接返回模拟数据 */
+      if (import.meta.env.VITE_USE_MOCK === 'true') {
+        set({
+          profileStats: {
+            memoriesCount: 42,
+            streakDays: 7,
+          },
+          statsLoading: false,
+        });
+        return;
+      }
       const res: any = await api.get('/api/users/stats');
       if (res.code === 200 && res.data) {
         set({ profileStats: res.data });

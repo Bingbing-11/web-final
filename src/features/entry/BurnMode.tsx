@@ -2,25 +2,15 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './BurnMode.module.css';
 
-interface Shred {
-  id: number;
-  char: string;
-  x: number;
-  y: number;
-  sx: number;
-  sy: number;
-  sr: number;
-  delay: number;
-}
-
-/* ── 常量文案 ────────────────────────────────────── */
+/* ── 常量文案 ── */
 const TEXT = {
-  placeholder: '在此写下，写完即焚……',
+  placeholder: '在这里写下隐秘的思绪…',
   burnBtnLabel: '焚烧',
-  voiceTitle: '语音输入',
+  confirmTitle: '确认焚烧？',
+  confirmDesc: '这些文字将永远消失，无法找回',
 };
 
-/* ── Canvas 背景粒子系统 ─────────────────────────── */
+/* ── Canvas 背景粒子系统 ── */
 class ParticleEngine {
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
@@ -61,29 +51,23 @@ class ParticleEngine {
   loop = () => {
     if (!this.running) return;
     const { ctx, canvas } = this;
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Spawn
     if (this.particles.length < 40 && Math.random() < 0.3) {
       this.particles.push(this.spawnParticle());
     }
 
-    // Update & Draw
     this.particles = this.particles.filter(p => {
       p.life++;
       if (p.life >= p.maxLife) return false;
-
       p.x += p.vx;
       p.y += p.vy;
       const progress = p.life / p.maxLife;
       const alpha = p.opacity * (1 - progress) * (1 - progress);
-
       ctx.fillStyle = `rgba(255, 210, 150, ${alpha})`;
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
       ctx.fill();
-
       return true;
     });
 
@@ -103,149 +87,224 @@ export default function BurnMode() {
   const navigate = useNavigate();
   const [text, setText] = useState('');
   const [burning, setBurning] = useState(false);
-  const [shreds, setShreds] = useState<Shred[]>([]);
-  const [ashPhase, setAshPhase] = useState<'idle' | 'shredding' | 'ash'>('idle');
+  const [fadingOut, setFadingOut] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [listening, setListening] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<ParticleEngine | null>(null);
-  const inputContainerRef = useRef<HTMLDivElement>(null);
+  const recognitionRef = useRef<any>(null);
+  const particleContainerRef = useRef<HTMLDivElement>(null);
 
-  /* ── Canvas 粒子引擎 ─── */
+  /* ── Canvas 粒子引擎 ── */
   useEffect(() => {
     if (!canvasRef.current) return;
     engineRef.current = new ParticleEngine(canvasRef.current);
     return () => engineRef.current?.destroy();
   }, []);
 
-  /* ── 关闭 ─── */
-  const handleClose = () => navigate('/');
+  /* ── 自动聚焦 ── */
+  useEffect(() => {
+    const timer = setTimeout(() => textareaRef.current?.focus(), 300);
+    return () => clearTimeout(timer);
+  }, []);
 
-  /* ── 焚烧 ─── */
-  const handleBurn = useCallback(() => {
+  /* ── 关闭（淡出回首页） ── */
+  const handleClose = useCallback(() => {
+    setFadingOut(true);
+    setTimeout(() => navigate('/'), 600);
+  }, [navigate]);
+
+  /* ── 语音输入 ── */
+  const handleMicClick = useCallback(() => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert('您的浏览器不支持语音输入');
+      return;
+    }
+    if (listening) {
+      recognitionRef.current?.stop();
+      setListening(false);
+      return;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'zh-CN';
+    recognition.interimResults = true;
+    recognition.continuous = false;
+    recognitionRef.current = recognition;
+
+    recognition.onresult = (event: any) => {
+      let transcript = '';
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript;
+      }
+      setText(prev => prev + transcript);
+    };
+
+    recognition.onend = () => {
+      setListening(false);
+    };
+
+    recognition.onerror = () => {
+      setListening(false);
+    };
+
+    recognition.start();
+    setListening(true);
+  }, [listening]);
+
+  /* ── 焚烧确认 ── */
+  const handleBurnClick = useCallback(() => {
     if (!text.trim() || burning) return;
+    setShowConfirm(true);
+  }, [text, burning]);
+
+  /* ── 确认焚烧 ── */
+  const handleConfirmBurn = useCallback(() => {
+    setShowConfirm(false);
+    if (navigator.vibrate) navigator.vibrate(50);
     setBurning(true);
-    setAshPhase('shredding');
 
-    // 生成字符碎片
-    const chars = text.split('');
-    const newShreds: Shred[] = chars.map((char, i) => ({
-      id: i,
-      char: char === ' ' ? ' ' : char,
-      x: 20 + Math.random() * 60,
-      y: 30 + Math.random() * 25,
-      sx: (Math.random() - 0.5) * 350,
-      sy: 180 + Math.random() * 450,
-      sr: (Math.random() - 0.5) * 900,
-      delay: Math.random() * 0.6,
-    }));
-    setShreds(newShreds);
+    const textarea = textareaRef.current;
+    const container = particleContainerRef.current;
+    if (!textarea || !container) return;
 
-    // 碎片化结束后进入灰烬阶段，输入框保留
-    setTimeout(() => setAshPhase('ash'), 1600);
+    /* 文字区域瞬间隐藏，营造文字直接变成碎片的视觉 */
+    textarea.style.opacity = '0';
 
-    // 灰烬散尽后跳转
-    setTimeout(() => navigate('/'), 2800);
-  }, [text, burning, navigate]);
+    /* ── 文字碎片粒子（100颗，每颗独立运动轨迹） ── */
+    const rect = textarea.getBoundingClientRect();
+    const particleCount = 100;
 
-  /* ── 键盘快捷键 ─── */
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.className = styles.burnParticle;
+
+      /* 粒子起点在 textarea 区域内 */
+      const x = rect.left + Math.random() * rect.width;
+      const y = rect.top + Math.random() * rect.height;
+
+      /* 每颗粒子独立的位移 & 旋转 */
+      const tx = (Math.random() - 0.5) * 200;
+      const ty = Math.random() * 300 + 100;
+      const tr = Math.random() * 720;
+
+      particle.style.left = `${x}px`;
+      particle.style.top = `${y}px`;
+      particle.style.width = `${Math.random() * 4 + 2}px`;
+      particle.style.height = `${Math.random() * 4 + 2}px`;
+      particle.style.setProperty('--tx', `${tx}px`);
+      particle.style.setProperty('--ty', `${ty}px`);
+      particle.style.setProperty('--tr', `${tr}deg`);
+
+      container.appendChild(particle);
+
+      /* 动画结束自动清理 */
+      setTimeout(() => particle.remove(), 2000);
+    }
+
+    /* 1.5s 后恢复 textarea 并淡出回首页 */
+    setTimeout(() => {
+      textarea.style.opacity = '1';
+      setText('');
+      setFadingOut(true);
+      setTimeout(() => navigate('/'), 800);
+    }, 1500);
+  }, [navigate]);
+
+  /* ── ESC 关闭 ── */
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === 'Escape') handleClose();
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, []);
+  }, [handleClose]);
 
   return (
-    <div className={`${styles.page} ${burning ? styles.burning : ''}`}>
+    <div className={`${styles.page} ${burning ? styles.burning : ''} ${fadingOut ? styles.fadingOut : ''}`}>
       {/* Canvas 背景粒子层 */}
       <canvas ref={canvasRef} className={styles.canvas} />
 
-      {/* ── 台灯光晕（扩大覆盖整个书写区） ── */}
-      <div className={styles.lampGlowLarge} />
-      {!burning && <div className={styles.lampGlowAmbient} />}
+      {/* 文字碎片粒子容器 */}
+      <div ref={particleContainerRef} className={styles.particleContainer} />
 
-      {/* ── 台灯图标 ── */}
-      <div className={styles.lamp}>
-        <span className={`${styles.lampIcon} material-symbols-outlined`}>light</span>
-      </div>
+      {/* 环境光晕 */}
+      <div className={styles.ambientGlow} />
+      {!burning && <div className={styles.lampGlow} />}
 
-      {/* ── 关闭按钮 ── */}
-      <button className={styles.closeBtn} onClick={handleClose} aria-label="关闭">
-        <span className="material-symbols-outlined">close</span>
-      </button>
+      {/* ── 顶部栏 ── */}
+      <header className={styles.topBar}>
+        <div className={styles.topBarLeft}>
+          <span className={`material-symbols-outlined ${styles.topBarIcon}`}>light_mode</span>
+          <span className={styles.topBarLabel}>灰烬模式</span>
+        </div>
+        <button className={styles.closeBtn} onClick={handleClose} aria-label="关闭">
+          <span className="material-symbols-outlined">close</span>
+        </button>
+      </header>
 
-      {/* ── 书写区 ── */}
-      <div className={styles.writingArea} ref={inputContainerRef}>
+      {/* ── 中央书写区 ── */}
+      <main className={styles.writingArea}>
         <textarea
           ref={textareaRef}
-          className={`${styles.textarea} ${ashPhase === 'idle' ? '' : styles.textareaDim}`}
+          className={styles.textarea}
           placeholder={TEXT.placeholder}
           value={text}
           onChange={e => { if (!burning) setText(e.target.value); }}
           disabled={burning}
           autoFocus
+          spellCheck={false}
         />
-        {ashPhase === 'idle' && (
-          <div className={`${styles.cursor} ${text.length > 0 ? styles.cursorHidden : ''}`} />
-        )}
-      </div>
 
-      {/* ── 底部操作 ── */}
-      {!burning && (
-        <div className={styles.actions}>
-          <button className={styles.voiceBtn} title={TEXT.voiceTitle}>
-            <span className="material-symbols-outlined">mic</span>
-          </button>
+        {/* 语音输入按钮 */}
+        {!burning && (
+          <div className={styles.micArea}>
+            <button
+              className={`${styles.micBtn} ${listening ? styles.micBtnListening : ''}`}
+              onClick={handleMicClick}
+              aria-label={listening ? '停止录音' : '语音输入'}
+            >
+              <span className="material-symbols-outlined">
+                {listening ? 'mic_off' : 'mic'}
+              </span>
+            </button>
+          </div>
+        )}
+      </main>
+
+      {/* ── 焚烧按钮 ── */}
+      {!burning && !fadingOut && (
+        <div className={styles.burnBtnWrap}>
           <button
-            className={`${styles.burnBtn} ${!text.trim() ? styles.disabled : ''}`}
-            onClick={handleBurn}
+            className={`${styles.burnBtn} ${text.trim() ? styles.burnBtnActive : styles.burnBtnDisabled}`}
+            onClick={handleBurnClick}
             disabled={!text.trim()}
           >
-            <span className="material-symbols-outlined" style={{ fontSize: 20 }}>local_fire_department</span>
-            {TEXT.burnBtnLabel}
+            <span className="material-symbols-outlined" style={{ fontVariationSettings: '"FILL" 1' }}>local_fire_department</span>
+            <span className={styles.burnBtnText}>{TEXT.burnBtnLabel}</span>
           </button>
         </div>
       )}
 
-      {/* ── 碎片动画层 ── */}
-      {shreds.length > 0 && (
-        <div className={styles.shreds}>
-          {shreds.map(s => (
-            <span
-              key={s.id}
-              className={`${styles.shred} ${ashPhase === 'ash' ? styles.shredAsh : ''}`}
-              style={{
-                left: `${s.x}%`,
-                top: `${s.y}%`,
-                '--sx': `${s.sx}px`,
-                '--sy': `${s.sy}px`,
-                '--sr': `${s.sr}deg`,
-                animationDelay: `${s.delay}s`,
-              } as React.CSSProperties}
-            >
-              {s.char}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {/* ── 灰烬颗粒层 ── */}
-      {ashPhase === 'ash' && (
-        <div className={styles.ashParticles}>
-          {Array.from({ length: 20 }, (_, i) => (
-            <div
-              key={`ash-${i}`}
-              className={styles.ashParticle}
-              style={{
-                left: `${20 + Math.random() * 60}%`,
-                animationDelay: `${Math.random() * 2}s`,
-                animationDuration: `${1.5 + Math.random() * 2}s`,
-                width: `${2 + Math.random() * 4}px`,
-                height: `${2 + Math.random() * 4}px`,
-              }}
-            />
-          ))}
+      {/* ── 焚烧确认弹框 ── */}
+      {showConfirm && (
+        <div className={styles.confirmOverlay} onClick={() => setShowConfirm(false)}>
+          <div className={styles.confirmSheet} onClick={e => e.stopPropagation()}>
+            <div className={styles.confirmIcon}>
+              <span className="material-symbols-outlined">local_fire_department</span>
+            </div>
+            <div className={styles.confirmTitle}>{TEXT.confirmTitle}</div>
+            <div className={styles.confirmDesc}>{TEXT.confirmDesc}</div>
+            <div className={styles.confirmActions}>
+              <button className={styles.confirmCancel} onClick={() => setShowConfirm(false)}>
+                再想想
+              </button>
+              <button className={styles.confirmOk} onClick={handleConfirmBurn}>
+                焚烧
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/useAuthStore';
 import { useWorldStore } from '../../stores/useWorldStore';
 import { mockWorlds, mockMessagesMap } from '../../mocks/mockWorlds';
+import CrystalOrb from '../../components/crystal/CrystalOrb';
 import styles from './WorldHub.module.css';
 
 /* ── Mock 开关 ── */
@@ -106,14 +107,19 @@ export default function WorldHub() {
     }));
   })();
 
+  /* ── 第一个世界的 ID（用于记忆圣殿导航） ── */
+  const firstWorldId = worlds[0]?.id ?? null;
+
   /* ── Filter Chip 点击 → 导航占位页 ── */
   const handleChipClick = useCallback(
     (key: string) => {
-      if (key === 'ash') navigate('/ash');
-      else if (key === 'temple') navigate('/temple');
+      if (key === 'ash') navigate('/burn');
+      else if (key === 'temple') {
+        if (firstWorldId) navigate(`/world/${firstWorldId}/temple`);
+      }
       else if (key === 'time') navigate('/timecapsule');
     },
-    [navigate]
+    [navigate, firstWorldId]
   );
 
   /* ── 空状态 ── */
@@ -225,13 +231,11 @@ export default function WorldHub() {
                 </div>
               </div>
               <div className={styles.crystalBall}>
-                {featured.imageUrl ? (
-                  <img className={styles.crystalImg} src={featured.imageUrl} alt={featured.name} />
-                ) : (
-                  <div className={styles.crystalPlaceholder} style={{ background: featured.color }}>
-                    <span className={styles.crystalEmoji}>{featured.icon || '🔮'}</span>
-                  </div>
-                )}
+                <CrystalOrb
+                  color={featured.color}
+                  icon={featured.icon || '🔮'}
+                  size="large"
+                />
               </div>
               {featured.latestExcerpt && (
                 <p className={styles.excerpt}>&ldquo;{featured.latestExcerpt}&rdquo;</p>
@@ -247,13 +251,11 @@ export default function WorldHub() {
               onClick={() => navigate(`/world/${w.id}`)}
             >
               <div className={styles.crystalBallSmall}>
-                {w.imageUrl ? (
-                  <img className={styles.crystalImg} src={w.imageUrl} alt={w.name} />
-                ) : (
-                  <div className={styles.crystalPlaceholder} style={{ background: w.color }}>
-                    <span className={styles.crystalEmoji}>{w.icon || '🔮'}</span>
-                  </div>
-                )}
+                <CrystalOrb
+                  color={w.color}
+                  icon={w.icon || '🔮'}
+                  size="small"
+                />
               </div>
               <div className={styles.cardFooter}>
                 <h3 className={styles.cardTitleSm}>{w.name}</h3>

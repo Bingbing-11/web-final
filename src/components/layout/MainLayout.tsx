@@ -12,7 +12,8 @@ export default function MainLayout() {
   /* 世界详情页 / 时光机页 / 编辑资料页：隐藏底部 Tab + 子页面顶栏 */
   const isFullscreenPage = /^\/world\/[^/]+$/.test(location.pathname) ||
     location.pathname.startsWith('/timecapsule') || location.pathname.startsWith('/time') ||
-    location.pathname === '/profile/edit';
+    location.pathname === '/profile/edit' ||
+    location.pathname.startsWith('/burn');
 
   const isFriendsPage = location.pathname.startsWith('/friends');
   const toggleFriendRequests = useLayoutStore(s => s.toggleFriendRequests);

@@ -1,21 +1,29 @@
 /* ═════════════════════════════════════════════════════════
-   BurnMode - Standalone 焚烧模式
+   BurnMode - 灰烬模式 · 暗黑空间 + 暖橙光晕
    ═════════════════════════════════════════════════════════ */
 
-/* ── Page ─────────────────────────────────────────────────── */
+/* ── Page ── */
 .page {
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: #0a0a0f;
+  background: #0c0c0c;
+  background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDiOSTQ2kIUAvPlRHaaGJ4xGxoBno8TeCiDnxJT_VWhBt_mKbT5mDUraooywuKPsBj453yhA1haCoaVZ0KmGayMSepT020XOw4P7fa8UythsaieTyW9Xn8gIL3GKXgZ70YZ51JBX8qCmCwUz23TFh7o1dolzgIaLZNTMLDW3aOceBETUmPdFTfHWqaghKJsZL5GjD4YWY1tKECOnZr8jhrUMxfRZzJEGZr7kotlNOSWEp52W-5KbCon9rcuPYZyb3Xt9YzxFNG3e_U');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   display: flex;
   flex-direction: column;
   align-items: center;
   overflow: hidden;
-  transition: background 1.5s ease;
+  transition: opacity 0.8s ease, background 1.5s ease;
 }
 
-/* ── Canvas Background Particles ─────────────────────────── */
+.fadingOut {
+  opacity: 0;
+}
+
+/* ── Canvas Background Particles ── */
 .canvas {
   position: absolute;
   inset: 0;
@@ -24,343 +32,423 @@
   opacity: 0.6;
 }
 
-/* ═════════════════════════════════════════════════════════
-   ── 台灯光晕系统（扩大版） ───────────────────────────────────
-   ═════════════════════════════════════════════════════════ */
-
-/* 主光晕 — 半径扩大至 600px，覆盖整个书写区 */
-.lampGlowLarge {
-  position: absolute;
-  top: 40px;
-  left: 40px;
-  width: 600px;
-  height: 600px;
-  border-radius: 50%;
+/* ════════════ 环境光晕 ════════════ */
+.ambientGlow {
   background: radial-gradient(
-    circle at 48px 48px,
-    rgba(255, 217, 125, 0.18) 0%,
-    rgba(255, 200, 100, 0.08) 30%,
-    rgba(255, 180, 80, 0.03) 55%,
-    transparent 70%
+    circle at 10% 10%,
+    rgba(255, 183, 77, 0.15) 0%,
+    rgba(12, 12, 12, 0) 60%
   );
-  pointer-events: none;
-  z-index: 1;
-  filter: blur(4px);
-}
-
-/* 环境微光 — 背景整体温暖暗调 */
-.lampGlowAmbient {
-  position: absolute;
+  position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 1;
+}
+
+.lampGlow {
   background: radial-gradient(
-    ellipse 50% 40% at 50% 45%,
-    rgba(255, 200, 120, 0.04) 0%,
-    transparent 60%
+    circle at 80px 120px,
+    rgba(255, 183, 77, 0.25) 0%,
+    rgba(255, 183, 77, 0.05) 40%,
+    rgba(12, 12, 12, 0) 70%
   );
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
 }
 
-/* ── 台灯图标 ───────────────────────────────────────────── */
-.lamp {
-  position: absolute;
-  top: 36px;
-  left: 36px;
-  width: 52px;
-  height: 52px;
+/* ════════════ 顶部栏 ════════════ */
+.topBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.topBarLeft {
   display: flex;
   align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 217, 125, 0.25) 0%, transparent 60%);
-  box-shadow:
-    0 0 40px rgba(255, 200, 100, 0.12),
-    0 0 80px rgba(255, 180, 80, 0.06);
-  z-index: 3;
-  transition: all 0.5s ease;
-}
-.lampIcon {
-  font-size: 28px;
-  color: #FFD97D;
-  filter: drop-shadow(0 0 8px rgba(255, 200, 100, 0.5));
-  transition: color 0.5s ease;
+  gap: 8px;
+  opacity: 0.6;
 }
 
-/* ── 关闭按钮 ───────────────────────────────────────────── */
+.topBarIcon {
+  font-size: 18px;
+  color: #ccc6b5;
+}
+
+.topBarLabel {
+  font-size: 12px;
+  font-weight: 500;
+  color: #ccc6b5;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
 .closeBtn {
-  position: absolute;
-  top: 32px;
-  right: 24px;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(228, 226, 226, 0.6);
   font-size: 20px;
-  transition: all 0.3s ease;
-  z-index: 5;
-  border: none;
-  background: transparent;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.2s ease;
 }
-.closeBtn:hover {
-  color: rgba(255, 255, 255, 0.6);
-  background: rgba(255, 255, 255, 0.06);
+.closeBtn:active {
+  transform: scale(0.9);
+  background: rgba(255, 255, 255, 0.1);
+}
+@media (hover: hover) {
+  .closeBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(228, 226, 226, 0.9);
+  }
 }
 
-/* ── 书写区 ─────────────────────────────────────────────── */
+/* ════════════ 中央书写区 ════════════ */
 .writingArea {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 520px;
-  padding: 80px 32px 140px;
   position: relative;
   z-index: 2;
+  height: 100dvh;
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px 160px;
 }
 
-/* ── 文本输入框 ─────────────────────────────────────────── */
+/* ── 文本输入框 ── */
 .textarea {
   width: 100%;
-  min-height: 220px;
+  min-height: 160px;
   background: transparent;
   border: none;
   outline: none;
-  color: rgba(255, 255, 255, 0.9);
-  font-family: var(--font-diary, 'Literata', serif);
-  font-size: 20px;
+  color: #e8e2d0;
+  font-family: 'Literata', 'Georgia', serif;
+  font-size: 18px;
   line-height: 1.85;
   resize: none;
   text-align: center;
   caret-color: rgba(255, 255, 255, 0.8);
   position: relative;
   z-index: 2;
-  transition: opacity 0.4s ease, filter 0.6s ease;
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out, filter 0.5s ease-out;
 }
 .textarea::placeholder {
-  color: rgba(255, 255, 255, 0.12);
+  color: rgba(228, 226, 226, 0.15);
   text-align: center;
 }
-/* 焚烧时输入框保留但变暗 */
-.textareaDim {
-  opacity: 0.25;
-  filter: blur(1px);
+.textarea:focus {
+  outline: none;
 }
 
-/* ── 闪烁光标 ───────────────────────────────────────────── */
-.cursor {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 2px;
-  height: 28px;
-  background: rgba(255, 255, 255, 0.8);
-  animation: cursorBlink 1s infinite;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-  pointer-events: none;
-  z-index: 3;
-  transition: opacity 0.2s;
-}
-.cursorHidden { opacity: 0; }
-
-/* ── 底部操作 ───────────────────────────────────────────── */
-.actions {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 20px 24px 32px;
+/* ── 语音输入按钮 ── */
+.micArea {
+  margin-top: 32px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  z-index: 5;
 }
 
-/* ── 语音按钮 ───────────────────────────────────────────── */
-.voiceBtn {
-  width: 48px;
-  height: 48px;
+.micBtn {
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: none;
   color: rgba(255, 255, 255, 0.3);
-  font-size: 22px;
+  font-size: 24px;
   cursor: pointer;
+  opacity: 0.4;
+  -webkit-tap-highlight-color: transparent;
   transition: all 0.3s ease;
 }
-.voiceBtn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.6);
+.micBtn:active {
+  transform: scale(0.9);
 }
-.voiceBtn:active { transform: scale(0.93); }
+.micBtnListening {
+  opacity: 1;
+  background: rgba(255, 45, 45, 0.2);
+  color: #ff2d2d;
+  animation: micPulse 1.2s ease-in-out infinite;
+}
+@keyframes micPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 45, 45, 0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(255, 45, 45, 0); }
+}
+@media (hover: hover) {
+  .micBtn:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
 
-/* ── 焚烧按钮 ───────────────────────────────────────────── */
+/* ════════════ 焚烧按钮 ════════════ */
+.burnBtnWrap {
+  position: fixed;
+  bottom: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  justify-content: center;
+  padding: 0 24px;
+  z-index: 5;
+}
+
 .burnBtn {
-  width: 200px;
-  padding: 14px 0;
-  border-radius: 999px;
-  background: rgba(192, 57, 43, 0.15);
-  border: 1px solid rgba(192, 57, 43, 0.25);
-  color: #e74c3c;
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  min-width: 200px;
+  min-height: 56px;
+  padding: 14px 48px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 112, 67, 0.5);
+  box-shadow: 0 0 30px rgba(255, 112, 67, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 12px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.2s ease;
 }
-.burnBtn:hover {
-  background: rgba(192, 57, 43, 0.22);
-  box-shadow: 0 0 30px rgba(192, 57, 43, 0.15);
+.burnBtn:active {
+  transform: scale(0.95);
 }
-.burnBtn:active { transform: scale(0.95); }
-.burnBtn.disabled {
-  opacity: 0.2;
+@media (hover: hover) {
+  .burnBtn:hover {
+    box-shadow: 0 0 50px rgba(255, 112, 67, 0.5);
+    background: rgba(255, 255, 255, 0.15);
+  }
+}
+
+.burnBtn .material-symbols-outlined {
+  font-size: 22px;
+  color: #ff2d2d;
+  filter: drop-shadow(0 0 8px rgba(255, 45, 45, 0.8)) drop-shadow(0 0 16px rgba(255, 80, 30, 0.5));
+  animation: firePulse 1.5s ease-in-out infinite;
+}
+@keyframes firePulse {
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(255, 45, 45, 0.8)) drop-shadow(0 0 16px rgba(255, 80, 30, 0.5)); }
+  50% { filter: drop-shadow(0 0 12px rgba(255, 45, 45, 1)) drop-shadow(0 0 24px rgba(255, 80, 30, 0.7)); }
+}
+
+.burnBtnText {
+  font-size: 20px;
+  font-weight: 600;
+  color: #fbf9f8;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* 有文字时按钮激活态 */
+.burnBtnActive {
+  animation: burnGlow 2s ease-in-out infinite;
+}
+
+.burnBtnDisabled {
+  opacity: 0.25;
   pointer-events: none;
+  box-shadow: none;
+  border-color: rgba(255, 112, 67, 0.2);
 }
 
-/* ═════════════════════════════════════════════════════════
-   ── 焚烧动画 ──────────────────────────────────────────────
-   ═════════════════════════════════════════════════════════ */
+@keyframes burnGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 112, 67, 0.2); }
+  50% { box-shadow: 0 0 50px rgba(255, 112, 67, 0.5); }
+}
 
-/* 焚烧时背景变暗红热 */
-.burning { background: #100502; }
+/* ════════════ 焚烧时状态 ════════════ */
+.burning {
+  background: #100502;
+}
 
-/* ── 碎片 ── */
-.shreds {
+/* ════════════ 焚烧确认弹框 ════════════ */
+.confirmOverlay {
   position: fixed;
   inset: 0;
-  pointer-events: none;
-  z-index: 200;
-  overflow: hidden;
-}
-.shred {
-  position: absolute;
-  padding: 2px 6px;
-  background: rgba(255, 255, 255, 0.85);
-  color: rgba(0, 0, 0, 0.7);
-  font-size: 14px;
-  font-family: var(--font-diary, 'Literata', serif);
-  border-radius: 2px;
-  animation: shredFall 1.5s ease-in forwards;
-  opacity: 0;
+  z-index: 300;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeInOverlay 0.2s ease;
 }
 
-/* 灰烬阶段碎片变暗 */
-.shredAsh {
-  background: rgba(200, 180, 140, 0.3) !important;
-  color: transparent !important;
-  animation: shredToAsh 2s ease-out forwards !important;
+.confirmSheet {
+  width: calc(100% - 48px);
+  max-width: 340px;
+  background: #1a1916;
+  border: 1px solid rgba(255, 112, 67, 0.15);
+  border-radius: 20px;
+  padding: 28px 24px 20px;
+  animation: scaleIn 0.25s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-/* ── 灰烬颗粒层 ── */
-.ashParticles {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 195;
-  overflow: hidden;
-}
-.ashParticle {
-  position: absolute;
-  bottom: 30%;
-  background: rgba(180, 160, 130, 0.35);
+.confirmIcon {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  animation: ashFloatUp ease-out forwards;
-  filter: blur(1px);
+  background: rgba(255, 112, 67, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+.confirmIcon .material-symbols-outlined {
+  font-size: 24px;
+  color: #ff7043;
 }
 
-/* ═════════════════════════════════════════════════════════
-   ── 关键帧 ────────────────────────────────────────────────
-   ═════════════════════════════════════════════════════════ */
-
-@keyframes cursorBlink {
-  0%, 100% { opacity: 0.9; }
-  50% { opacity: 0.1; }
+.confirmTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fbf9f8;
+  text-align: center;
+  margin-bottom: 8px;
 }
 
-@keyframes shredFall {
+.confirmDesc {
+  font-size: 14px;
+  color: rgba(228, 226, 226, 0.5);
+  text-align: center;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.confirmActions {
+  display: flex;
+  gap: 10px;
+}
+
+.confirmCancel {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(228, 226, 226, 0.6);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.1s ease;
+}
+.confirmCancel:active {
+  transform: scale(0.97);
+}
+
+.confirmOk {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  background: #ff7043;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.1s ease, opacity 0.15s ease;
+}
+.confirmOk:active {
+  transform: scale(0.97);
+  opacity: 0.85;
+}
+
+/* ════════════ 文字碎片粒子 ════════════ */
+.particleContainer {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.burnParticle {
+  position: absolute;
+  pointer-events: none;
+  background: #e8e2d0;
+  border-radius: 1px;
+  animation: burnParticleAnim 2s ease-out forwards;
+}
+
+@keyframes burnParticleAnim {
   0% {
-    opacity: 1;
     transform: translate(0, 0) rotate(0deg) scale(1);
-  }
-  25% {
-    opacity: 0.95;
-    transform: translate(calc(var(--sx) * 0.15), calc(var(--sy) * 0.1)) rotate(calc(var(--sr) * 0.1)) scale(1.05);
-  }
-  70% {
-    opacity: 0.4;
-    transform: translate(calc(var(--sx) * 0.6), calc(var(--sy) * 0.5)) rotate(calc(var(--sr) * 0.6)) scale(0.7);
+    opacity: 1;
   }
   100% {
+    transform: translate(var(--tx), var(--ty)) rotate(var(--tr)) scale(0);
     opacity: 0;
-    transform: translate(var(--sx), var(--sy)) rotate(var(--sr)) scale(0.2);
   }
 }
 
-@keyframes shredToAsh {
-  0% {
-    opacity: 0.4;
-    transform: translate(var(--sx), var(--sy)) rotate(var(--sr)) scale(0.2);
-  }
-  100% {
-    opacity: 0;
-    transform: translate(calc(var(--sx) * 1.5), calc(var(--sy) * 1.3 + 100px)) rotate(calc(var(--sr) * 1.5)) scale(0);
-  }
+/* ════════════ 空内容时 textarea 抖动 ════════════ */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
 }
 
-@keyframes ashFloatUp {
-  0% {
-    opacity: 0;
-    transform: translateY(0) scale(1);
-  }
-  20% {
-    opacity: 0.5;
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-200px) scale(0.2);
-  }
+/* ════════════ 通用动画 ════════════ */
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-/* ═════════════════════════════════════════════════════════
-   ── Mobile Responsive ─────────────────────────────────────
-   ═════════════════════════════════════════════════════════ */
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ════════════ Mobile Responsive ════════════ */
 @media (max-width: 480px) {
-  .lamp { top: 20px; left: 20px; width: 40px; height: 40px; }
-  .lampGlowLarge {
-    top: 24px;
-    left: 24px;
-    width: 350px;
-    height: 350px;
+  .topBar {
+    padding: 12px 16px;
   }
-  .lampIcon { font-size: 22px; }
-  .closeBtn { top: 20px; right: 16px; }
+
+  .writingArea {
+    padding: 60px 20px 140px;
+  }
 
   .textarea {
     font-size: 17px;
-    min-height: 180px;
-    line-height: 1.7;
-  }
-  .writingArea {
-    padding: 60px 24px 120px;
-    max-width: 100%;
+    min-height: 140px;
   }
 
-  .burnBtn { width: 160px; padding: 12px 0; font-size: 14px; }
-  .voiceBtn { width: 42px; height: 42px; font-size: 20px; }
+  .burnBtn {
+    min-width: 160px;
+    min-height: 48px;
+    padding: 12px 36px;
+  }
 
-  .shred { font-size: 12px; padding: 1px 4px; }
+  .burnBtnText {
+    font-size: 17px;
+  }
 }
