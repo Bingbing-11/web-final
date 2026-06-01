@@ -104,7 +104,7 @@ export default function EntryEditor() {
         </div>
         <div className={styles.actions}>
           <Button onClick={() => navigate(-1)} variant="secondary">取消</Button>
-          <Button onClick={handleSubmit} fullWidth disabled={submitting}>{submitting ? '发布中...' : '发布'}</Button>
+          <Button onClick={handleSubmit} fullWidth disabled={submitting} variant="primary">{submitting ? '保存中...' : '完成'}</Button>
         </div>
       </div>
     </div>

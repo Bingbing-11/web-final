@@ -27,6 +27,7 @@
   --text-secondary: #5A5A5A;
   --text-muted: #8A8A8A;
   --text-inverse: #FFFFFF;
+  --text-primary-dark: #625f50;
 
   /* 边框 & 阴影 */
   --border: rgba(0, 0, 0, 0.06);

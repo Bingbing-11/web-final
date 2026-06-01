@@ -4,6 +4,8 @@ import styles from './EntryCard.module.css';
 
 interface Props {
   entry: Entry;
+  showActions?: boolean;
+  onFlowToResonance?: (entry: Entry) => void;
 }
 
 const MODE_LABELS: Record<string, string> = {
@@ -15,8 +17,18 @@ const MODE_STYLES: Record<string, string> = {
   futurelook: styles.modeFuture, collection: styles.modeCollection,
 };
 
-export default function EntryCard({ entry }: Props) {
+export default function EntryCard({ entry, showActions, onFlowToResonance }: Props) {
   const navigate = useNavigate();
+
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/world/${entry.worldId}/entry/${entry.id}/edit`);
+  };
+
+  const handleFlowToResonance = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onFlowToResonance?.(entry);
+  };
 
   return (
     <div className={styles.card} onClick={() => navigate(`/entry/${entry.id}`)} style={{ '--emotion-color': `hsl(${entry.emotionHue || 180}, 60%, 60%)` } as React.CSSProperties}>
@@ -36,6 +48,12 @@ export default function EntryCard({ entry }: Props) {
           {MODE_LABELS[entry.mode] || entry.mode}
         </span>
       </div>
+      {showActions && (
+        <div className={styles.actions}>
+          <button className={styles.actionBtn} onClick={handleEdit}>✏️ 编辑</button>
+          <button className={styles.actionBtn} onClick={handleFlowToResonance}>✨ 流向共鸣池</button>
+        </div>
+      )}
     </div>
   );
 }

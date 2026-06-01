@@ -23,7 +23,7 @@
 
 .primary {
   background: var(--primary-dark);
-  color: var(--text);
+  color: var(--text-primary-dark);
   box-shadow: var(--shadow-sm);
 }
 .primary:active {

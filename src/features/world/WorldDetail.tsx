@@ -2,12 +2,16 @@ import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useWorldStore } from '../../stores/useWorldStore';
 import { useEntryStore } from '../../stores/useEntryStore';
+import { useResonanceStore } from '../../stores/useResonanceStore';
+import { useAuthStore } from '../../stores/useAuthStore';
 import { matchScenes } from '../../lib/crystal/sceneEngine';
 import { DEFAULT_CRYSTAL_PARAMS } from '../../lib/crystal/materialEngine';
+import { analyzeEmotion, extractKeywords } from '../../lib/crystal';
 import CrystalCanvas from '../../components/crystal/CrystalCanvas';
 import type { Entry } from '../../types/entry';
 import type { Comment } from '../../types/comment';
 import { allMockComments } from '../../mocks/mockComments';
+import ConfirmModal from '../../components/common/ConfirmModal';
 import styles from './WorldDetail.module.css';
 
 /* ── 正文截断行数 ── */
@@ -20,6 +24,11 @@ export default function WorldDetail() {
   /* 原始数据订阅（避免 selector 中创建新引用） */
   const rawWorlds = useWorldStore(s => s.worlds);
   const rawEntries = useEntryStore(s => s.entries);
+  const user = useAuthStore(s => s.currentUser);
+  const addResonance = useResonanceStore(s => s.addResonance);
+
+  const [flowTarget, setFlowTarget] = useState<Entry | null>(null);
+  const [flowingEntry, setFlowingEntry] = useState<Entry | null>(null);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
@@ -175,6 +184,33 @@ export default function WorldDetail() {
     if (navigator.vibrate) navigator.vibrate(8);
     navigate(-1);
   }, [navigate]);
+
+  /* ── 流向共鸣池 ── */
+  const handleFlowToResonance = (entry: Entry) => {
+    setFlowTarget(entry);
+  };
+
+  const confirmFlowToResonance = async () => {
+    if (!flowTarget || !user) return;
+    const text = `${flowTarget.title} ${flowTarget.content}`;
+    const { emotion, hue } = analyzeEmotion(text);
+    const keywords = extractKeywords(text);
+    await addResonance({
+      worldId: flowTarget.worldId,
+      worldName: world?.name,
+      authorId: user.id,
+      authorName: user.nickname,
+      emotion,
+      emotionHue: hue,
+      content: flowTarget.content,
+      keywords,
+      isAnonymous: true,
+    });
+    const entry = flowTarget;
+    setFlowTarget(null);
+    setFlowingEntry(entry);
+    setTimeout(() => setFlowingEntry(null), 2000);
+  };
 
   if (!world) return <div className={styles.empty}>世界不存在</div>;
 
@@ -339,7 +375,7 @@ export default function WorldDetail() {
                           </div>
                         )}
 
-                        {/* 留言按钮 + 数量 */}
+                        {/* 留言按钮 + 数量 + 流向共鸣池 */}
                         <div className={styles.commentActions}>
                           <button
                             className={styles.diaryCommentBtn}
@@ -348,6 +384,18 @@ export default function WorldDetail() {
                             <span className="material-symbols-outlined" style={{ fontSize: 15 }}>chat_bubble</span>
                             {entryComments.length > 0 ? entryComments.length : '留言'}
                           </button>
+                          {!isBurned && (
+                            <button
+                              className={styles.diaryCommentBtn}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleFlowToResonance(entry);
+                              }}
+                            >
+                              <span className="material-symbols-outlined" style={{ fontSize: 15 }}>waves</span>
+                              流向共鸣池
+                            </button>
+                          )}
                         </div>
                       </div>
                     </>
@@ -512,6 +560,29 @@ export default function WorldDetail() {
           </div>
         </div>
       )}
+
+      {/* ═══════════════ 流向共鸣池弹框 ═══════════════ */}
+      <ConfirmModal
+        open={!!flowTarget}
+        icon="✨"
+        title="是的，流向共鸣池"
+        message={`将「${flowTarget?.title || '无标题'}」匿名分享到共鸣池，让灵魂在此相遇`}
+        confirmText="确认分享"
+        cancelText="取消"
+        onConfirm={confirmFlowToResonance}
+        onCancel={() => setFlowTarget(null)}
+      />
+
+      {/* 分享成功提示弹框 */}
+      <ConfirmModal
+        open={!!flowingEntry}
+        icon="🌟"
+        title="已流向共鸣池"
+        message="你的日记已匿名分享到共鸣池，等待灵魂的回响"
+        confirmText="知道了"
+        onConfirm={() => setFlowingEntry(null)}
+        onCancel={() => setFlowingEntry(null)}
+      />
     </div>
   );
 }

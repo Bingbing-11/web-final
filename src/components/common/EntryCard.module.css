@@ -92,3 +92,36 @@
 .modeCapsule { background: var(--secondary); color: var(--text); }
 .modeFuture { background: var(--info); color: var(--text-inverse); }
 .modeCollection { background: var(--success); color: var(--text); }
+
+/* ===== 操作按钮容器 ===== */
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.actionBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary-dark);
+  background: var(--primary);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.actionBtn:active {
+  transform: scale(0.97);
+  background: var(--primary-dark);
+}
