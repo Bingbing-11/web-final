@@ -212,16 +212,31 @@ export default function WorldDetail() {
     setTimeout(() => setFlowingEntry(null), 2000);
   };
 
+  /* ── 跳转写日记 ── */
+  const handleAddEntry = useCallback(() => {
+    if (navigator.vibrate) navigator.vibrate(10);
+    navigate(`/world/${id}/entry/new`);
+  }, [navigate, id]);
+
+  /* ── 跳转编辑日记 ── */
+  const handleEditEntry = useCallback((entryId: string) => {
+    if (navigator.vibrate) navigator.vibrate(8);
+    navigate(`/world/${id}/entry/${entryId}/edit`);
+  }, [navigate, id]);
+
   if (!world) return <div className={styles.empty}>世界不存在</div>;
 
   return (
     <div className={styles.page}>
-      {/* ── 顶部栏：返回 + 世界名 ── */}
+      {/* ── 顶部栏：返回 + 世界名 + 写日记 ── */}
       <header className={styles.topBar}>
         <button className={styles.backBtn} onClick={handleBack}>
           <span className="material-symbols-outlined">arrow_back</span>
         </button>
         <h1 className={styles.topBarTitle}>{world.name}</h1>
+        <button className={styles.addBtn} onClick={handleAddEntry}>
+          <span className="material-symbols-outlined">add</span>
+        </button>
       </header>
 
       {/* ── 搜索栏（移动端聚焦展开） ── */}
@@ -297,6 +312,17 @@ export default function WorldDetail() {
                   <span className={styles.timeDot} />
                   <span>{new Date(entry.createdAt).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
+
+                {/* 编辑按钮（仅非封存态） */}
+                {!isBurned && (
+                  <button
+                    className={styles.editBtn}
+                    onClick={() => handleEditEntry(entry.id)}
+                    aria-label="编辑日记"
+                  >
+                    <span className="material-symbols-outlined">edit</span>
+                  </button>
+                )}
 
                 {/* 卡片主体 */}
                 <div

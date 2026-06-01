@@ -45,6 +45,7 @@ export default function App() {
             <Route path="/world/:id/temple" element={<TemplePage />} />
             <Route path="/world/:id/permissions" element={<PermissionsPage />} />
             <Route path="/world/:worldId/entry/new" element={<EntryEditor />} />
+            <Route path="/world/:worldId/entry/:entryId/edit" element={<EntryEditor />} />
             <Route path="/entry/:id" element={<EntryDetail />} />
             <Route path="/entry/:id/burn" element={<BurnView />} />
             <Route path="/burn" element={<BurnMode />} />

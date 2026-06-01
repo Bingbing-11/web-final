@@ -11,9 +11,11 @@ export default function MainLayout() {
   const isDarkPage = ['/resonance', '/burn'].some(p => location.pathname.startsWith(p));
   /* 世界详情页 / 时光机页 / 编辑资料页：隐藏底部 Tab + 子页面顶栏 */
   const isFullscreenPage = /^\/world\/[^/]+$/.test(location.pathname) ||
+    /^\/world\/[^/]+\/entry\//.test(location.pathname) ||
     location.pathname.startsWith('/timecapsule') || location.pathname.startsWith('/time') ||
     location.pathname === '/profile/edit' ||
     location.pathname === '/world/create' ||
+    location.pathname.startsWith('/entry') ||
     location.pathname.startsWith('/burn');
 
   const isFriendsPage = location.pathname.startsWith('/friends');
