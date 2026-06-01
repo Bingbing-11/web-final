@@ -122,9 +122,9 @@
   box-sizing: border-box;
 }
 
-/* 非首页：不需要顶部栏留白 */
+/* 非首页：fixed 子顶部栏高 56px，留出呼吸空间 */
 .mainNoTop {
-  padding-top: 24px;
+  padding-top: 72px;
 }
 
 /* ── Bottom Navigation（浮动药丸式 + 文字标签） ─────────── */

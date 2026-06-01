@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { useNavigate, useLocation, useOutletContext } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/useAuthStore';
 import { useFriendStore } from '../../stores/useFriendStore';
+import { useLayoutStore } from '../../stores/useLayoutStore';
 import styles from './FriendList.module.css';
 
 /* ── 好友备注（本地存储）── */
@@ -36,32 +37,43 @@ function getAvatarEmoji(friendId: string): string {
 /* ── 主组件 ── */
 export default function FriendList() {
   const user = useAuthStore(s => s.currentUser);
-  const friends = useFriendStore(s => s.getFriends(user?.id || ''));
-  const pendingRequests = useFriendStore(s => s.getPendingRequests(user?.id || ''));
-  const sentRequests = useFriendStore(s => s.getSentRequests(user?.id || ''));
+  const allFriends = useFriendStore(s => s.friends);
+  const allPending = useFriendStore(s => s.pendingRequests);
+  const allSent = useFriendStore(s => s.sentRequests);
   const { fetchFriends, fetchRequests, searchUser, sendRequest, acceptRequest, rejectRequest, removeFriend } = useFriendStore();
+
+  const currentUserId = user?.id || '';
+  const friends = useMemo(
+    () => allFriends.filter(f => f.userId === currentUserId || f.userId === ''),
+    [allFriends, currentUserId],
+  );
+  const pendingRequests = useMemo(() => allPending.filter(r => r.toId === currentUserId), [allPending, currentUserId]);
+  const sentRequests = useMemo(() => allSent.filter(r => r.fromId === currentUserId), [allSent, currentUserId]);
 
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [feedback, setFeedback] = useState<{ type: 'error' | 'success'; msg: string } | null>(null);
   const [loading, setLoading] = useState(false);
   const [remarks, setRemarks] = useState<Record<string, string>>(loadRemarks);
-  const [showRequests, setShowRequests] = useState(false);
+
+  /* 实时搜索筛选（必须在 searchQuery / remarks useState 之后声明） */
+  const filteredFriends = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return friends;
+    return friends.filter(f => {
+      const name = (remarks[f.friendId] || f.friendName).toLowerCase();
+      const world = (f as any).latestWorldName?.toLowerCase() || '';
+      return name.includes(q) || world.includes(q);
+    });
+  }, [friends, searchQuery, remarks]);
+  const showRequests = useLayoutStore(s => s.showFriendRequests);
+  const toggleShowRequests = useLayoutStore(s => s.toggleFriendRequests);
   const [showSent, setShowSent] = useState(false);
   const [manageFriend, setManageFriend] = useState<string | null>(null);
   const [pulsingId, setPulsingId] = useState<string | null>(null);
   const [brokenAvatars, setBrokenAvatars] = useState<Set<string>>(new Set());
   const pulseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  /* 通过 Outlet context 向 MainLayout 传递顶部栏右侧按钮 */
-  const outletContextValue = useMemo(() => ({
-    topBarRight: (
-      <button className={styles.manageBtn} onClick={() => setShowRequests(v => !v)}>
-        管理
-      </button>
-    ),
-  }), [setShowRequests]);
 
   /* 数据加载 */
   useEffect(() => {
@@ -201,10 +213,6 @@ export default function FriendList() {
 
   return (
     <div className={styles.page}>
-      {/* 通过 Outlet context 传递顶部栏右侧按钮 */}
-      {/* Outlet 由 MainLayout 渲染，此处仅构造 context 值 */}
-      {null}
-
       {/* ── 搜索栏 ── */}
       <section className={styles.searchSection}>
         <div className={styles.searchBar}>
@@ -219,13 +227,6 @@ export default function FriendList() {
               onKeyDown={e => e.key === 'Enter' && handleAddFriend()}
             />
           </div>
-          <button
-            className={styles.searchSubmit}
-            disabled={loading}
-            onClick={handleAddFriend}
-          >
-            {loading ? '…' : '添加'}
-          </button>
         </div>
         {feedback && (
           <div className={`${styles.feedback} ${feedback.type === 'error' ? styles.feedbackError : styles.feedbackSuccess}`}>
@@ -241,7 +242,7 @@ export default function FriendList() {
             <>
               <button
                 className={styles.sectionToggle}
-                onClick={() => setShowRequests(v => !v)}
+                onClick={toggleShowRequests}
               >
                 <div className={styles.sectionToggleLeft}>
                   <span className={styles.sectionToggleIcon}>📨</span>
@@ -350,19 +351,30 @@ export default function FriendList() {
       <section>
         <div className={styles.sectionLabel}>
           我的好友 · {friends.length}
+          {searchQuery.trim() && filteredFriends.length !== friends.length && (
+            <span style={{ color: 'var(--text-muted)', fontWeight: 400, marginLeft: 6 }}>
+              筛选出 {filteredFriends.length} 位
+            </span>
+          )}
         </div>
 
-        {friends.length === 0 ? (
+        {filteredFriends.length === 0 ? (
           <div className={styles.empty}>
             <div className={styles.emptyIcon}>🔮</div>
-            <div>还没有好友<br />搜索 ID 或昵称来添加第一位朋友吧</div>
+            <div>
+              {friends.length === 0
+                ? <>还没有好友<br />搜索 ID 或昵称来添加第一位朋友吧</>
+                : <>未找到匹配的好友</>}
+            </div>
           </div>
         ) : (
           <div className={styles.sphereGrid}>
-            {friends.map((f) => {
+            {filteredFriends.map((f) => {
               const displayName = remarks[f.friendId] || f.friendName;
               const hasRemark = !!remarks[f.friendId];
               const isPulsing = pulsingId === f.friendId;
+              const hasUpdate = (f as any).hasUpdate;
+              const worldName = (f as any).latestWorldName;
 
               return (
                 <div
@@ -374,6 +386,7 @@ export default function FriendList() {
                   onTouchCancel={handleTouchEnd}
                 >
                   <div className={styles.sphereWrap}>
+                    {hasUpdate && <div className={styles.sphereHalo} />}
                     <div className={`${styles.sphere} ${isPulsing ? styles.spherePulse : ''}`}>
                       <div className={styles.sphereContent}>
                         {f.friendAvatar && !brokenAvatars.has(f.friendId) ? (
@@ -394,7 +407,10 @@ export default function FriendList() {
                     </div>
                   </div>
                   <span className={styles.sphereName}>{displayName}</span>
-                  {hasRemark && (
+                  {worldName && (
+                    <span className={styles.sphereWorld}>{displayName} 的 {worldName}</span>
+                  )}
+                  {hasRemark && !worldName && (
                     <span className={styles.sphereRemark}>{f.friendName}</span>
                   )}
                 </div>

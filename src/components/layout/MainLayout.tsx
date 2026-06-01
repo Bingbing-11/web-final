@@ -1,10 +1,7 @@
-import { NavLink, Outlet, useNavigate, useLocation, useOutletContext } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect, useMemo } from 'react';
+import { useLayoutStore } from '../../stores/useLayoutStore';
 import styles from './MainLayout.module.css';
-
-interface TopBarContext {
-  topBarRight?: React.ReactNode;
-}
 
 export default function MainLayout() {
   const navigate = useNavigate();
@@ -13,9 +10,8 @@ export default function MainLayout() {
   const isHome = location.pathname === '/';
   const isDarkPage = ['/resonance', '/burn'].some(p => location.pathname.startsWith(p));
 
-  /* 从 Outlet context 读取顶部栏右侧内容 */
-  const outletContext = useOutletContext() as TopBarContext | null;
-  const topBarRight = outletContext?.topBarRight ?? null;
+  const isFriendsPage = location.pathname.startsWith('/friends');
+  const toggleFriendRequests = useLayoutStore(s => s.toggleFriendRequests);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -45,9 +41,9 @@ export default function MainLayout() {
         </header>
       )}
 
-      {/* ── Page Content（通过 context 传递 topBarRight） ── */}
+      {/* ── Page Content ── */}
       <main className={`${styles.main} ${!isHome ? styles.mainNoTop : ''}`}>
-        <Outlet context={{ topBarRight } satisfies TopBarContext} />
+        <Outlet />
       </main>
 
       {/* ── 非首页：动态顶部栏（标题 + 右侧操作区） ── */}
@@ -55,7 +51,11 @@ export default function MainLayout() {
         <header className={styles.subTopBar}>
           <div className={styles.topBarInner}>
             <h1 className={styles.subTitle}>{getPageTitle(location.pathname)}</h1>
-            {topBarRight && <div className={styles.topBarRight}>{topBarRight}</div>}
+            {isFriendsPage && (
+              <button className={styles.topBarRightBtn} onClick={toggleFriendRequests}>
+                管理
+              </button>
+            )}
           </div>
         </header>
       )}
