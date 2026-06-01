@@ -19,6 +19,7 @@ import TimeMachine from './features/timecapsule/TimeMachine';
 import FriendList from './features/social/FriendList';
 import ResonancePage from './features/social/ResonancePage';
 import SettingsPage from './features/settings/SettingsPage';
+import EditProfilePage from './features/settings/EditProfilePage';
 import HelpPage from './features/settings/HelpPage';
 
 export default function App() {
@@ -36,6 +37,7 @@ export default function App() {
             <Route path="/resonance" element={<ResonancePage />} />
             <Route path="/entries" element={<EntryList />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/profile/edit" element={<EditProfilePage />} />
             <Route path="/help" element={<HelpPage />} />
             <Route path="/world/create" element={<WorldCreate />} />
             <Route path="/world/:id" element={<WorldDetail />} />

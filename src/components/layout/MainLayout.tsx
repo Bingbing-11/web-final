@@ -9,9 +9,10 @@ export default function MainLayout() {
   const [scrolled, setScrolled] = useState(false);
   const isHome = location.pathname === '/';
   const isDarkPage = ['/resonance', '/burn'].some(p => location.pathname.startsWith(p));
-  /* 世界详情页 / 时光机页：隐藏底部 Tab + 子页面顶栏 */
+  /* 世界详情页 / 时光机页 / 编辑资料页：隐藏底部 Tab + 子页面顶栏 */
   const isFullscreenPage = /^\/world\/[^/]+$/.test(location.pathname) ||
-    location.pathname.startsWith('/timecapsule') || location.pathname.startsWith('/time');
+    location.pathname.startsWith('/timecapsule') || location.pathname.startsWith('/time') ||
+    location.pathname === '/profile/edit';
 
   const isFriendsPage = location.pathname.startsWith('/friends');
   const toggleFriendRequests = useLayoutStore(s => s.toggleFriendRequests);

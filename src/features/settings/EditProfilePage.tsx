@@ -1,11 +1,15 @@
 import { useState, useRef, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/useAuthStore';
 import { useThemeStore } from '../../stores/useThemeStore';
 import styles from './EditProfilePage.module.css';
 
 export default function EditProfilePage() {
+  const navigate = useNavigate();
   const { currentUser, updateProfile } = useAuthStore();
   const nightMode = useThemeStore(s => s.nightMode);
+  const nightModeStart = useThemeStore(s => s.nightModeStart);
+  const nightModeEnd = useThemeStore(s => s.nightModeEnd);
 
   const [showNicknameModal, setShowNicknameModal] = useState(false);
   const [nickname, setNickname] = useState(currentUser?.nickname || '');
@@ -15,44 +19,54 @@ export default function EditProfilePage() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  /* 是否在深夜模式时间范围内 */
+  const isNightTime = (): boolean => {
+    if (!nightMode) return false;
+    const now = new Date().getHours();
+    if (nightModeStart < nightModeEnd) {
+      return now >= nightModeStart && now < nightModeEnd;
+    }
+    return now >= nightModeStart || now < nightModeEnd;
+  };
+
+  const isNight = isNightTime();
+
   const showToastMsg = useCallback((msg: string, isError = false) => {
     setToast(msg);
     setToastError(isError);
     setTimeout(() => setToast(''), 2500);
   }, []);
 
-  // 上传新头像
+  /* 上传新头像 */
   const handleUploadAvatar = useCallback(() => {
-    if (!fileInputRef.current) {
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'image/*';
-      input.style.display = 'none';
-      input.onchange = async (e: Event) => {
-        const file = (e.target as HTMLInputElement).files?.[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = async (ev) => {
-          const base64 = ev.target?.result as string;
-          setSaving(true);
-          try {
-            await updateProfile({ avatar: base64 } as any);
-            showToastMsg('头像已更新');
-          } catch {
-            showToastMsg('头像更新失败', true);
-          } finally {
-            setSaving(false);
-          }
-        };
-        reader.readAsDataURL(file);
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.style.display = 'none';
+    input.onchange = async (e: Event) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async (ev) => {
+        const base64 = ev.target?.result as string;
+        setSaving(true);
+        try {
+          await updateProfile({ avatar: base64 } as any);
+          showToastMsg('头像已更新');
+        } catch {
+          showToastMsg('头像更新失败', true);
+        } finally {
+          setSaving(false);
+        }
       };
-      document.body.appendChild(input);
-      (fileInputRef as any).current = input;
-    }
-    fileInputRef.current?.click();
+      reader.readAsDataURL(file);
+    };
+    document.body.appendChild(input);
+    input.click();
+    document.body.removeChild(input);
   }, [updateProfile, showToastMsg]);
 
-  // 保存昵称
+  /* 保存昵称 */
   const handleSaveNickname = async () => {
     const trimmed = nickname.trim();
     if (!trimmed) {
@@ -72,23 +86,12 @@ export default function EditProfilePage() {
     }
   };
 
-  // 深夜模式判定
-  const isNightTime = (): boolean => {
-    if (!nightMode) return false;
-    const now = new Date().getHours();
-    const { nightModeStart, nightModeEnd } = useThemeStore.getState();
-    if (nightModeStart < nightModeEnd) {
-      return now >= nightModeStart && now < nightModeEnd;
-    }
-    return now >= nightModeStart || now < nightModeEnd;
-  };
-
   if (!currentUser) return null;
 
   return (
-    <div className={styles.page}>
-      {/* 夜间暗角遮罩 */}
-      {nightMode && isNightTime() && <div className={styles.nightOverlay} />}
+    <div className={`${styles.page} ${isNight ? styles.pageNight : ''}`}>
+      {/* 深夜模式暗角遮罩 */}
+      {isNight && <div className={styles.nightOverlay} />}
 
       {/* Toast */}
       {toast && (
@@ -96,6 +99,14 @@ export default function EditProfilePage() {
           {toast}
         </div>
       )}
+
+      {/* 顶部栏 */}
+      <header className={styles.topBar}>
+        <button className={styles.backBtn} onClick={() => navigate(-1)}>
+          <span className="material-symbols-outlined">arrow_back</span>
+        </button>
+        <h1 className={styles.topBarTitle}>编辑资料</h1>
+      </header>
 
       {/* 头像 */}
       <div className={styles.avatarSection}>
@@ -114,29 +125,18 @@ export default function EditProfilePage() {
       <div className={styles.actionList}>
         <button className={styles.actionItem} onClick={handleUploadAvatar} disabled={saving}>
           <div className={styles.actionIcon}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-              <circle cx="8.5" cy="8.5" r="1.5" />
-              <polyline points="21 15 16 10 5 21" />
-            </svg>
+            <span className="material-symbols-outlined">add_photo_alternate</span>
           </div>
           <span className={styles.actionLabel}>上传新头像</span>
-          <svg className={styles.actionArrow} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
+          <span className={`material-symbols-outlined ${styles.actionArrow}`}>chevron_right</span>
         </button>
 
         <button className={styles.actionItem} onClick={() => { setNickname(currentUser.nickname); setShowNicknameModal(true); }}>
           <div className={styles.actionIcon}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 20h9" />
-              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-            </svg>
+            <span className="material-symbols-outlined">edit</span>
           </div>
           <span className={styles.actionLabel}>编辑昵称</span>
-          <svg className={styles.actionArrow} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
+          <span className={`material-symbols-outlined ${styles.actionArrow}`}>chevron_right</span>
         </button>
       </div>
 
