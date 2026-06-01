@@ -13,6 +13,7 @@ export default function MainLayout() {
   const isFullscreenPage = /^\/world\/[^/]+$/.test(location.pathname) ||
     location.pathname.startsWith('/timecapsule') || location.pathname.startsWith('/time') ||
     location.pathname === '/profile/edit' ||
+    location.pathname === '/world/create' ||
     location.pathname.startsWith('/burn');
 
   const isFriendsPage = location.pathname.startsWith('/friends');

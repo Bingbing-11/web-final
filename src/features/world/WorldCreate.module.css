@@ -1,94 +1,457 @@
-/* ===== WorldCreate 创建世界 - 暖米色移动端 ===== */
+/* ===== WorldCreate — 创建世界 移动端 ===== */
+
 .page {
-  max-width: 430px;
+  min-height: 100vh;
+  max-width: 720px;
   margin: 0 auto;
-  animation: fadeInUp 0.4s ease;
-  padding-bottom: 16px;
+  background: var(--bg);
+  animation: fadeInUp 0.35s ease;
 }
 
-.title {
-  font-size: 24px;
+/* ── 顶部栏 ── */
+.topBar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px var(--page-margin);
+  background: rgba(245, 243, 240, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--text-secondary);
+  font-size: 15px;
+  font-weight: 500;
+  transition: var(--transition-fast);
+}
+.backBtn:active {
+  opacity: 0.6;
+  transform: scale(0.96);
+}
+
+.backLabel {
+  font-size: 14px;
+}
+
+.topTitle {
+  font-size: 17px;
   font-weight: 700;
-  margin-bottom: 32px;
+  color: var(--text);
+  letter-spacing: 0.3px;
+}
+
+.doneBtn {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  padding: 6px 4px;
+  transition: var(--transition-fast);
+  position: relative;
+  min-width: 36px;
+  text-align: center;
+}
+.doneBtn:not(:disabled) {
   color: var(--text);
 }
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.doneBtn:not(:disabled):active {
+  opacity: 0.6;
+  transform: scale(0.96);
+}
+.doneBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 
-.field {
+/* Loading spinner */
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--text-muted);
+  border-top-color: var(--text);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+}
+
+/* ── 主内容 ── */
+.content {
+  padding: 8px var(--page-margin) 40px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 36px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .label {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  padding: 0 4px;
 }
 
-.iconGrid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+/* ── 世界名称输入 ── */
+.inputWrap {
+  position: relative;
 }
 
-.iconOption {
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  border-radius: var(--radius-sm);
-  border: 2px solid var(--border);
-  cursor: pointer;
-  transition: var(--transition);
+.nameInput {
+  width: 100%;
+  padding: 16px 56px 16px 18px;
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--text);
   background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  transition: var(--transition-fast);
+}
+.nameInput:focus {
+  border-color: var(--primary-deeper);
+  background: #FFFEFA;
+  box-shadow: 0 0 0 3px rgba(232, 213, 176, 0.25);
+}
+.nameInput::placeholder {
+  color: var(--text-muted);
+  font-weight: 400;
 }
 
-.iconOption:active {
-  transform: scale(0.95);
+.charCount {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+.charLimit {
+  color: var(--accent);
 }
 
-.iconOption.selected {
-  border-color: var(--primary-dark);
-  background: var(--primary);
-}
-
-.colorGrid {
+/* ── 水晶球颜色选择 ── */
+.colorRow {
   display: flex;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 8px 8px 0;
+}
+
+.colorItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 10px;
 }
 
-.colorOption {
-  width: 36px;
-  height: 36px;
+.shellOrb {
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
+  border: 1.5px solid;
+  position: relative;
   cursor: pointer;
-  border: 3px solid transparent;
-  transition: var(--transition);
-  background: var(--color-bg, #ccc);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
+  /* 高光 */
+  overflow: hidden;
+}
+.shellOrb::before {
+  content: '';
+  position: absolute;
+  top: 14%;
+  left: 18%;
+  width: 32%;
+  height: 22%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 100%);
+  border-radius: 50%;
+  z-index: 1;
+}
+.shellOrb::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3) 0%, transparent 70%);
+  z-index: 0;
 }
 
-.colorOption:active {
-  transform: scale(0.95);
+/* 选中态：放大 + 发光 */
+.shellOrbActive {
+  transform: scale(1.15);
+}
+/* 选中弹跳 */
+.shellOrb:active {
+  transform: scale(0.92);
+  transition: transform 0.1s ease;
+}
+.shellOrbActive:active {
+  transform: scale(1.05);
 }
 
-.colorOption.selected {
+.colorLabel {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* ── 隐私权限 ── */
+.privacyToggle {
+  display: flex;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 4px;
+  gap: 4px;
+}
+
+.privacyBtn {
+  flex: 1;
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-radius: var(--radius-pill);
+  transition: var(--transition-fast);
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.privacyBtn:active {
+  transform: scale(0.97);
+}
+
+.privacyActive {
+  background: var(--primary);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+
+.privacyHint {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 0 8px;
+  line-height: 1.5;
+}
+
+/* ── 好友选择列表 ── */
+.friendList {
+  margin-top: 4px;
+  animation: slideDown 0.3s ease;
+}
+
+.friendListTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0 4px 8px;
+}
+
+.friendItems {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.friendEmpty {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 24px 0;
+}
+
+.friendItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+.friendItem:active {
+  background: var(--bg-hover);
+  transform: scale(0.985);
+}
+
+.friendSelected {
+  border-color: var(--primary-deeper);
+  background: rgba(255, 249, 230, 0.45);
+}
+
+.friendInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.friendAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--bg-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.friendAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.friendAvatar .material-symbols-outlined {
+  font-size: 22px;
+}
+
+.friendName {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* ── Checkbox（44×44px 触控目标） ── */
+.checkbox {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--border-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+  flex-shrink: 0;
+  color: transparent;
+}
+
+.checkboxChecked {
   border-color: var(--text);
-  box-shadow: 0 0 0 2px var(--bg-card), 0 0 0 4px var(--text);
+  background: var(--text);
+  color: var(--text-inverse);
 }
 
-.actions {
+/* ── 覆盖层（弹框背景） ── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+/* ── 底部弹出 Sheet ── */
+.sheet {
+  width: 100%;
+  max-width: 720px;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: 28px var(--page-margin) calc(var(--page-margin) + env(safe-area-inset-bottom, 0));
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.sheetTitle {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.sheetDesc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.sheetActions {
   display: flex;
   gap: 12px;
-  margin-top: 8px;
+  width: 100%;
+}
+
+.sheetCancel,
+.sheetConfirm {
+  flex: 1;
+  padding: 14px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: var(--radius-pill);
+  transition: var(--transition-fast);
+  text-align: center;
+}
+.sheetCancel:active,
+.sheetConfirm:active {
+  transform: scale(0.97);
+}
+
+.sheetCancel {
+  color: var(--text-secondary);
+  background: var(--bg-hover);
+}
+.sheetCancel:active {
+  background: var(--border-medium);
+}
+
+.sheetConfirm {
+  color: var(--text-inverse);
+  background: var(--text);
+}
+.sheetConfirm:active {
+  opacity: 0.85;
+}
+
+/* ═════════════════════════════════════════════════
+   Keyframes
+   ═════════════════════════════════════════════════ */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
