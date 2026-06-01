@@ -54,8 +54,8 @@
   border-radius: var(--radius-pill);
   font-size: 15px;
   font-weight: 600;
-  color: var(--text-primary-dark);
-  background: var(--primary-dark);
+  color: #fff;
+  background: var(--text-primary-dark);
   border: none;
   cursor: pointer;
   transition: var(--transition-fast);
@@ -64,7 +64,7 @@
 
 .confirmBtn:active {
   transform: scale(0.97);
-  background: var(--primary-deeper);
+  background: #4a4739;
 }
 
 .cancelBtn {

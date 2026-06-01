@@ -195,7 +195,8 @@ export default function WorldDetail() {
     const text = `${flowTarget.title} ${flowTarget.content}`;
     const { emotion, hue } = analyzeEmotion(text);
     const keywords = extractKeywords(text);
-    await addResonance({
+    // 不阻塞 UI 过渡 — 后台执行 API 调用，即使失败也让弹框正常切换
+    addResonance({
       worldId: flowTarget.worldId,
       worldName: world?.name,
       authorId: user.id,
@@ -205,7 +206,7 @@ export default function WorldDetail() {
       content: flowTarget.content,
       keywords,
       isAnonymous: true,
-    });
+    }).catch(() => {});
     const entry = flowTarget;
     setFlowTarget(null);
     setFlowingEntry(entry);
