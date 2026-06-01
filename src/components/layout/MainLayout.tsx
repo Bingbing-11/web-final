@@ -9,6 +9,9 @@ export default function MainLayout() {
   const [scrolled, setScrolled] = useState(false);
   const isHome = location.pathname === '/';
   const isDarkPage = ['/resonance', '/burn'].some(p => location.pathname.startsWith(p));
+  /* 世界详情页 / 时光机页：隐藏底部 Tab + 子页面顶栏 */
+  const isFullscreenPage = /^\/world\/[^/]+$/.test(location.pathname) ||
+    location.pathname.startsWith('/timecapsule') || location.pathname.startsWith('/time');
 
   const isFriendsPage = location.pathname.startsWith('/friends');
   const toggleFriendRequests = useLayoutStore(s => s.toggleFriendRequests);
@@ -47,7 +50,7 @@ export default function MainLayout() {
       </main>
 
       {/* ── 非首页：动态顶部栏（标题 + 右侧操作区） ── */}
-      {!isHome && (
+      {!isHome && !isFullscreenPage && (
         <header className={styles.subTopBar}>
           <div className={styles.topBarInner}>
             <h1 className={styles.subTitle}>{getPageTitle(location.pathname)}</h1>
@@ -60,7 +63,8 @@ export default function MainLayout() {
         </header>
       )}
 
-      {/* ── Bottom Navigation ── */}
+      {/* ── Bottom Navigation（全屏页面隐藏） ── */}
+      {!isFullscreenPage && (
       <nav className={`${styles.bottomNav} ${isDarkPage ? styles.darkNav : ''}`}>
         {navItems.map(item => (
           <NavLink
@@ -78,6 +82,7 @@ export default function MainLayout() {
           </NavLink>
         ))}
       </nav>
+      )}
     </div>
   );
 }

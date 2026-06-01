@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { Entry } from '../types/entry';
 import * as api from '../lib/api';
+import { mockEntries } from '../mocks/mockEntries';
 
 interface EntryState {
   entries: Entry[];
@@ -15,7 +16,7 @@ interface EntryState {
 }
 
 export const useEntryStore = create<EntryState>()((set, get) => ({
-  entries: [],
+  entries: import.meta.env.DEV ? mockEntries : [],
   isLoading: false,
 
   fetchEntries: async (worldId: string) => {

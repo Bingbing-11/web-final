@@ -330,7 +330,7 @@ export default function WorldHub() {
                     className={styles.msgItem}
                     onClick={() => {
                       setMsgWorldId(null);
-                      navigate(`/world/${msg.worldId}`);
+                      navigate(`/world/${msg.worldId}#comment-${msg.id}`);
                     }}
                   >
                     <div className={styles.msgMeta}>

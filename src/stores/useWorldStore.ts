@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { World } from '../types/world';
 import * as api from '../lib/api';
+import { mockWorlds } from '../mocks/mockWorlds';
 
 interface WorldState {
   worlds: World[];
@@ -15,7 +16,7 @@ interface WorldState {
 }
 
 export const useWorldStore = create<WorldState>()((set, get) => ({
-  worlds: [],
+  worlds: import.meta.env.DEV ? mockWorlds : [],
   isLoading: false,
 
   fetchWorlds: async () => {

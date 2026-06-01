@@ -1,11 +1,13 @@
-import { useState, useMemo, useCallback, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useWorldStore } from '../../stores/useWorldStore';
 import { useEntryStore } from '../../stores/useEntryStore';
 import { matchScenes } from '../../lib/crystal/sceneEngine';
 import { DEFAULT_CRYSTAL_PARAMS } from '../../lib/crystal/materialEngine';
 import CrystalCanvas from '../../components/crystal/CrystalCanvas';
 import type { Entry } from '../../types/entry';
+import type { Comment } from '../../types/comment';
+import { allMockComments } from '../../mocks/mockComments';
 import styles from './WorldDetail.module.css';
 
 /* ── 正文截断行数 ── */
@@ -14,11 +16,72 @@ const PREVIEW_LINE_CLAMP = 4;
 export default function WorldDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const world = useWorldStore(s => s.getWorld(id || ''));
-  const entries = useEntryStore(s => s.entries.filter(e => e.worldId === id));
+  const location = useLocation();
+  /* 原始数据订阅（避免 selector 中创建新引用） */
+  const rawWorlds = useWorldStore(s => s.worlds);
+  const rawEntries = useEntryStore(s => s.entries);
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchFocused, setSearchFocused] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState<Entry | null>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  /* ── URL hash 定位（从首页消息跳转） ── */
+  const highlightCommentId = useMemo(() => {
+    const hash = location.hash; // "#comment-m1-1"
+    if (!hash.startsWith('#comment-')) return null;
+    return hash.slice('#comment-'.length);
+  }, [location.hash]);
+
+  /* 定位滚动 + 高亮效果 */
+  useEffect(() => {
+    if (!highlightCommentId) return;
+    const targetComment = comments.find(c => c.id === highlightCommentId);
+    if (!targetComment) return;
+
+    /* 尝试在卡片预览区查找 */
+    const el = document.getElementById(`comment-${highlightCommentId}`);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.classList.add(styles.commentHighlight);
+      const timer = setTimeout(() => el.classList.remove(styles.commentHighlight), 2500);
+      return () => clearTimeout(timer);
+    } else {
+      /* 不在预览区 → 打开弹框再定位 */
+      const targetEntry = entries.find(e => e.id === targetComment.entryId);
+      if (targetEntry) {
+        setSelectedEntry(targetEntry);
+        setTimeout(() => {
+          const modalEl = document.getElementById(`comment-${highlightCommentId}`);
+          if (modalEl) {
+            modalEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            modalEl.classList.add(styles.commentHighlight);
+            setTimeout(() => modalEl.classList.remove(styles.commentHighlight), 2500);
+          }
+        }, 400);
+      }
+    }
+  }, [highlightCommentId]);
+
+  /* ── 留言状态 ── */
+  const [comments, setComments] = useState<Comment[]>(() =>
+    import.meta.env.DEV ? allMockComments : []
+  );
+  const [commentInput, setCommentInput] = useState('');
+  const [replyTo, setReplyTo] = useState<Comment | null>(null);
+  const commentInputRef = useRef<HTMLInputElement>(null);
+
+  /* 从 worlds 中查找当前世界 */
+  const world = useMemo(
+    () => rawWorlds.find(w => w.id === id),
+    [rawWorlds, id],
+  );
+
+  /* 过滤当前世界的日记 */
+  const entries = useMemo(
+    () => rawEntries.filter(e => e.worldId === id),
+    [rawEntries, id],
+  );
 
   /* 场景权重（水晶球用） */
   const sceneWeights = useMemo(() => {
@@ -57,9 +120,47 @@ export default function WorldDetail() {
     return () => { document.body.style.overflow = ''; };
   }, [selectedEntry]);
 
-  /* 点击日记卡片 */
+  /* 获取某篇日记的留言 */
+  const getCommentsForEntry = useCallback((entryId: string) => {
+    return comments.filter(c => c.entryId === entryId);
+  }, [comments]);
+
+  /* 发表留言 */
+  const handleSubmitComment = useCallback((entryId: string) => {
+    const text = commentInput.trim();
+    if (!text) return;
+
+    const newComment: Comment = {
+      id: `comment-${Date.now()}`,
+      entryId,
+      userId: 'mock-user',
+      userName: '我',
+      userAvatar: '🧑',
+      content: text,
+      ...(replyTo ? { replyToId: replyTo.id, replyToName: replyTo.userName } : {}),
+      createdAt: new Date().toISOString(),
+    };
+
+    setComments(prev => [...prev, newComment]);
+    setCommentInput('');
+    setReplyTo(null);
+  }, [commentInput, replyTo]);
+
+  /* 点击回复 */
+  const handleReply = useCallback((comment: Comment) => {
+    setReplyTo(comment);
+    setCommentInput('');
+    commentInputRef.current?.focus();
+  }, []);
+
+  /* 取消回复 */
+  const handleCancelReply = useCallback(() => {
+    setReplyTo(null);
+    setCommentInput('');
+  }, []);
+
+  /* 点击日记正文 → 打开弹框 */
   const handleEntryClick = useCallback((entry: Entry) => {
-    // 触觉反馈
     if (navigator.vibrate) navigator.vibrate(10);
     setSelectedEntry(entry);
   }, []);
@@ -69,64 +170,71 @@ export default function WorldDetail() {
     setSelectedEntry(null);
   }, []);
 
+  /* 返回上一页 */
+  const handleBack = useCallback(() => {
+    if (navigator.vibrate) navigator.vibrate(8);
+    navigate(-1);
+  }, [navigate]);
+
   if (!world) return <div className={styles.empty}>世界不存在</div>;
 
   return (
     <div className={styles.page}>
-      {/* ── 搜索栏 ── */}
-      <div className={styles.searchWrap}>
+      {/* ── 顶部栏：返回 + 世界名 ── */}
+      <header className={styles.topBar}>
+        <button className={styles.backBtn} onClick={handleBack}>
+          <span className="material-symbols-outlined">arrow_back</span>
+        </button>
+        <h1 className={styles.topBarTitle}>{world.name}</h1>
+      </header>
+
+      {/* ── 搜索栏（移动端聚焦展开） ── */}
+      <div className={`${styles.searchWrap} ${searchFocused ? styles.searchFocused : ''}`}>
         <span className={styles.searchIcon}>🔍</span>
         <input
+          ref={searchInputRef}
           className={styles.searchInput}
           type="text"
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
+          onFocus={() => setSearchFocused(true)}
+          onBlur={() => setSearchFocused(false)}
           placeholder="搜索这个世界里的日记…"
         />
+        {searchQuery && (
+          <button className={styles.searchClear} onClick={() => { setSearchQuery(''); }}>
+            <span className="material-symbols-outlined" style={{ fontSize: 16 }}>close</span>
+          </button>
+        )}
       </div>
 
-      {/* ── 世界头部 ── */}
-      <div className={styles.worldHeader}>
-        <div className={styles.worldInfo}>
-          <div className={styles.worldName}>
-            <span>{world.icon || '🌍'}</span> {world.name}
-            {world.isSealed && <span className={styles.sealedLabel}>已封存</span>}
-          </div>
-          {world.description && (
-            <div className={styles.worldDesc}>{world.description}</div>
-          )}
-        </div>
-      </div>
+      {/* ── 世界描述 ── */}
+      {world.description && (
+        <div className={styles.worldDesc}>{world.description}</div>
+      )}
 
       {/* ── 水晶球 ── */}
-      <div style={{ width: '100%', height: 200, borderRadius: 'var(--radius-lg)', overflow: 'hidden', marginBottom: 20, background: 'linear-gradient(135deg, var(--primary-deeper), var(--primary-dark))', boxShadow: 'var(--shadow)', border: '1px solid var(--border)' }}>
+      <div className={styles.crystalWrap}>
         <CrystalCanvas params={{ ...DEFAULT_CRYSTAL_PARAMS }} sceneWeights={sceneWeights} isSealed={world.isSealed} />
       </div>
-
-      {/* ── 操作按钮 ── */}
-      {!world.isSealed && (
-        <div className={styles.actions}>
-          <button className={`${styles.actionBtn} ${styles.actionBtnPrimary}`} onClick={() => navigate(`/world/${id}/entry/new`)}>
-            ✏️ 写日记
-          </button>
-          <button className={`${styles.actionBtn} ${styles.actionBtnSecondary}`} onClick={() => navigate(`/world/${id}/settings`)}>
-            ⚙️ 设置
-          </button>
-          <button className={`${styles.actionBtn} ${styles.actionBtnSecondary}`} onClick={() => navigate(`/world/${id}/temple`)}>
-            🏛️ 圣殿
-          </button>
-        </div>
-      )}
 
       {/* ── 日记时间线 ── */}
       <div className={styles.sectionTitle}>
         <span>日记</span>
-        <span className={styles.sectionCount}>{filteredEntries.length} 篇</span>
+        <span className={styles.sectionCount}>
+          {filteredEntries.length} 篇
+          {searchQuery.trim() && filteredEntries.length !== entries.length && (
+            <span style={{ color: 'var(--text-muted)', fontWeight: 400, marginLeft: 4 }}>
+              （筛选）
+            </span>
+          )}
+        </span>
       </div>
 
       {filteredEntries.length === 0 ? (
         searchQuery ? (
           <div className={styles.searchEmpty}>
+            <div className={styles.emptyIcon}>🔍</div>
             没有找到包含「{searchQuery}」的日记
           </div>
         ) : (
@@ -137,97 +245,147 @@ export default function WorldDetail() {
         )
       ) : (
         <div className={styles.timeline}>
-          {filteredEntries.map(entry => {
+          {filteredEntries.map((entry) => {
             const isBurned = entry.status === 'burned';
-            const isLong = entry.content.length > 120;
+            const isLong = entry.content.split('\n').length > PREVIEW_LINE_CLAMP || entry.content.length > 120;
+            const entryComments = getCommentsForEntry(entry.id);
 
             return (
-              <div key={entry.id} className={styles.diaryCard}>
+              <article key={entry.id} className={styles.diaryCard}>
                 {/* 时间线圆点 */}
                 <div className={`${styles.diaryDot} ${isBurned ? styles.diaryDotBurned : ''}`} />
 
-                {/* 时间 */}
+                {/* 日期时间 */}
                 <div className={styles.diaryTime}>
-                  {new Date(entry.createdAt).toLocaleDateString('zh-CN', { month: 'long', day: 'numeric' })}
-                  {' · '}
-                  {new Date(entry.createdAt).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })}
+                  <span>{new Date(entry.createdAt).toLocaleDateString('zh-CN', { month: 'long', day: 'numeric' })}</span>
+                  <span className={styles.timeDot} />
+                  <span>{new Date(entry.createdAt).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
 
                 {/* 卡片主体 */}
                 <div
                   className={`${styles.diaryBody} ${isBurned ? styles.diaryBodyFaded : ''}`}
-                  onClick={() => !isBurned && handleEntryClick(entry)}
                 >
-                  {/* 正文（截断） */}
-                  <div className={`${styles.diaryContent} ${isLong && !isBurned ? styles.diaryContentTruncated : ''}`}>
-                    {isBurned ? (
+                  {isBurned ? (
+                    /* 封存态 */
+                    <div className={styles.diaryBodyFadedInner}>
                       <span className={styles.diaryContentFaded}>
-                        "这一页已经随着时间变得模糊……"
+                        「这一页已经随着时间变得模糊……」
                       </span>
-                    ) : (
-                      entry.content
-                    )}
-                  </div>
+                    </div>
+                  ) : (
+                    <>
+                      {/* 正文（截断） */}
+                      <div
+                        className={`${styles.diaryContent} ${isLong ? styles.diaryContentTruncated : ''}`}
+                        onClick={() => handleEntryClick(entry)}
+                      >
+                        {entry.content.split('\n').map((line, i) => (
+                          <p key={i}>{line || '\u00A0'}</p>
+                        ))}
+                        {isLong && (
+                          <div className={styles.diaryExpandHint}>点击查看全文 ↓</div>
+                        )}
+                      </div>
 
-                  {/* 展开提示 */}
-                  {isLong && !isBurned && (
-                    <div className={styles.diaryExpandHint}>点击查看全文 ↓</div>
-                  )}
-
-                  {/* 图片（非绝对定位） */}
-                  {!isBurned && entry.keywords?.length > 0 && (
-                    <div className={styles.diaryImages}>
-                      {entry.keywords.slice(0, 3).map((kw, i) => (
-                        <div key={i} className={styles.diaryImage}>
-                          <div style={{ width: '100%', height: '100%', background: `hsl(${(i * 60 + 30) % 360}, 20%, 90%)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>
-                            {kw}
-                          </div>
+                      {/* 图片（内联排列） */}
+                      {entry.keywords?.length > 0 && (
+                        <div className={styles.diaryImages}>
+                          {entry.keywords.slice(0, 3).map((kw, i) => (
+                            <div key={i} className={styles.diaryImage}>
+                              <div
+                                style={{
+                                  width: '100%',
+                                  height: '100%',
+                                  background: `hsl(${(i * 60 + 30) % 360}, 20%, 90%)`,
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  fontSize: 18,
+                                }}
+                              >
+                                {kw}
+                              </div>
+                            </div>
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                  )}
+                      )}
 
-                  {/* 底部互动 */}
-                  {!isBurned && (
-                    <div className={styles.diaryFooter}>
-                      <button className={styles.diaryCommentBtn}>
-                        💬 留言
-                      </button>
-                    </div>
+                      {/* ── 留言区域 ── */}
+                      <div className={styles.diaryFooter}>
+                        {/* 留言列表（预览最近 2 条） */}
+                        {entryComments.length > 0 && (
+                          <div className={styles.commentList}>
+                            {entryComments.slice(0, 2).map(c => (
+                              <div key={c.id} id={`comment-${c.id}`} className={styles.commentItem}>
+                                <span className={styles.commentAvatar}>{c.userAvatar}</span>
+                                <div className={styles.commentBody}>
+                                  <span className={styles.commentName}>{c.userName}</span>
+                                  {c.replyToName && (
+                                    <span className={styles.commentReplyTag}>回复 {c.replyToName}</span>
+                                  )}
+                                  <span className={styles.commentText}>{c.content}</span>
+                                </div>
+                              </div>
+                            ))}
+                            {entryComments.length > 2 && (
+                              <button
+                                className={styles.commentMoreBtn}
+                                onClick={() => handleEntryClick(entry)}
+                              >
+                                查看全部 {entryComments.length} 条留言
+                              </button>
+                            )}
+                          </div>
+                        )}
+
+                        {/* 留言按钮 + 数量 */}
+                        <div className={styles.commentActions}>
+                          <button
+                            className={styles.diaryCommentBtn}
+                            onClick={() => handleEntryClick(entry)}
+                          >
+                            <span className="material-symbols-outlined" style={{ fontSize: 15 }}>chat_bubble</span>
+                            {entryComments.length > 0 ? entryComments.length : '留言'}
+                          </button>
+                        </div>
+                      </div>
+                    </>
                   )}
                 </div>
-              </div>
+              </article>
             );
           })}
         </div>
       )}
 
-      {/* ── 底部快捷 ── */}
-      <div className={styles.bottomNav}>
-        <button className={`${styles.actionBtn} ${styles.actionBtnSecondary}`} onClick={() => navigate(`/world/${id}/permissions`)}>
-          🔐 权限
-        </button>
-        <button className={`${styles.actionBtn} ${styles.actionBtnSecondary}`} onClick={() => navigate('/timecapsule')}>
-          ⏳ 时光机
-        </button>
-      </div>
+      {/* ── 底部安全区占位 ── */}
+      <div className={styles.bottomSpacer} />
 
-      {/* ── 日记全文弹框 ── */}
+      {/* ═══════════════ 日记全文弹框（含完整留言） ═══════════════ */}
       {selectedEntry && (
         <div className={styles.modalOverlay} onClick={handleCloseModal}>
-          <div className={styles.modalSheet} onClick={e => e.stopPropagation()}>
+          <div className={styles.modalSheet} onClick={(e) => e.stopPropagation()}>
+            {/* 拖拽柄 */}
             <div className={styles.modalHandle} />
+
+            {/* 弹框头部 */}
             <div className={styles.modalHeader}>
               <span className={styles.modalTitle}>{selectedEntry.title || '日记详情'}</span>
-              <button className={styles.modalClose} onClick={handleCloseModal}>✕</button>
+              <button className={styles.modalClose} onClick={handleCloseModal}>
+                <span className="material-symbols-outlined" style={{ fontSize: 20 }}>close</span>
+              </button>
             </div>
+
+            {/* 弹框内容 */}
             <div className={styles.modalBody}>
               {/* 日期 */}
               <div className={styles.modalDate}>
+                <span className="material-symbols-outlined" style={{ fontSize: 14, marginRight: 4 }}>event</span>
                 {new Date(selectedEntry.createdAt).toLocaleDateString('zh-CN', {
                   year: 'numeric', month: 'long', day: 'numeric',
                 })}
-                {' '}
+                {' · '}
                 {new Date(selectedEntry.createdAt).toLocaleTimeString('zh-CN', {
                   hour: '2-digit', minute: '2-digit',
                 })}
@@ -236,14 +394,19 @@ export default function WorldDetail() {
               {/* 情绪标签 */}
               {selectedEntry.emotion && (
                 <div className={styles.modalEmotion}>
-                  <span style={{ width: 8, height: 8, borderRadius: '50%', background: `hsl(${selectedEntry.emotionHue || 180}, 60%, 60%)` }} />
+                  <span
+                    className={styles.emotionDot}
+                    style={{ background: `hsl(${selectedEntry.emotionHue || 180}, 60%, 60%)` }}
+                  />
                   {selectedEntry.emotion}
                 </div>
               )}
 
-              {/* 完整正文 */}
+              {/* 完整正文（带横线纸风格） */}
               <div className={styles.modalContent}>
-                {selectedEntry.content}
+                {selectedEntry.content.split('\n').map((line, i) => (
+                  <p key={i} className={styles.modalPara}>{line || '\u00A0'}</p>
+                ))}
               </div>
 
               {/* 图片区域 */}
@@ -251,13 +414,100 @@ export default function WorldDetail() {
                 <div className={styles.modalImages}>
                   {selectedEntry.keywords.slice(0, 4).map((kw, i) => (
                     <div key={i} className={styles.modalImage}>
-                      <div style={{ width: '100%', height: 160, background: `hsl(${(i * 60 + 30) % 360}, 20%, 90%)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28 }}>
+                      <div
+                        style={{
+                          width: '100%',
+                          height: 160,
+                          borderRadius: 12,
+                          background: `hsl(${(i * 60 + 30) % 360}, 20%, 90%)`,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: 24,
+                        }}
+                      >
                         {kw}
                       </div>
                     </div>
                   ))}
                 </div>
               )}
+
+              {/* ══ 弹框内完整留言区 ══ */}
+              <div className={styles.modalComments}>
+                <div className={styles.modalCommentsTitle}>
+                  留言 ({getCommentsForEntry(selectedEntry.id).length})
+                </div>
+
+                {getCommentsForEntry(selectedEntry.id).length === 0 ? (
+                  <div className={styles.modalCommentsEmpty}>
+                    还没有留言，说点什么吧 ✨
+                  </div>
+                ) : (
+                  <div className={styles.modalCommentList}>
+                    {getCommentsForEntry(selectedEntry.id).map(c => (
+                      <div key={c.id} id={`comment-${c.id}`} className={styles.modalCommentItem}>
+                        <span className={styles.commentAvatar}>{c.userAvatar}</span>
+                        <div className={styles.commentBody}>
+                          <div className={styles.commentHeader}>
+                            <span className={styles.commentName}>{c.userName}</span>
+                            <span className={styles.commentTime}>
+                              {new Date(c.createdAt).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          </div>
+                          {c.replyToName && (
+                            <div className={styles.commentReplyRef}>
+                              回复 <span>{c.replyToName}</span>
+                            </div>
+                          )}
+                          <p className={styles.commentText}>{c.content}</p>
+                          <button
+                            className={styles.commentReplyBtn}
+                            onClick={() => handleReply(c)}
+                          >
+                            回复
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* 留言输入框 */}
+                <div className={styles.commentInputWrap}>
+                  {replyTo && (
+                    <div className={styles.replyHint}>
+                      <span>回复 {replyTo.userName}</span>
+                      <button className={styles.replyCancel} onClick={handleCancelReply}>
+                        <span className="material-symbols-outlined" style={{ fontSize: 14 }}>close</span>
+                      </button>
+                    </div>
+                  )}
+                  <div className={styles.commentInputRow}>
+                    <span className={styles.commentInputAvatar}>🧑</span>
+                    <input
+                      ref={commentInputRef}
+                      className={styles.commentInput}
+                      type="text"
+                      value={commentInput}
+                      onChange={e => setCommentInput(e.target.value)}
+                      placeholder={replyTo ? `回复 ${replyTo.userName}…` : '写下留言…'}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
+                          handleSubmitComment(selectedEntry.id);
+                        }
+                      }}
+                    />
+                    <button
+                      className={styles.commentSendBtn}
+                      onClick={() => handleSubmitComment(selectedEntry.id)}
+                      disabled={!commentInput.trim()}
+                    >
+                      <span className="material-symbols-outlined" style={{ fontSize: 18 }}>send</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
