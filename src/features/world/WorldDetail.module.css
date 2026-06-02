@@ -431,38 +431,6 @@
 }
 
 /* ── 日记图片（内联排列，非绝对定位）── */
-.diaryImages {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
-  flex-wrap: wrap;
-}
-
-.diaryImage {
-  width: 72px;
-  height: 72px;
-  border-radius: 8px;
-  overflow: hidden;
-  flex-shrink: 0;
-  background: #F5F3F3;
-  /* 移动端不使用 hover 灰度效果，用 active 反馈 */
-  transition: transform 0.2s ease;
-}
-.diaryImage:active {
-  transform: scale(0.94);
-}
-@media (hover: hover) {
-  .diaryImage {
-    filter: grayscale(60%);
-    opacity: 0.65;
-  }
-  .diaryImage:hover {
-    filter: grayscale(0%);
-    opacity: 1;
-    transform: scale(1.03);
-  }
-}
-
 /* ── 底部互动区 ── */
 .diaryFooter {
   margin-top: 14px;
@@ -727,22 +695,6 @@
 .modalPara {
   margin: 0;
   min-height: 30px;
-}
-
-/* 弹框内图片 */
-.modalImages {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  margin-top: 16px;
-}
-
-.modalImage {
-  width: 100%;
-  max-height: 180px;
-  border-radius: 12px;
-  overflow: hidden;
-  background: #F5F3F3;
 }
 
 /* ════════════ 动画 ═════════════ */

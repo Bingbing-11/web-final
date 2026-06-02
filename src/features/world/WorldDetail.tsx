@@ -2,16 +2,12 @@ import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useWorldStore } from '../../stores/useWorldStore';
 import { useEntryStore } from '../../stores/useEntryStore';
-import { useResonanceStore } from '../../stores/useResonanceStore';
-import { useAuthStore } from '../../stores/useAuthStore';
 import { matchScenes } from '../../lib/crystal/sceneEngine';
 import { DEFAULT_CRYSTAL_PARAMS } from '../../lib/crystal/materialEngine';
-import { analyzeEmotion, extractKeywords } from '../../lib/crystal';
 import CrystalCanvas from '../../components/crystal/CrystalCanvas';
 import type { Entry } from '../../types/entry';
 import type { Comment } from '../../types/comment';
 import { allMockComments } from '../../mocks/mockComments';
-import ConfirmModal from '../../components/common/ConfirmModal';
 import styles from './WorldDetail.module.css';
 
 /* ── 正文截断行数 ── */
@@ -340,29 +336,6 @@ export default function WorldDetail() {
                         )}
                       </div>
 
-                      {/* 图片（内联排列） */}
-                      {entry.keywords?.length > 0 && (
-                        <div className={styles.diaryImages}>
-                          {entry.keywords.slice(0, 3).map((kw, i) => (
-                            <div key={i} className={styles.diaryImage}>
-                              <div
-                                style={{
-                                  width: '100%',
-                                  height: '100%',
-                                  background: `hsl(${(i * 60 + 30) % 360}, 20%, 90%)`,
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  fontSize: 18,
-                                }}
-                              >
-                                {kw}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
                       {/* ── 留言区域 ── */}
                       <div className={styles.diaryFooter}>
                         {/* 留言列表（预览最近 2 条） */}
@@ -391,7 +364,7 @@ export default function WorldDetail() {
                           </div>
                         )}
 
-                        {/* 留言按钮 + 数量 + 流向共鸣池 */}
+                        {/* 留言按钮 + 数量 */}
                         <div className={styles.commentActions}>
                           <button
                             className={styles.diaryCommentBtn}
@@ -400,18 +373,6 @@ export default function WorldDetail() {
                             <span className="material-symbols-outlined" style={{ fontSize: 15 }}>chat_bubble</span>
                             {entryComments.length > 0 ? entryComments.length : '留言'}
                           </button>
-                          {!isBurned && (
-                            <button
-                              className={styles.diaryCommentBtn}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleFlowToResonance(entry);
-                              }}
-                            >
-                              <span className="material-symbols-outlined" style={{ fontSize: 15 }}>waves</span>
-                              流向共鸣池
-                            </button>
-                          )}
                         </div>
 
                         {/* ── 操作按钮组：编辑 + 流入共鸣池 ── */}
@@ -496,30 +457,6 @@ export default function WorldDetail() {
                 ))}
               </div>
 
-              {/* 图片区域 */}
-              {selectedEntry.keywords?.length > 0 && (
-                <div className={styles.modalImages}>
-                  {selectedEntry.keywords.slice(0, 4).map((kw, i) => (
-                    <div key={i} className={styles.modalImage}>
-                      <div
-                        style={{
-                          width: '100%',
-                          height: 160,
-                          borderRadius: 12,
-                          background: `hsl(${(i * 60 + 30) % 360}, 20%, 90%)`,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: 24,
-                        }}
-                      >
-                        {kw}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
               {/* ══ 弹框内完整留言区 ══ */}
               <div className={styles.modalComments}>
                 <div className={styles.modalCommentsTitle}>
@@ -600,28 +537,7 @@ export default function WorldDetail() {
         </div>
       )}
 
-      {/* ═══════════════ 流向共鸣池弹框 ═══════════════ */}
-      <ConfirmModal
-        open={!!flowTarget}
-        icon="✨"
-        title="是的，流向共鸣池"
-        message={`将「${flowTarget?.title || '无标题'}」匿名分享到共鸣池，让灵魂在此相遇`}
-        confirmText="确认分享"
-        cancelText="取消"
-        onConfirm={confirmFlowToResonance}
-        onCancel={() => setFlowTarget(null)}
-      />
-
-      {/* 分享成功提示弹框 */}
-      <ConfirmModal
-        open={!!flowingEntry}
-        icon="🌟"
-        title="已流向共鸣池"
-        message="你的日记已匿名分享到共鸣池，等待灵魂的回响"
-        confirmText="知道了"
-        onConfirm={() => setFlowingEntry(null)}
-        onCancel={() => setFlowingEntry(null)}
-      />
+      {/* ═══════════════ 底部安全区 ═══════════════ */}
     </div>
   );
 }
