@@ -115,7 +115,7 @@ export default function WorldHub() {
     (key: string) => {
       if (key === 'ash') navigate('/burn');
       else if (key === 'temple') {
-        if (firstWorldId) navigate(`/world/${firstWorldId}/temple`);
+        navigate('/memory-sanctuary');
       }
       else if (key === 'time') navigate('/timecapsule');
     },

@@ -23,6 +23,7 @@ import SettingsPage from './features/settings/SettingsPage';
 import EditProfilePage from './features/settings/EditProfilePage';
 import HelpPage from './features/settings/HelpPage';
 import NotificationsPage from './features/settings/NotificationsPage';
+import MemorySanctuary from './features/memorySanctuary/MemorySanctuary';
 
 export default function App() {
   return (
@@ -43,6 +44,7 @@ export default function App() {
             <Route path="/profile/edit" element={<EditProfilePage />} />
             <Route path="/help" element={<HelpPage />} />
             <Route path="/notifications" element={<NotificationsPage />} />
+            <Route path="/memory-sanctuary" element={<MemorySanctuary />} />
             <Route path="/world/create" element={<WorldCreate />} />
             <Route path="/world/:id" element={<WorldDetail />} />
             <Route path="/world/:id/settings" element={<WorldSettings />} />
