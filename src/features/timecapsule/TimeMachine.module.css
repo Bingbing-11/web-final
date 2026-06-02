@@ -137,10 +137,7 @@
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.45);
   border-radius: 16px;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  padding: 16px 20px;
   box-shadow: 0 8px 28px rgba(90, 90, 90, 0.05);
 }
 
@@ -148,6 +145,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  margin-bottom: 12px;
 }
 
 .datePickerIcon {
@@ -172,14 +170,29 @@
   letter-spacing: 0.01em;
 }
 
-.dateInput {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
+/* ── 日期控制行 ── */
+.dateControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 52px;
+}
+
+.dateSelect {
+  font-size: 13px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(203, 198, 187, 0.3);
+  background: rgba(255, 255, 255, 0.6);
+  color: #49473F;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  appearance: auto;
+}
+.dateSelect:focus {
+  border-color: rgba(98, 95, 80, 0.4);
 }
 
 .travelBtn {
@@ -269,10 +282,6 @@
   background: rgba(98, 95, 80, 0.4);
 }
 
-.dotEcho {
-  background: rgba(98, 95, 80, 0.15);
-}
-
 /* ── 时间戳标头 ── */
 .sectionHeader {
   display: flex;
@@ -297,13 +306,7 @@
   background: rgba(203, 198, 187, 0.2);
 }
 
-.sectionLineDashed {
-  flex: 1;
-  height: 0;
-  border-top: 1px dashed rgba(203, 198, 187, 0.15);
-}
-
-/* ════════════ 记忆卡片主体（玻璃卡片）═════════════ */
+/* ════════════ 玻璃卡片 ═════════════ */
 .glassCard {
   background: rgba(255, 255, 255, 0.78);
   backdrop-filter: blur(16px);
@@ -320,41 +323,6 @@
 .glassCard:active {
   transform: scale(0.985);
   transition: transform 0.1s ease;
-}
-
-/* ── 记忆图片区域 ── */
-.memoryImageWrap {
-  position: relative;
-  width: 100%;
-  height: 192px;
-  overflow: hidden;
-}
-
-.memoryImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.7s ease, filter 0.7s ease;
-  filter: grayscale(30%) opacity(0.9);
-}
-.glassCard:hover .memoryImage {
-  filter: grayscale(0%) opacity(1);
-  transform: scale(1.03);
-}
-
-.worldBadge {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  padding: 4px 12px;
-  border-radius: 9999px;
-  font-size: 11px;
-  font-weight: 500;
-  color: #625F50;
-  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 /* ── 卡片内容 ── */
@@ -417,95 +385,7 @@
   50% { opacity: 1; }
 }
 
-/* ── 关键词图片占位 ── */
-.keywordsRow {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
-  flex-wrap: wrap;
-}
-
-.keywordImage {
-  width: 72px;
-  height: 72px;
-  border-radius: 8px;
-  overflow: hidden;
-  flex-shrink: 0;
-  background: #F5F3F3;
-  transition: transform 0.2s ease;
-}
-.keywordImage:active {
-  transform: scale(0.94);
-}
-
-.keywordPlaceholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  color: #7A776E;
-}
-
-/* ── 卡片底部操作区 ── */
-.cardFooter {
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(203, 198, 187, 0.18);
-  display: flex;
-  gap: 16px;
-}
-
-.footerAction {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  background: transparent;
-  border: none;
-  padding: 4px;
-  cursor: pointer;
-  color: rgba(122, 119, 110, 0.4);
-  -webkit-tap-highlight-color: transparent;
-  transition: color 0.15s ease, transform 0.1s ease;
-}
-.footerAction:active {
-  transform: scale(0.9);
-  color: #625F50;
-}
-.footerAction .material-symbols-outlined {
-  font-size: 18px;
-}
-
-.footerActionFilled {
-  color: rgba(98, 95, 80, 0.3);
-  font-variation-settings: 'FILL' 1;
-}
-
-/* ════════════ 遥远的回声（空状态占位）═════════════ */
-.echoCard {
-  background: rgba(232, 226, 208, 0.2);
-  border: 1px dashed rgba(98, 95, 80, 0.2);
-  border-radius: 12px;
-  padding: 32px 24px;
-  text-align: center;
-}
-
-.echoIcon {
-  font-size: 36px;
-  margin-bottom: 8px;
-  color: rgba(98, 95, 80, 0.35);
-}
-
-.echoText {
-  font-size: 14px;
-  color: rgba(122, 119, 110, 0.5);
-  font-family: 'Literata', 'Georgia', serif;
-  font-style: italic;
-  line-height: 1.6;
-}
-
-/* ════════════ 空状态（无记忆时） ═════════════ */
+/* ════════════ 空状态 ═════════════ */
 .emptyState {
   text-align: center;
   padding: 80px 24px;
@@ -524,7 +404,7 @@
   font-family: 'Literata', 'Georgia', serif;
 }
 
-/* ════════════ 全文弹框（与 WorldDetail 一致） ═════════════ */
+/* ════════════ 全文弹框 ═════════════ */
 .modalOverlay {
   position: fixed;
   inset: 0;
@@ -628,24 +508,6 @@
   font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-.modalEmotion {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: #625F50;
-  font-weight: 500;
-  margin-bottom: 12px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-}
-
-.emotionDot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  display: inline-block;
-}
-
 .modalContent {
   font-family: 'Literata', 'Georgia', serif;
   font-size: 15px;
@@ -654,45 +516,6 @@
 }
 .modalContent p {
   margin: 0 0 8px;
-}
-
-.modalImages {
-  display: flex;
-  gap: 8px;
-  margin-top: 16px;
-  flex-wrap: wrap;
-}
-
-.modalImage {
-  width: 100%;
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-/* ════════════ 穿梭成功 Toast ═════════════ */
-.travelToast {
-  position: fixed;
-  bottom: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 10px 24px;
-  border-radius: 9999px;
-  background: rgba(98, 95, 80, 0.92);
-  color: #FFF9E6;
-  font-size: 14px;
-  font-weight: 500;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  z-index: 300;
-  white-space: nowrap;
-  animation: toastUp 0.3s cubic-bezier(0.32, 0.72, 0, 1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  font-family: 'Plus Jakarta Sans', sans-serif;
-}
-
-@keyframes toastUp {
-  from { opacity: 0; transform: translateX(-50%) translateY(12px); }
-  to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
 /* ════════════ 动画关键帧 ═════════════ */

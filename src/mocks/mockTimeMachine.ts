@@ -1,8 +1,8 @@
 import type { Entry } from '../types/entry';
 
 /**
- * 时光机 Mock 数据 —— 按日期分组的"多年以前"记忆
- * 数据结构与 mockEntries 保持一致
+ * 时光机 Mock 数据 —— 按 MM-DD 分组的多年记忆
+ * yearsAgo / label 动态计算
  */
 
 const now = Date.now();
@@ -10,8 +10,6 @@ const day = 86400_000;
 
 export interface TimeMemory {
   id: string;
-  yearsAgo: number;        // 几年以前
-  label: string;           // "五年前的今天"
   type: 'memory' | 'echo';
   entry: Entry | null;     // null 表示"遥远的回声"占位态
   worldName: string;
@@ -19,20 +17,16 @@ export interface TimeMemory {
 }
 
 export interface TimeDateGroup {
-  date: string;            // key: "2024-05-25"
-  display: string;         // "2024年5月25日"
+  key: string;             // "MM-DD" 格式
   memories: TimeMemory[];
 }
 
-/* ── 预设日期 1：当前默认 ── */
-const defaultMemories: TimeDateGroup = {
-  date: '2024-05-25',
-  display: '2024年5月25日',
+/* ── 05-25：多个年份的记忆 ── */
+const date0525: TimeDateGroup = {
+  key: '05-25',
   memories: [
     {
       id: 'tm-1',
-      yearsAgo: 5,
-      label: '五年前的今天',
       type: 'memory',
       worldName: '梦境花园',
       imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCWPq9dMrEaXHSGZi_U5oSDZOKsQwNQFxE9mFOSuxOxU9ErpbZXjDCWXPTiDlvMV7Au9mQBi5u_bIJs5XFS8wfsUpAgjdelUI3GPlNUFPP9JCt2_c24vq0JGEAqMrXEbN4tqll7fcMptDeOv8zt5t7ciNPaN_JxG63K2zvU8jzqpFmrJfR4LqW1NHo7lCx8hDMnNltnjrQaui_IW05cJEz8bOCvphRo_HT3bnMyZTBF1MOzEwGIoj-b3il2ydXbypOf3Gs9rivIy1Q',
@@ -50,9 +44,7 @@ const defaultMemories: TimeDateGroup = {
 现在回想起来，那段时间的安静和秩序，像是一座小小的避难所。`,
         mode: 'normal',
         status: 'published',
-        emotion: '平静',
-        emotionHue: 180,
-        keywords: ['清晨', '阳光', '安静'],
+        keywords: [],
         createdAt: new Date(now - 5 * 365 * day).toISOString(),
         updatedAt: new Date(now - 5 * 365 * day).toISOString(),
         readCount: 23,
@@ -60,8 +52,6 @@ const defaultMemories: TimeDateGroup = {
     },
     {
       id: 'tm-2',
-      yearsAgo: 1,
-      label: '一年前的今天',
       type: 'memory',
       worldName: '猫咪咖啡馆',
       imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAp3XlsJrtW7htI-3ntRsfKo-QABTl_FThV1W2FxS_Xx76_YKAV87OP8OIZkTxXs1rp9PEY9TKHiNe9jW9TBpe-XrjaPQYAIBuyreZ2rAoPzl0xU7QDuZolxcc4HEEga7kOEqFvh_O1gOVRIBiOeHMJM43b_yyX3YuV1sNVkFpy9-bAtQ9z9msCy8w4GYB277OqgylClgu-d9oavJHHxzUstFpMJ12_Ot1thwtf6_a8OnPxqKrZRHNutD-uM7BRAV0kLqNwEzrvBFo',
@@ -79,34 +69,21 @@ const defaultMemories: TimeDateGroup = {
 有时候最幸福的时刻，就是你知道自己在做一件对的事情，即使周围没有人理解。`,
         mode: 'normal',
         status: 'published',
-        emotion: '温暖',
-        emotionHue: 35,
-        keywords: ['项目', '咖啡', '成长'],
+        keywords: [],
         createdAt: new Date(now - 365 * day).toISOString(),
         updatedAt: new Date(now - 365 * day).toISOString(),
         readCount: 15,
       },
     },
-    {
-      id: 'tm-3',
-      yearsAgo: 0,
-      label: '遥远的回声',
-      type: 'echo',
-      worldName: '',
-      entry: null,
-    },
   ],
 };
 
-/* ── 预设日期 2 ── */
-const altDate1: TimeDateGroup = {
-  date: '2024-06-01',
-  display: '2024年6月1日',
+/* ── 06-01 ── */
+const date0601: TimeDateGroup = {
+  key: '06-01',
   memories: [
     {
       id: 'tm-4',
-      yearsAgo: 3,
-      label: '三年前的今天',
       type: 'memory',
       worldName: '深海图书馆',
       imageUrl: '',
@@ -124,9 +101,7 @@ const altDate1: TimeDateGroup = {
 留下的是被冲刷过的、干净的沙滩，和我记住了的那种咸咸的味道。`,
         mode: 'normal',
         status: 'published',
-        emotion: '怀念',
-        emotionHue: 210,
-        keywords: ['海洋', '夏天', '旅行'],
+        keywords: [],
         createdAt: new Date(now - 3 * 365 * day).toISOString(),
         updatedAt: new Date(now - 3 * 365 * day).toISOString(),
         readCount: 18,
@@ -134,8 +109,6 @@ const altDate1: TimeDateGroup = {
     },
     {
       id: 'tm-5',
-      yearsAgo: 1,
-      label: '一年前的今天',
       type: 'memory',
       worldName: '极光信箱',
       imageUrl: '',
@@ -155,9 +128,7 @@ const altDate1: TimeDateGroup = {
 希望收到这封信的你，还保持着写字的心情。`,
         mode: 'timecapsule',
         status: 'published',
-        emotion: '期待',
-        emotionHue: 160,
-        keywords: ['信件', '未来', '咖啡'],
+        keywords: [],
         createdAt: new Date(now - 365 * day).toISOString(),
         updatedAt: new Date(now - 365 * day).toISOString(),
         readCount: 11,
@@ -166,15 +137,12 @@ const altDate1: TimeDateGroup = {
   ],
 };
 
-/* ── 预设日期 3 ── */
-const altDate2: TimeDateGroup = {
-  date: '2024-07-15',
-  display: '2024年7月15日',
+/* ── 07-15 ── */
+const date0715: TimeDateGroup = {
+  key: '07-15',
   memories: [
     {
       id: 'tm-6',
-      yearsAgo: 2,
-      label: '两年前的今天',
       type: 'memory',
       worldName: '火山熔岩日记',
       imageUrl: '',
@@ -192,9 +160,7 @@ const altDate2: TimeDateGroup = {
 在漫长的时间面前，一切都会冷却，只剩下安静的轮廓。`,
         mode: 'normal',
         status: 'published',
-        emotion: '震撼',
-        emotionHue: 15,
-        keywords: ['火山', '时间', '旅行'],
+        keywords: [],
         createdAt: new Date(now - 2 * 365 * day).toISOString(),
         updatedAt: new Date(now - 2 * 365 * day).toISOString(),
         readCount: 8,
@@ -202,8 +168,6 @@ const altDate2: TimeDateGroup = {
     },
     {
       id: 'tm-7',
-      yearsAgo: 1,
-      label: '一年前的今天',
       type: 'memory',
       worldName: '梦境花园',
       imageUrl: '',
@@ -221,9 +185,7 @@ const altDate2: TimeDateGroup = {
 我想，记忆大概也是这样——碎了又聚，聚了又碎，从来不会真正消失。`,
         mode: 'normal',
         status: 'published',
-        emotion: '安宁',
-        emotionHue: 230,
-        keywords: ['夜晚', '星星', '散步'],
+        keywords: [],
         createdAt: new Date(now - 365 * day).toISOString(),
         updatedAt: new Date(now - 365 * day).toISOString(),
         readCount: 12,
@@ -232,17 +194,63 @@ const altDate2: TimeDateGroup = {
   ],
 };
 
-/* ── 预设日期 Map ── */
-export const MOCK_TIME_MEMORIES_MAP: Record<string, TimeDateGroup> = {
-  '2024-05-25': defaultMemories,
-  '2024-06-01': altDate1,
-  '2024-07-15': altDate2,
+/* ── 03-12（额外示例：只有一年有记录）── */
+const date0312: TimeDateGroup = {
+  key: '03-12',
+  memories: [
+    {
+      id: 'tm-8',
+      type: 'memory',
+      worldName: '梦境花园',
+      imageUrl: '',
+      entry: {
+        id: 'tm-entry-7',
+        worldId: 'mock-1',
+        userId: 'mock-user',
+        title: '春天的第一个电话',
+        content: `窗外的玉兰花开了，白得像一盏盏小灯。
+今天接到一个很久没联系的朋友的电话，声音听起来和以前一样。
+我们聊了一个下午，从工作聊到生活，从过去聊到未来。
+
+挂掉电话之后，屋子里变得特别安静。
+那种安静不是寂寞，而是一种被填满之后的满足。`,
+        mode: 'normal',
+        status: 'published',
+        keywords: [],
+        createdAt: new Date(now - 4 * 365 * day).toISOString(),
+        updatedAt: new Date(now - 4 * 365 * day).toISOString(),
+        readCount: 7,
+      },
+    },
+  ],
 };
 
-/** 获取所有预置日期列表（用于日期选择器） */
-export const MOCK_TIME_DATES = Object.values(MOCK_TIME_MEMORIES_MAP);
+/* ── 所有数据映射 ── */
+const ALL_GROUPS: TimeDateGroup[] = [
+  date0525,
+  date0601,
+  date0715,
+  date0312,
+];
 
-/** 根据日期 key 获取记忆组 */
-export function getTimeMemoriesByDate(dateKey: string): TimeMemory[] | null {
-  return MOCK_TIME_MEMORIES_MAP[dateKey]?.memories ?? null;
+/** 按 MM-DD 构建查找 Map */
+export const MOCK_TIME_MEMORIES_MAP: Record<string, TimeDateGroup> = {};
+ALL_GROUPS.forEach(g => {
+  MOCK_TIME_MEMORIES_MAP[g.key] = g;
+});
+
+/** 获取所有可用的 MM-DD 键列表 */
+export const MOCK_TIME_KEYS = ALL_GROUPS.map(g => g.key);
+
+/** 根据 MM-DD 获取记忆组 */
+export function getTimeMemoriesByDate(mmdd: string): TimeMemory[] | null {
+  return MOCK_TIME_MEMORIES_MAP[mmdd]?.memories ?? null;
+}
+
+/** 计算 yearAgo 中文标签 */
+const CN_NUMBERS = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十'];
+export function formatYearsAgo(years: number): string {
+  if (years <= 0) return '今年';
+  if (years <= 10) return `${CN_NUMBERS[years]}年前的今天`;
+  return `${years}年前的今天`;
 }
