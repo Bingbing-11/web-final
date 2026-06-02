@@ -465,7 +465,7 @@ export default function EntryEditor() {
                     style={{
                       fontVariationSettings: "'FILL' 1",
                       fontSize: 36,
-                      color: 'var(--primary,#625f50)',
+                      color: '#625f50',
                     }}
                   >
                     waves

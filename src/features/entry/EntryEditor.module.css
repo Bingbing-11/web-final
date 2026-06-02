@@ -424,7 +424,7 @@
 
 .flowIcon {
   font-size: 56px !important;
-  color: var(--primary, #625f50);
+  color: #625f50;
   display: block;
   margin-bottom: 16px;
 }
@@ -433,7 +433,7 @@
   font-family: 'Plus Jakarta Sans', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   font-size: 20px;
   font-weight: 600;
-  color: var(--primary, #625f50);
+  color: #625f50;
 }
 
 /* ════════════════════════════════════════════════

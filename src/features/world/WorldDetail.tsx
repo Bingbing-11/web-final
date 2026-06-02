@@ -33,6 +33,8 @@ export default function WorldDetail() {
   const [flowToast, setFlowToast] = useState('');
   const searchInputRef = useRef<HTMLInputElement>(null);
   const flowToastTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const [flowTarget, setFlowTarget] = useState<Entry | null>(null);
+  const [flowingEntry, setFlowingEntry] = useState<Entry | null>(null);
 
   /* ── URL hash 定位（从首页消息跳转） ── */
   const highlightCommentId = useMemo(() => {
@@ -196,25 +198,32 @@ export default function WorldDetail() {
     navigate(`/world/${id}/entry/${entryId}/edit`);
   }, [navigate, id]);
 
-  /* 流入共鸣池 */
-  const handleFlowToResonance = useCallback(async (entry: Entry) => {
+  /* 点击 → 确认弹框 */
+  const handleFlowToResonance = useCallback((entry: Entry) => {
+    if (navigator.vibrate) navigator.vibrate(12);
+    setFlowTarget(entry);
+  }, []);
+
+  /* 确认 → 流入共鸣池 */
+  const confirmFlowToResonance = useCallback(async () => {
+    if (!flowTarget) return;
     if (navigator.vibrate) navigator.vibrate(12);
     await addResonance({
-      worldId: entry.worldId,
+      worldId: flowTarget.worldId,
       worldName: world?.name,
-      authorId: currentUser?.id || entry.userId,
+      authorId: currentUser?.id || flowTarget.userId,
       authorName: currentUser?.nickname || '匿名',
-      emotion: entry.emotion || '',
-      emotionHue: entry.emotionHue || 180,
-      content: entry.content,
-      keywords: entry.keywords,
+      emotion: flowTarget.emotion || '',
+      emotionHue: flowTarget.emotionHue || 180,
+      content: flowTarget.content,
+      keywords: flowTarget.keywords,
       isAnonymous: false,
     });
-    /* 显示提示 */
-    setFlowToast('已流入共鸣池 ✨');
+    setFlowTarget(null);
+    setFlowingEntry(flowTarget);
     if (flowToastTimerRef.current) clearTimeout(flowToastTimerRef.current);
-    flowToastTimerRef.current = setTimeout(() => setFlowToast(''), 2000);
-  }, [addResonance, world, currentUser]);
+    flowToastTimerRef.current = setTimeout(() => setFlowingEntry(null), 2000);
+  }, [flowTarget, addResonance, world, currentUser]);
 
   if (!world) return <div className={styles.empty}>世界不存在</div>;
 
