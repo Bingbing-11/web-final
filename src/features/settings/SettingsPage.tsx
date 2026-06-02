@@ -104,6 +104,7 @@ export default function SettingsPage() {
 
   /* ── 菜单项导航 ── */
   const menuItems = [
+    { icon: 'schedule', label: '时光机', onClick: () => navigate('/timecapsule') },
     { icon: 'notifications', label: '我的通知', onClick: () => navigate('/notifications') },
     { icon: 'auto_stories', label: '新手教程', onClick: () => {} },
     { icon: 'verified_user', label: '隐私政策', onClick: () => {} },

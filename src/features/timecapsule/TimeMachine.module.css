@@ -1,101 +1,712 @@
-/* ===== TimeMachine 时光机 - 暖米色移动端 ===== */
+/* ===== TimeMachine 时光机 - 暖白治愈风 · Mobile-First ===== */
+
 .page {
-  animation: fadeIn 0.3s ease;
-  padding-bottom: 16px;
+  animation: fadeIn 0.4s ease;
+  min-height: 100dvh;
+  padding-bottom: 80px;
+  position: relative;
 }
 
-.header {
+/* ════════════ 深夜模式暗角遮罩 ═════════════ */
+.nightOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 44;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 35%,
+    rgba(30, 25, 20, 0.15) 55%,
+    rgba(30, 25, 20, 0.35) 75%,
+    rgba(20, 15, 10, 0.5) 100%
+  );
+  transition: opacity 0.8s ease;
+}
+
+/* ════════════ 顶部导航栏 ═════════════ */
+.topBar {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 720px;
+  z-index: 50;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  padding: 0 20px;
+  height: 64px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background: rgba(251, 249, 248, 0.8);
+  border-bottom: 1px solid rgba(203, 198, 187, 0.2);
 }
 
-.title {
+.backBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #49473F;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s ease, transform 0.1s ease;
+  flex-shrink: 0;
+}
+.backBtn:active {
+  transform: scale(0.92);
+  background: rgba(239, 237, 237, 0.8);
+}
+.backBtn .material-symbols-outlined {
   font-size: 24px;
-  font-weight: 700;
 }
 
-.search {
-  margin-bottom: 16px;
+.topBarTitle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  font-weight: 600;
+  color: #625F50;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
 }
 
-.filters {
+.searchWrap {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(122, 119, 110, 0.4);
+  font-size: 16px;
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 130px;
+  background: rgba(239, 237, 237, 0.6);
+  border: 1px solid rgba(203, 198, 187, 0.2);
+  border-radius: 9999px;
+  padding: 7px 12px 7px 34px;
+  font-size: 12px;
+  color: #1B1C1C;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: all 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.searchInput::placeholder {
+  color: rgba(203, 198, 187, 0.7);
+}
+.searchInput:focus {
+  outline: none;
+  width: 180px;
+  border-color: rgba(98, 95, 80, 0.3);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* ════════════ 主内容区 ═════════════ */
+.mainContent {
+  padding: 80px 24px 40px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* ════════════ 日期穿梭选择器 ═════════════ */
+.datePicker {
+  margin-bottom: 32px;
+}
+
+.dateCard {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 8px 28px rgba(90, 90, 90, 0.05);
+}
+
+.datePickerLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.datePickerIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 249, 230, 0.6);
+  color: #625F50;
+  flex-shrink: 0;
+}
+.datePickerIcon .material-symbols-outlined {
+  font-size: 20px;
+}
+
+.dateDisplay {
+  font-size: 16px;
+  font-weight: 600;
+  color: #49473F;
+  letter-spacing: 0.01em;
+}
+
+.dateInput {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.travelBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  border: none;
+  background: rgba(255, 249, 230, 0.8);
+  color: #625F50;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.1s ease, background 0.15s ease;
+  white-space: nowrap;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.travelBtn:active {
+  transform: scale(0.95);
+  background: rgba(255, 249, 230, 1);
+}
+.travelBtn .material-symbols-outlined {
+  font-size: 16px;
+}
+
+/* ════════════ 时间线容器 ═════════════ */
+.timeline {
+  position: relative;
+  padding-left: 32px;
+}
+
+.timelineLine {
+  position: absolute;
+  left: 7px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(90, 90, 90, 0.08) 10%,
+    rgba(90, 90, 90, 0.08) 90%,
+    transparent
+  );
+}
+
+/* ════════════ 记忆卡片 ═════════════ */
+.memoryCard {
+  position: relative;
+  margin-bottom: 28px;
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 1s ease;
+}
+
+.memoryCard.hidden {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.memoryCard.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── 时间线圆点 ── */
+.timelineDot {
+  position: absolute;
+  left: -26px;
+  top: 12px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  z-index: 10;
+  border: 4px solid #FFF9E6;
+  box-shadow: 0 0 0 1px rgba(98, 95, 80, 0.15);
+  transition: all 0.3s ease;
+}
+
+.dotPrimary {
+  background: #625F50;
+}
+
+.dotSecondary {
+  background: rgba(98, 95, 80, 0.4);
+}
+
+.dotEcho {
+  background: rgba(98, 95, 80, 0.15);
+}
+
+/* ── 时间戳标头 ── */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.sectionLabel {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(122, 119, 110, 0.6);
+  white-space: nowrap;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.sectionLine {
+  flex: 1;
+  height: 1px;
+  background: rgba(203, 198, 187, 0.2);
+}
+
+.sectionLineDashed {
+  flex: 1;
+  height: 0;
+  border-top: 1px dashed rgba(203, 198, 187, 0.15);
+}
+
+/* ════════════ 记忆卡片主体（玻璃卡片）═════════════ */
+.glassCard {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 12px;
+  box-shadow: 0 8px 28px rgba(90, 90, 90, 0.05);
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: default;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.glassCard:active {
+  transform: scale(0.985);
+  transition: transform 0.1s ease;
+}
+
+/* ── 记忆图片区域 ── */
+.memoryImageWrap {
+  position: relative;
+  width: 100%;
+  height: 192px;
+  overflow: hidden;
+}
+
+.memoryImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s ease, filter 0.7s ease;
+  filter: grayscale(30%) opacity(0.9);
+}
+.glassCard:hover .memoryImage {
+  filter: grayscale(0%) opacity(1);
+  transform: scale(1.03);
+}
+
+.worldBadge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #625F50;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* ── 卡片内容 ── */
+.cardBody {
+  padding: 18px;
+}
+
+.cardTitle {
+  font-size: 17px;
+  font-weight: 600;
+  color: #1B1C1C;
+  margin-bottom: 8px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* ── 日记正文（Literata 衬线，横线纸背景）── */
+.diaryContent {
+  font-family: 'Literata', 'Georgia', serif;
+  font-size: 15px;
+  line-height: 1.85;
+  color: rgba(27, 28, 28, 0.78);
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 28px,
+    rgba(90, 90, 90, 0.07) 28px,
+    rgba(90, 90, 90, 0.07) 29px
+  );
+  background-size: 100% 29px;
+  position: relative;
+}
+.diaryContent p {
+  margin: 0;
+  min-height: 29px;
+}
+
+.diaryContentTruncated {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.diaryExpandHint {
+  display: block;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: #625F50;
+  margin-top: 10px;
+  padding-top: 6px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: 0.02em;
+  animation: fadePulse 2s ease infinite;
+}
+
+@keyframes fadePulse {
+  0%, 100% { opacity: 0.65; }
+  50% { opacity: 1; }
+}
+
+/* ── 关键词图片占位 ── */
+.keywordsRow {
   display: flex;
   gap: 8px;
+  margin-top: 12px;
   flex-wrap: wrap;
-  margin-bottom: 20px;
 }
 
-.filterChip {
-  padding: 6px 14px;
-  border-radius: var(--radius-pill);
-  font-size: 13px;
-  border: 1px solid var(--border);
+.keywordImage {
+  width: 72px;
+  height: 72px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #F5F3F3;
+  transition: transform 0.2s ease;
+}
+.keywordImage:active {
+  transform: scale(0.94);
+}
+
+.keywordPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #7A776E;
+}
+
+/* ── 卡片底部操作区 ── */
+.cardFooter {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(203, 198, 187, 0.18);
+  display: flex;
+  gap: 16px;
+}
+
+.footerAction {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  padding: 4px;
   cursor: pointer;
-  transition: var(--transition);
-  background: var(--bg-card);
+  color: rgba(122, 119, 110, 0.4);
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.15s ease, transform 0.1s ease;
+}
+.footerAction:active {
+  transform: scale(0.9);
+  color: #625F50;
+}
+.footerAction .material-symbols-outlined {
+  font-size: 18px;
 }
 
-.filterChip:active {
-  transform: scale(0.97);
+.footerActionFilled {
+  color: rgba(98, 95, 80, 0.3);
+  font-variation-settings: 'FILL' 1;
 }
 
-.filterChip.active {
-  background: var(--primary-dark);
-  color: var(--text);
-  border-color: var(--primary-dark);
+/* ════════════ 遥远的回声（空状态占位）═════════════ */
+.echoCard {
+  background: rgba(232, 226, 208, 0.2);
+  border: 1px dashed rgba(98, 95, 80, 0.2);
+  border-radius: 12px;
+  padding: 32px 24px;
+  text-align: center;
 }
 
-.dateGroup {
-  margin-bottom: 24px;
+.echoIcon {
+  font-size: 36px;
+  margin-bottom: 8px;
+  color: rgba(98, 95, 80, 0.35);
 }
 
-.dateLabel {
+.echoText {
   font-size: 14px;
+  color: rgba(122, 119, 110, 0.5);
+  font-family: 'Literata', 'Georgia', serif;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+/* ════════════ 空状态（无记忆时） ═════════════ */
+.emptyState {
+  text-align: center;
+  padding: 80px 24px;
+}
+
+.emptyIcon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.3;
+}
+
+.emptyText {
+  font-size: 16px;
+  color: rgba(122, 119, 110, 0.5);
+  line-height: 1.6;
+  font-family: 'Literata', 'Georgia', serif;
+}
+
+/* ════════════ 全文弹框（与 WorldDetail 一致） ═════════════ */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(27, 28, 28, 0.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: overlayIn 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.modalSheet {
+  width: 100%;
+  max-width: 480px;
+  max-height: 88vh;
+  background: #FBF9F8;
+  border-radius: 20px 20px 0 0;
+  display: flex;
+  flex-direction: column;
+  animation: sheetUp 0.32s cubic-bezier(0.32, 0.72, 0, 1);
+  overflow: hidden;
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.1);
+}
+
+.modalHandle {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: #CBC6BB;
+  margin: 10px auto 4px;
+  flex-shrink: 0;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px 8px;
+  flex-shrink: 0;
+}
+
+.modalTitle {
+  font-size: 16px;
   font-weight: 600;
-  color: var(--text-secondary);
-  padding: 8px 0;
-  border-bottom: 2px solid var(--primary-dark);
+  color: #1B1C1C;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.modalClose {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #F5F3F3;
+  color: #7A776E;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.1s ease, background-color 0.15s ease;
+}
+.modalClose:active {
+  transform: scale(0.88);
+  background: #EAE8E7;
+}
+
+.modalBody {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 20px 24px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(98, 95, 80, 0.12) transparent;
+}
+.modalBody::-webkit-scrollbar {
+  width: 4px;
+}
+.modalBody::-webkit-scrollbar-track {
+  background: transparent;
+}
+.modalBody::-webkit-scrollbar-thumb {
+  background: rgba(98, 95, 80, 0.12);
+  border-radius: 10px;
+}
+
+.modalDate {
+  font-size: 12px;
+  color: #7A776E;
   margin-bottom: 12px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-.dateDot {
+.modalEmotion {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #625F50;
+  font-weight: 500;
+  margin-bottom: 12px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.emotionDot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--primary-dark);
+  display: inline-block;
 }
 
-.timeline {
+.modalContent {
+  font-family: 'Literata', 'Georgia', serif;
+  font-size: 15px;
+  line-height: 1.85;
+  color: rgba(27, 28, 28, 0.78);
+}
+.modalContent p {
+  margin: 0 0 8px;
+}
+
+.modalImages {
   display: flex;
-  flex-direction: column;
   gap: 8px;
-  padding-left: 16px;
-  border-left: 2px solid var(--border);
+  margin-top: 16px;
+  flex-wrap: wrap;
 }
 
-.entry {
-  padding: 8px 0;
+.modalImage {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-.empty {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text-muted);
+/* ════════════ 穿梭成功 Toast ═════════════ */
+.travelToast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 24px;
+  border-radius: 9999px;
+  background: rgba(98, 95, 80, 0.92);
+  color: #FFF9E6;
   font-size: 14px;
+  font-weight: 500;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 300;
+  white-space: nowrap;
+  animation: toastUp 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-/* World select dropdown */
-.worldSelect {
-  padding: 6px 12px;
-  border-radius: var(--radius-pill);
-  border: 1px solid var(--border);
-  background: var(--bg-card);
-  color: var(--text);
-  font-size: 13px;
-  font-family: var(--font);
+@keyframes toastUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ════════════ 动画关键帧 ═════════════ */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes sheetUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
 }
