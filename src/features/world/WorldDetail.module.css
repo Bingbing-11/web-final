@@ -46,6 +46,30 @@
   }
 }
 
+.addBtn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: transparent;
+  color: #49473F;
+  font-size: 20px;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+.addBtn:active {
+  transform: scale(0.9);
+  background: rgba(98, 95, 80, 0.08);
+}
+@media (hover: hover) {
+  .addBtn:hover {
+    background: rgba(98, 95, 80, 0.06);
+  }
+}
+
 .topBarTitle {
   flex: 1;
   font-size: 17px;
@@ -201,6 +225,39 @@
   bottom: 8px;
   width: 1px;
   background: linear-gradient(to bottom, #625F50, rgba(203, 198, 187, 0.35));
+}
+
+/* ════════════ 编辑按钮（右上角，移动端） ═════════════ */
+.editBtn {
+  position: absolute;
+  z-index: 3;
+  top: 6px;
+  right: 6px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: rgba(98, 95, 80, 0.08);
+  color: #625F50;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  opacity: 0.7;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.2s ease, background-color 0.15s ease, transform 0.1s ease;
+}
+.editBtn:active {
+  opacity: 1;
+  transform: scale(0.9);
+  background: rgba(98, 95, 80, 0.16);
+}
+@media (hover: hover) {
+  .editBtn:hover {
+    opacity: 1;
+    background: rgba(98, 95, 80, 0.12);
+  }
 }
 
 /* ════════════ 日记卡片（时间线条目）═════════════ */
