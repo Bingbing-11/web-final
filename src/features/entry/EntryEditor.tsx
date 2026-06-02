@@ -2,7 +2,10 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/useAuthStore';
 import { useEntryStore } from '../../stores/useEntryStore';
+import { useResonanceStore } from '../../stores/useResonanceStore';
+import { useWorldStore } from '../../stores/useWorldStore';
 import { useCrystalStore } from '../../stores/useCrystalStore';
+import { Entry } from '../../types/entry';
 import { analyzeEmotion, extractKeywords } from '../../lib/crystal';
 import { DEFAULT_CRYSTAL_PARAMS } from '../../lib/crystal/materialEngine';
 import { matchScenes } from '../../lib/crystal/sceneEngine';
@@ -53,6 +56,7 @@ export default function EntryEditor() {
   const updateEntry = useEntryStore(s => s.updateEntry);
   const getEntry = useEntryStore(s => s.getEntry);
   const updateCache = useCrystalStore(s => s.updateCache);
+  const addResonance = useResonanceStore(s => s.addResonance);
 
   /* ── 编辑模式判定 ── */
   const isEdit = !!entryId;
@@ -302,14 +306,75 @@ export default function EntryEditor() {
     setShowModal(true);
   }, [editorEl, loading]);
 
-  /* ── 模态框选择 ── */
-  const handleFlow = useCallback(() => {
+  /* ── 流向共鸣池（保存+共鸣+导航） ── */
+  const handleFlow = useCallback(async () => {
     setFlowChoice('flow');
-    // 动画过渡
-    setTimeout(() => {
-      saveEntry(true);
-    }, 1500);
-  }, [saveEntry]);
+
+    const content = editorEl?.innerHTML || '';
+    const textContent = editorEl?.innerText?.trim() || '';
+    if (!textContent || loading) return;
+    setLoading(true);
+
+    const { emotion: detectedEmotion, hue } = analyzeEmotion(textContent);
+    const keywordsArr = extractKeywords(textContent);
+
+    try {
+      let savedEntry: Entry | null = null;
+
+      if (isEdit && entryId) {
+        await updateEntry(entryId, {
+          content,
+          emotion: detectedEmotion,
+          emotionHue: hue,
+          keywords: keywordsArr,
+          status: 'published',
+        });
+        savedEntry = getEntry(entryId) || null;
+      } else {
+        savedEntry = await addEntry({
+          worldId: worldId || '',
+          userId: user!.id,
+          title: '',
+          content,
+          mode: 'normal',
+          status: 'published',
+          emotion: detectedEmotion,
+          emotionHue: hue,
+          keywords: keywordsArr,
+        });
+      }
+
+      if (savedEntry) {
+        // 添加到共鸣池
+        const currentWorld = useWorldStore.getState().getWorld(worldId || '');
+        await addResonance({
+          worldId: savedEntry.worldId,
+          worldName: currentWorld?.name,
+          authorId: user!.id,
+          authorName: user?.nickname || '匿名',
+          emotion: savedEntry.emotion || '',
+          emotionHue: savedEntry.emotionHue || 180,
+          content: savedEntry.content,
+          keywords: savedEntry.keywords,
+          isAnonymous: false,
+        });
+
+        // 更新水晶参数
+        const sw = matchScenes(savedEntry);
+        const params = { ...DEFAULT_CRYSTAL_PARAMS, hue };
+        updateCache(worldId || '', params);
+      }
+
+      // 让"正在流向共鸣池……"动画显现，然后返回世界详情页
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      navigate(`/world/${worldId}`);
+    } catch {
+      navigate(`/world/${worldId}`);
+    } finally {
+      setLoading(false);
+    }
+  }, [editorEl, loading, isEdit, entryId, addEntry, updateEntry, getEntry,
+      addResonance, user, worldId, updateCache, navigate]);
 
   const handlePrivate = useCallback(() => {
     setFlowChoice('private');
