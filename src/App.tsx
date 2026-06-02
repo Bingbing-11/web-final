@@ -7,6 +7,7 @@ import GuidePage from './features/auth/GuidePage';
 import WorldHub from './features/world/WorldHub';
 import WorldCreate from './features/world/WorldCreate';
 import WorldDetail from './features/world/WorldDetail';
+import FriendWorldDetail from './features/world/FriendWorldDetail';
 import WorldSettings from './features/world/WorldSettings';
 import TemplePage from './features/world/TemplePage';
 import PermissionsPage from './features/world/PermissionsPage';
@@ -50,6 +51,7 @@ export default function App() {
             <Route path="/world/:id/settings" element={<WorldSettings />} />
             <Route path="/world/:id/temple" element={<TemplePage />} />
             <Route path="/world/:id/permissions" element={<PermissionsPage />} />
+            <Route path="/friend/:friendId/world/:worldId" element={<FriendWorldDetail />} />
             <Route path="/world/:worldId/entry/new" element={<EntryEditor />} />
             <Route path="/world/:worldId/entry/:entryId/edit" element={<EntryEditor />} />
             <Route path="/entry/:id" element={<EntryDetail />} />

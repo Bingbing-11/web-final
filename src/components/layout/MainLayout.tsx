@@ -12,6 +12,7 @@ export default function MainLayout() {
   /* 世界详情页 / 时光机页 / 编辑资料页：隐藏底部 Tab + 子页面顶栏 */
   const isFullscreenPage = /^\/world\/[^/]+$/.test(location.pathname) ||
     /^\/world\/[^/]+\/entry\//.test(location.pathname) ||
+    /^\/friend\/[^/]+\/world\//.test(location.pathname) ||
     location.pathname.startsWith('/timecapsule') || location.pathname.startsWith('/time') ||
     location.pathname === '/profile/edit' ||
     location.pathname === '/world/create' ||
@@ -97,6 +98,7 @@ export default function MainLayout() {
 
 function getPageTitle(pathname: string): string {
   if (pathname.startsWith('/friends'))  return '好友';
+  if (pathname.startsWith('/friend/'))  return '好友世界';
   if (pathname.startsWith('/resonance')) return '共鸣池';
   if (pathname.startsWith('/timecapsule') || pathname.startsWith('/time')) return '时光机';
   if (pathname.startsWith('/settings')) return '我的';

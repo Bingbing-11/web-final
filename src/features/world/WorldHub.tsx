@@ -45,7 +45,7 @@ export default function WorldHub() {
 
   /* ── Mock 模式：使用模拟数据；否则走真实 store ── */
   const worlds = USE_MOCK
-    ? mockWorlds.filter(w => !w.isSealed)
+    ? mockWorlds.filter(w => !w.isSealed && w.ownerId === 'mock-user')
     : allWorlds.filter(w => w.ownerId === user?.id && !w.isSealed);
 
   /* ── 搜索 ── */

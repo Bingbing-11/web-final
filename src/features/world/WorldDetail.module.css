@@ -71,14 +71,44 @@
 }
 
 .topBarTitle {
-  flex: 1;
   font-size: 17px;
   font-weight: 600;
   color: #1B1C1C;
-  text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* ── 好友世界顶部栏：好友名 + 世界名 ── */
+.topBarCenter {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.topBarFriendName {
+  font-size: 14px;
+  font-weight: 400;
+  color: #6B6962;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 40%;
+}
+
+.topBarDivider {
+  font-size: 14px;
+  color: #B8B5AB;
+  flex-shrink: 0;
+}
+
+.topBarPlaceholder {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
 }
 
 /* ── 顶部栏 + 按钮 ── */

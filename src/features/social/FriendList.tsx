@@ -180,17 +180,20 @@ export default function FriendList() {
     [remarks],
   );
 
-  /* 点击水晶球：脉冲 → 跳转 */
+  /* 点击水晶球：脉冲 → 跳转到好友世界详情 */
   const handleSphereClick = useCallback((friendId: string) => {
     if (manageFriend) return;
     if (navigator.vibrate) navigator.vibrate(10);
+    const f = friends.find(fr => fr.friendId === friendId);
+    const worldId = f?.sharedWorlds?.[0];
+    if (!worldId) return;
     setPulsingId(friendId);
     if (pulseTimer.current) clearTimeout(pulseTimer.current);
     pulseTimer.current = setTimeout(() => {
       setPulsingId(null);
-      navigate(`/world/${friendId}`);
+      navigate(`/friend/${friendId}/world/${worldId}`);
     }, 400);
-  }, [manageFriend, navigate]);
+  }, [manageFriend, navigate, friends]);
 
   /* 长按 → 打开管理菜单 */
   const handleTouchStart = useCallback((friendId: string) => {
@@ -463,8 +466,11 @@ export default function FriendList() {
               <button
                 className={styles.manageBtn}
                 onClick={() => {
+                  const worldId = managingFriend?.sharedWorlds?.[0];
                   setManageFriend(null);
-                  navigate(`/world/${managingFriend.friendId}`);
+                  if (worldId) {
+                    navigate(`/friend/${managingFriend.friendId}/world/${worldId}`);
+                  }
                 }}
               >
                 <span className={styles.manageBtnIcon}>🌍</span>
