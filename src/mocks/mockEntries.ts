@@ -261,4 +261,253 @@ export const mockEntries: Entry[] = [
     updatedAt: new Date(now - 1 * day).toISOString(),
     readCount: 20,
   },
+
+  /* ════════════════ amber-2 Sunset Beach ════════════════ */
+  {
+    id: 'entry-amber2-1',
+    worldId: 'amber-2',
+    userId: 'mock-user',
+    title: '金色海浪',
+    content: `今天的日落是我见过最浓烈的颜色。
+整个天空从橙红渐变到玫瑰紫，像是在举行一场盛大的告别仪式。
+
+海浪把余晖揉碎了又拼起来，一遍又一遍。
+我脱了鞋踩在退潮后的沙滩上，脚印很快就被水抹平了。
+也好，这样就没有人知道我来过。`,
+    mode: 'normal',
+    status: 'published',
+    emotion: '宁静',
+    emotionHue: 30,
+    keywords: ['日落', '海滩', '治愈'],
+    createdAt: new Date(now - 8 * day).toISOString(),
+    updatedAt: new Date(now - 8 * day).toISOString(),
+    readCount: 6,
+  },
+  {
+    id: 'entry-amber2-2',
+    worldId: 'amber-2',
+    userId: 'mock-user',
+    title: '漂流瓶',
+    content: `捡到一个半埋在沙里的玻璃瓶，里面塞着一张潮透的纸条。
+展开来只能看清几个字："…还在等…"
+不知道它在海里漂了多久，也不知道等它的那个人还在不在等。
+
+我把瓶子洗干净带回了家，插了一枝干花进去。
+现在它是一件新的摆件了。`,
+    mode: 'normal',
+    status: 'published',
+    emotion: '好奇',
+    emotionHue: 210,
+    keywords: ['漂流瓶', '海滩', '发现'],
+    createdAt: new Date(now - 6 * day).toISOString(),
+    updatedAt: new Date(now - 6 * day).toISOString(),
+    readCount: 4,
+  },
+
+  /* ════════════════ amber-3 Midnight Rain ════════════════ */
+  {
+    id: 'entry-amber3-1',
+    worldId: 'amber-3',
+    userId: 'mock-user',
+    title: '窗边的雨',
+    content: `半夜被雨声吵醒了。
+也不想睡，就披了件外套坐在窗边看雨。
+
+路灯把雨丝照得像一根根发亮的银线，
+整条街道都是湿漉漉的反光，像覆盖了一层黑釉。
+
+这样的夜晚最适合想一些不会说出口的事吧。`,
+    mode: 'normal',
+    status: 'published',
+    emotion: '沉思',
+    emotionHue: 240,
+    keywords: ['雨夜', '独处', '沉思'],
+    createdAt: new Date(now - 15 * day).toISOString(),
+    updatedAt: new Date(now - 15 * day).toISOString(),
+    readCount: 9,
+  },
+
+  /* ════════════════ amber-4 Old Library ════════════════ */
+  {
+    id: 'entry-amber4-1',
+    worldId: 'amber-4',
+    userId: 'mock-user',
+    title: '书页之间',
+    content: `在旧书市集淘到一本1978年的日记本。
+前主人是一个叫"林"的人，字迹清秀，断断续续写了三年。
+
+翻到最后一页，只写了四个字：
+"算了，不记了。"
+
+不知道为什么，看到这里笑了一下。又觉得有点心酸。`,
+    mode: 'normal',
+    status: 'published',
+    emotion: '感动',
+    emotionHue: 350,
+    keywords: ['旧书', '日记', '回忆'],
+    createdAt: new Date(now - 22 * day).toISOString(),
+    updatedAt: new Date(now - 22 * day).toISOString(),
+    readCount: 14,
+  },
+  {
+    id: 'entry-amber4-2',
+    worldId: 'amber-4',
+    userId: 'mock-user',
+    title: '借阅记录',
+    content: `在图书馆的旧书借阅记录卡上，看到同一个名字出现了七次。
+借的书从《海子诗选》到《数据结构》，跨度大得离谱。
+
+不知道这个人后来怎么样了。
+现在还读书吗？还像当年一样什么都想看看吗？
+
+我把卡放回去，夹了一枚书签——也许下一个看见的人也会想这些问题。`,
+    mode: 'normal',
+    status: 'published',
+    emotion: '温暖',
+    emotionHue: 40,
+    keywords: ['图书馆', '阅读', '时间'],
+    createdAt: new Date(now - 20 * day).toISOString(),
+    updatedAt: new Date(now - 20 * day).toISOString(),
+    readCount: 11,
+  },
+
+  /* ════════════════ amber-5 Forest Mist ════════════════ */
+  {
+    id: 'entry-amber5-1',
+    worldId: 'amber-5',
+    userId: 'mock-user',
+    title: '晨雾',
+    content: `五点醒的，天还没亮。
+推开窗户，白茫茫一片。
+
+穿上外套去了后山的松林。雾大得十步之外就看不见人了，
+只能听见自己的脚步踩在松针上发出的沙沙声。
+
+走到一半忽然停下——世界好像消失了。
+没有方向，没有目的，只有脚下的路和眼前的雾。
+这种感觉意外地让人安心。`,
+    mode: 'normal',
+    status: 'published',
+    emotion: '安宁',
+    emotionHue: 150,
+    keywords: ['森林', '雾', '清晨'],
+    createdAt: new Date(now - 31 * day).toISOString(),
+    updatedAt: new Date(now - 31 * day).toISOString(),
+    readCount: 7,
+  },
+
+  /* ════════════════ amber-6 Starry Night ════════════════ */
+  {
+    id: 'entry-amber6-1',
+    worldId: 'amber-6',
+    userId: 'mock-user',
+    title: '银河',
+    content: `开车到远离城市灯光的地方看星星。
+躺在引擎盖上，感觉自己像浮在宇宙中间。
+
+银河不是一条河，
+是一道由无数个遥远的太阳组成的旋臂。
+每一颗都比我们的太阳大，每一颗都孤独地燃烧了数十亿年。
+
+想到这里，今晚遇到的那点烦恼突然就不算什么了。`,
+    mode: 'normal',
+    status: 'published',
+    emotion: '敬畏',
+    emotionHue: 260,
+    keywords: ['星空', '银河', '宇宙'],
+    createdAt: new Date(now - 46 * day).toISOString(),
+    updatedAt: new Date(now - 46 * day).toISOString(),
+    readCount: 16,
+  },
+  {
+    id: 'entry-amber6-2',
+    worldId: 'amber-6',
+    userId: 'mock-user',
+    title: '流星',
+    content: `看到一颗流星。
+太快了，来不及许愿就消失了。
+
+旁边的朋友说："没许到愿好可惜。"
+我说："能看见就已经很幸运了。"
+
+后来想想，也许流星的意义不是让你许愿，
+而是提醒你——有些美好转瞬即逝，所以记得抬头看。`,
+    mode: 'normal',
+    status: 'published',
+    emotion: '感动',
+    emotionHue: 300,
+    keywords: ['流星', '朋友', '感悟'],
+    createdAt: new Date(now - 44 * day).toISOString(),
+    updatedAt: new Date(now - 44 * day).toISOString(),
+    readCount: 13,
+  },
+
+  /* ════════════════ amber-7 Cherry Blossom ════════════════ */
+  {
+    id: 'entry-amber7-1',
+    worldId: 'amber-7',
+    userId: 'mock-user',
+    title: '樱吹雪',
+    content: `在樱花树下坐了整整一个下午。
+风一吹，花瓣就像雪一样落下来，落在头上、肩膀上、翻开的书页上。
+
+旁边有个老人在画水彩，画的不是樱花，是坐在树下的我。
+他画完给我看，我笑了——在他的画里，我变成了樱花树上的一片花瓣。
+
+他说："你坐在那里的时候，本来就是风景的一部分。"`,
+    mode: 'normal',
+    status: 'published',
+    emotion: '幸福',
+    emotionHue: 340,
+    keywords: ['樱花', '春天', '偶遇'],
+    createdAt: new Date(now - 61 * day).toISOString(),
+    updatedAt: new Date(now - 61 * day).toISOString(),
+    readCount: 22,
+  },
+
+  /* ════════════════ amber-8 Winter Solitude ════════════════ */
+  {
+    id: 'entry-amber8-1',
+    worldId: 'amber-8',
+    userId: 'mock-user',
+    title: '初雪',
+    content: `今年冬天的第一场雪。
+不大，薄薄的一层，像面粉撒在大地上。
+
+小区里很安静，没有人出来扫雪，也没有人出来玩。
+大家都躲在温暖的屋子里，隔着玻璃看外面白色的世界。
+
+只有我一个人在外面。
+没有特别的原因，只是觉得——如果第一场雪没有人踩过，它会不会太寂寞了。`,
+    mode: 'normal',
+    status: 'published',
+    emotion: '孤单',
+    emotionHue: 200,
+    keywords: ['雪', '冬天', '独处'],
+    createdAt: new Date(now - 91 * day).toISOString(),
+    updatedAt: new Date(now - 91 * day).toISOString(),
+    readCount: 5,
+  },
+  {
+    id: 'entry-amber8-2',
+    worldId: 'amber-8',
+    userId: 'mock-user',
+    title: '暖炉旁',
+    content: `从雪地里回来后泡了一杯热可可。
+双手捧着杯子坐在暖炉前，看窗外又开始飘雪。
+
+忽然想起一件事——
+去年的冬天，窗外也是这样下着雪，我却在为一些现在根本想不起来的事情烦恼。
+
+时间真是个温柔的东西。
+它带走了所有不值得记住的，留下的都是让人微笑的回忆。`,
+    mode: 'normal',
+    status: 'published',
+    emotion: '感恩',
+    emotionHue: 30,
+    keywords: ['暖炉', '热可可', '回忆'],
+    createdAt: new Date(now - 90 * day).toISOString(),
+    updatedAt: new Date(now - 90 * day).toISOString(),
+    readCount: 8,
+  },
 ];
