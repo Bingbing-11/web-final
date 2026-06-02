@@ -227,6 +227,12 @@ export default function FriendList() {
               onKeyDown={e => e.key === 'Enter' && handleAddFriend()}
             />
           </div>
+          <button
+            className={styles.topManageBtn}
+            onClick={() => navigate('/friends/manage')}
+          >
+            管理
+          </button>
         </div>
         {feedback && (
           <div className={`${styles.feedback} ${feedback.type === 'error' ? styles.feedbackError : styles.feedbackSuccess}`}>

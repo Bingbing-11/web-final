@@ -17,6 +17,7 @@ import BurnView from './features/entry/BurnView';
 import BurnMode from './features/entry/BurnMode';
 import TimeMachine from './features/timecapsule/TimeMachine';
 import FriendList from './features/social/FriendList';
+import FriendManagement from './features/social/FriendManagement';
 import ResonancePage from './features/social/ResonancePage';
 import SettingsPage from './features/settings/SettingsPage';
 import EditProfilePage from './features/settings/EditProfilePage';
@@ -34,6 +35,7 @@ export default function App() {
             <Route path="/" element={<WorldHub />} />
             <Route path="/timecapsule" element={<TimeMachine />} />
             <Route path="/friends" element={<FriendList />} />
+            <Route path="/friends/manage" element={<FriendManagement />} />
             <Route path="/resonance" element={<ResonancePage />} />
             <Route path="/entries" element={<EntryList />} />
             <Route path="/settings" element={<SettingsPage />} />

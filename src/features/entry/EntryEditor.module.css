@@ -65,8 +65,8 @@
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.05em;
-  color: var(--on-primary, #ffffff);
-  background: var(--primary, #625f50);
+  color: #625f50;
+  background: rgba(98, 95, 80, 0.08);
   padding: 8px 24px;
   border-radius: 9999px;
   transition: opacity 0.2s, transform 0.15s;
@@ -76,7 +76,7 @@
   -webkit-tap-highlight-color: transparent;
 }
 .doneBtn:active:not(:disabled) {
-  opacity: 0.85;
+  background: rgba(98, 95, 80, 0.15);
   transform: scale(0.96);
 }
 .doneBtn:disabled {
@@ -88,8 +88,8 @@
   display: inline-block;
   width: 16px;
   height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #ffffff;
+  border: 2px solid rgba(98, 95, 80, 0.2);
+  border-top-color: #625f50;
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
   vertical-align: middle;
@@ -124,7 +124,7 @@
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.05em;
-  color: rgba(73, 71, 63, 0.6);
+  color: #625f50;
 }
 
 /* ═══ 编辑器玻璃面板 ═══ */
@@ -182,6 +182,11 @@
   max-width: 25%;
   border-radius: 0.75rem;
   margin: 8px 0;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.editor img:active {
+  opacity: 0.7;
 }
 
 /* ── 猫咪插画锚点 ── */
@@ -358,7 +363,7 @@
   font-size: 18px;
   font-weight: 400;
   line-height: 28px;
-  color: rgba(73, 71, 63, 0.8);
+  color: #625f50;
   margin-bottom: 32px;
 }
 
@@ -371,30 +376,32 @@
 
 .flowBtn {
   width: 100%;
-  background: var(--primary, #625f50);
-  color: var(--on-primary, #ffffff);
+  background: rgba(255, 255, 255, 0.5);
+  color: #625f50;
   font-family: 'Plus Jakarta Sans', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
   letter-spacing: 0.05em;
   padding: 16px 0;
   border-radius: 9999px;
-  box-shadow: 0 4px 16px rgba(98, 95, 80, 0.2);
-  transition: opacity 0.2s, transform 0.15s;
+  border: 1.5px solid rgba(98, 95, 80, 0.25);
+  box-shadow: 0 4px 16px rgba(98, 95, 80, 0.12);
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
   -webkit-tap-highlight-color: transparent;
 }
 .flowBtn:active {
-  opacity: 0.9;
+  background: rgba(255, 255, 255, 0.85);
   transform: scale(0.98);
+  box-shadow: 0 2px 8px rgba(98, 95, 80, 0.08);
 }
 
 .privateBtn {
   width: 100%;
   font-family: 'Plus Jakarta Sans', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
   letter-spacing: 0.05em;
-  color: var(--on-surface-variant, #49473f);
+  color: #625f50;
   padding: 16px 0;
   border-radius: 9999px;
   transition: background 0.2s, transform 0.15s;
@@ -487,6 +494,29 @@
   .privateBtn {
     padding: 14px 0;
   }
+}
+
+/* ═══ 全屏图片预览 ═══ */
+.previewOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  cursor: zoom-out;
+  animation: fadeIn 0.2s ease;
+}
+
+.previewImage {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 1rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  object-fit: contain;
+  animation: scaleIn 0.25s ease;
 }
 
 /* ════════════════════════════════════════════════

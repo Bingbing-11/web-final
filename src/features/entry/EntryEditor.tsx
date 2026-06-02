@@ -64,6 +64,7 @@ export default function EntryEditor() {
   const [isListening, setIsListening] = useState(false);
   const [flowChoice, setFlowChoice] = useState<FlowChoice>(null);
   const [hasContent, setHasContent] = useState(false);
+  const [previewImageSrc, setPreviewImageSrc] = useState<string | null>(null);
 
   /* ── Refs ── */
   const [editorEl, setEditorEl] = useState<HTMLDivElement | null>(null);
@@ -89,6 +90,15 @@ export default function EntryEditor() {
     }
   }, [editorEl]);
 
+  /* ── 点击编辑器内图片 → 全屏预览 ── */
+  const handleEditorClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName === 'IMG' && target.getAttribute('data-previewable') === 'true') {
+      setPreviewImageSrc((target as HTMLImageElement).src);
+      e.preventDefault();
+    }
+  }, []);
+
   /* ── 关闭按钮：返回上一页 ── */
   const handleClose = useCallback(() => {
     if (hasContent && !window.confirm(TEXTS.confirmLeave)) return;
@@ -102,7 +112,7 @@ export default function EntryEditor() {
   }, [editorEl]);
 
   /* ── 图片/文件选择 ── */
-  const handleImageSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     // 在编辑器中插入图片引用标记
@@ -110,7 +120,7 @@ export default function EntryEditor() {
     reader.onload = () => {
       if (editorEl) {
         editorEl.focus();
-        document.execCommand('insertHTML', false, `<img src="${reader.result}" alt="插入的图片" style="max-width:100%;border-radius:0.75rem;margin:8px 0;">`);
+        document.execCommand('insertHTML', false, `<img src="${reader.result}" alt="插入的图片" style="max-width:50%;border-radius:0.75rem;margin:8px 0;cursor:pointer;" data-previewable="true">`);
         checkContent();
       }
     };
@@ -350,6 +360,7 @@ export default function EntryEditor() {
             data-placeholder={TEXTS.editorPlaceholder}
             onInput={checkContent}
             onFocus={checkContent}
+            onClick={handleEditorClick}
           />
 
           {/* ── 角落插画（猫咪） ── */}
@@ -473,6 +484,13 @@ export default function EntryEditor() {
               </>
             )}
           </div>
+        </div>
+      )}
+
+      {/* ═══ 图片全屏预览 ═══ */}
+      {previewImageSrc && (
+        <div className={styles.previewOverlay} onClick={() => setPreviewImageSrc(null)}>
+          <img src={previewImageSrc} alt="全屏预览" className={styles.previewImage} />
         </div>
       )}
     </div>

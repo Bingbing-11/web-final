@@ -573,21 +573,23 @@
   margin-bottom: 12px;
 }
 
-/* ── 管理按钮（顶部栏右侧） ── */
-.manageBtn {
+/* ── 管理按钮（搜索栏右侧） ── */
+.topManageBtn {
   font-size: 13px;
   font-weight: 600;
-  color: var(--primary);
-  background: none;
-  border: none;
+  color: var(--text-primary-dark);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   cursor: pointer;
-  padding: 6px 10px;
-  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  border-radius: var(--radius-pill);
   transition: var(--transition-fast);
   -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
 }
 
-.manageBtn:active {
+.topManageBtn:active {
   opacity: 0.6;
   transform: scale(0.96);
 }

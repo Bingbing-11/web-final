@@ -15,6 +15,7 @@ export default function MainLayout() {
     location.pathname.startsWith('/timecapsule') || location.pathname.startsWith('/time') ||
     location.pathname === '/profile/edit' ||
     location.pathname === '/world/create' ||
+    location.pathname === '/friends/manage' ||
     location.pathname.startsWith('/entry') ||
     location.pathname.startsWith('/burn');
 
