@@ -104,7 +104,7 @@ export default function SettingsPage() {
 
   /* ── 菜单项导航 ── */
   const menuItems = [
-    { icon: 'notifications', label: '我的通知', onClick: () => {} },
+    { icon: 'notifications', label: '我的通知', onClick: () => navigate('/notifications') },
     { icon: 'auto_stories', label: '新手教程', onClick: () => {} },
     { icon: 'verified_user', label: '隐私政策', onClick: () => {} },
     { icon: 'download', label: '导出数据', onClick: handleExport },

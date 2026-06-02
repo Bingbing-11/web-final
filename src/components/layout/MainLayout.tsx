@@ -17,7 +17,8 @@ export default function MainLayout() {
     location.pathname === '/world/create' ||
     location.pathname === '/friends/manage' ||
     location.pathname.startsWith('/entry') ||
-    location.pathname.startsWith('/burn');
+    location.pathname.startsWith('/burn') ||
+    location.pathname.startsWith('/notifications');
 
   const isFriendsPage = location.pathname.startsWith('/friends');
   const toggleFriendRequests = useLayoutStore(s => s.toggleFriendRequests);

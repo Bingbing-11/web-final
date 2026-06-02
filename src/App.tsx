@@ -22,6 +22,7 @@ import ResonancePage from './features/social/ResonancePage';
 import SettingsPage from './features/settings/SettingsPage';
 import EditProfilePage from './features/settings/EditProfilePage';
 import HelpPage from './features/settings/HelpPage';
+import NotificationsPage from './features/settings/NotificationsPage';
 
 export default function App() {
   return (
@@ -41,6 +42,7 @@ export default function App() {
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/profile/edit" element={<EditProfilePage />} />
             <Route path="/help" element={<HelpPage />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
             <Route path="/world/create" element={<WorldCreate />} />
             <Route path="/world/:id" element={<WorldDetail />} />
             <Route path="/world/:id/settings" element={<WorldSettings />} />
