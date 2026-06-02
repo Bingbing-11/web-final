@@ -24,16 +24,15 @@ export default function WorldDetail() {
   /* 原始数据订阅（避免 selector 中创建新引用） */
   const rawWorlds = useWorldStore(s => s.worlds);
   const rawEntries = useEntryStore(s => s.entries);
-  const user = useAuthStore(s => s.currentUser);
   const addResonance = useResonanceStore(s => s.addResonance);
-
-  const [flowTarget, setFlowTarget] = useState<Entry | null>(null);
-  const [flowingEntry, setFlowingEntry] = useState<Entry | null>(null);
+  const currentUser = useAuthStore(s => s.currentUser);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState<Entry | null>(null);
+  const [flowToast, setFlowToast] = useState('');
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const flowToastTimerRef = useRef<ReturnType<typeof setTimeout>>();
 
   /* ── URL hash 定位（从首页消息跳转） ── */
   const highlightCommentId = useMemo(() => {
@@ -185,43 +184,51 @@ export default function WorldDetail() {
     navigate(-1);
   }, [navigate]);
 
-  /* ── 流向共鸣池 ── */
-  const handleFlowToResonance = (entry: Entry) => {
-    setFlowTarget(entry);
-  };
+  /* 新建日记 */
+  const handleAddEntry = useCallback(() => {
+    if (navigator.vibrate) navigator.vibrate(10);
+    navigate(`/world/${id}/entry/new`);
+  }, [navigate, id]);
 
-  const confirmFlowToResonance = async () => {
-    if (!flowTarget || !user) return;
-    const text = `${flowTarget.title} ${flowTarget.content}`;
-    const { emotion, hue } = analyzeEmotion(text);
-    const keywords = extractKeywords(text);
+  /* 编辑日记 */
+  const handleEditEntry = useCallback((entryId: string) => {
+    if (navigator.vibrate) navigator.vibrate(8);
+    navigate(`/world/${id}/entry/${entryId}/edit`);
+  }, [navigate, id]);
+
+  /* 流入共鸣池 */
+  const handleFlowToResonance = useCallback(async (entry: Entry) => {
+    if (navigator.vibrate) navigator.vibrate(12);
     await addResonance({
-      worldId: flowTarget.worldId,
+      worldId: entry.worldId,
       worldName: world?.name,
-      authorId: user.id,
-      authorName: user.nickname,
-      emotion,
-      emotionHue: hue,
-      content: flowTarget.content,
-      keywords,
-      isAnonymous: true,
+      authorId: currentUser?.id || entry.userId,
+      authorName: currentUser?.nickname || '匿名',
+      emotion: entry.emotion || '',
+      emotionHue: entry.emotionHue || 180,
+      content: entry.content,
+      keywords: entry.keywords,
+      isAnonymous: false,
     });
-    const entry = flowTarget;
-    setFlowTarget(null);
-    setFlowingEntry(entry);
-    setTimeout(() => setFlowingEntry(null), 2000);
-  };
+    /* 显示提示 */
+    setFlowToast('已流入共鸣池 ✨');
+    if (flowToastTimerRef.current) clearTimeout(flowToastTimerRef.current);
+    flowToastTimerRef.current = setTimeout(() => setFlowToast(''), 2000);
+  }, [addResonance, world, currentUser]);
 
   if (!world) return <div className={styles.empty}>世界不存在</div>;
 
   return (
     <div className={styles.page}>
-      {/* ── 顶部栏：返回 + 世界名 ── */}
+      {/* ── 顶部栏：返回 + 世界名 + 添加 ── */}
       <header className={styles.topBar}>
         <button className={styles.backBtn} onClick={handleBack}>
           <span className="material-symbols-outlined">arrow_back</span>
         </button>
         <h1 className={styles.topBarTitle}>{world.name}</h1>
+        <button className={styles.addBtn} onClick={handleAddEntry} aria-label="写日记">
+          <span className="material-symbols-outlined">add</span>
+        </button>
       </header>
 
       {/* ── 搜索栏（移动端聚焦展开） ── */}
@@ -397,6 +404,24 @@ export default function WorldDetail() {
                             </button>
                           )}
                         </div>
+
+                        {/* ── 操作按钮组：编辑 + 流入共鸣池 ── */}
+                        <div className={styles.diaryActions}>
+                          <button
+                            className={styles.diaryActionBtn}
+                            onClick={() => handleEditEntry(entry.id)}
+                          >
+                            <span className="material-symbols-outlined" style={{ fontSize: 15 }}>edit</span>
+                            编辑
+                          </button>
+                          <button
+                            className={styles.diaryActionBtn}
+                            onClick={() => handleFlowToResonance(entry)}
+                          >
+                            <span className="material-symbols-outlined" style={{ fontSize: 15 }}>stream</span>
+                            流入共鸣池
+                          </button>
+                        </div>
                       </div>
                     </>
                   )}
@@ -405,6 +430,11 @@ export default function WorldDetail() {
             );
           })}
         </div>
+      )}
+
+      {/* ── 流入共鸣池提示 ── */}
+      {flowToast && (
+        <div className={styles.flowToast}>{flowToast}</div>
       )}
 
       {/* ── 底部安全区占位 ── */}

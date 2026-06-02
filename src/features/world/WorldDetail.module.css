@@ -57,6 +57,28 @@
   text-overflow: ellipsis;
 }
 
+/* ── 顶部栏 + 按钮 ── */
+.addBtn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(98, 95, 80, 0.10);
+  color: #49473F;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+.addBtn:active {
+  transform: scale(0.9);
+  background: rgba(98, 95, 80, 0.20);
+}
+
 /* ════════════ 搜索栏（移动端聚焦展开）════════════ */
 .searchWrap {
   position: relative;
@@ -387,6 +409,58 @@
 .diaryCommentBtn:active {
   transform: scale(0.93);
   background: #EAE8E7;
+}
+
+/* ── 日记操作按钮组 ── */
+.diaryActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.diaryActionBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  background: rgba(98, 95, 80, 0.08);
+  font-size: 12px;
+  font-weight: 500;
+  color: #625F50;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.1s ease, background-color 0.15s ease;
+}
+.diaryActionBtn:active {
+  transform: scale(0.93);
+  background: rgba(98, 95, 80, 0.15);
+}
+
+/* ════════════ 流入共鸣池提示 ── 底部浮层 ═════════════ */
+.flowToast {
+  position: fixed;
+  bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 24px;
+  border-radius: 9999px;
+  background: rgba(98, 95, 80, 0.92);
+  color: #FFF9E6;
+  font-size: 14px;
+  font-weight: 500;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 300;
+  white-space: nowrap;
+  animation: toastUp 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes toastUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
 /* ════════════ 空状态 & 搜索无结果 ═════════════ */
