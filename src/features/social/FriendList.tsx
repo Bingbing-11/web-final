@@ -24,13 +24,14 @@ function saveRemarks(remarks: Record<string, string>) {
 /* ── 好友头像 Emoji 映射 ── */
 const AVATAR_EMOJIS = ['🔮', '🌙', '🌊', '🌸', '✨', '🦋', '💎', '🍃', '🎭', '🌈', '🎪', '🐾'];
 
+/* 每个水晶球不同颜色的光晕 */
 const GLOW_COLORS = [
-  'rgba(98, 95, 80, 0.3)',
-  'rgba(160, 170, 190, 0.3)',
-  'rgba(140, 180, 160, 0.3)',
-  'rgba(200, 180, 140, 0.3)',
-  'rgba(180, 160, 140, 0.3)',
-  'rgba(190, 170, 130, 0.3)',
+  'rgba(215, 186, 255, 0.35)',   // 紫
+  'rgba(255, 184, 108, 0.35)',   // 橙
+  'rgba(80, 250, 123, 0.30)',    // 绿
+  'rgba(255, 121, 198, 0.30)',    // 粉
+  'rgba(139, 233, 253, 0.30)',   // 青
+  'rgba(241, 250, 140, 0.30)',   // 黄
 ];
 
 /* 境外不可达域名黑名单 */
@@ -95,6 +96,26 @@ export default function FriendList() {
   const [brokenAvatars, setBrokenAvatars] = useState<Set<string>>(new Set());
   const pulseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  /* ── 星空粒子背景 ── */
+  const starFieldRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const container = starFieldRef.current;
+    if (!container) return;
+    container.innerHTML = '';
+    for (let i = 0; i < 80; i++) {
+      const star = document.createElement('div');
+      star.className = styles.star!;
+      const size = Math.random() * 2;
+      star.style.width = `${size}px`;
+      star.style.height = `${size}px`;
+      star.style.left = `${Math.random() * 100}%`;
+      star.style.top = `${Math.random() * 100}%`;
+      star.style.setProperty('--duration', `${Math.random() * 3 + 2}s`);
+      star.style.animationDelay = `${Math.random() * 5}s`;
+      container.appendChild(star);
+    }
+  }, []);
 
   /* 数据加载 */
   useEffect(() => {
@@ -235,268 +256,284 @@ export default function FriendList() {
   /* 当前管理的好友 */
   const managingFriend = friends.find(f => f.friendId === manageFriend);
 
+  /* 瀑布流：将好友分成左右两列 */
+  const leftCol = filteredFriends.filter((_, i) => i % 2 === 0);
+  const rightCol = filteredFriends.filter((_, i) => i % 2 === 1);
+
+  /* 渲染单个水晶球 */
+  const renderSphere = (f: typeof filteredFriends[0], globalIdx: number) => {
+    const displayName = remarks[f.friendId] || f.friendName;
+    const hasRemark = !!remarks[f.friendId];
+    const isPulsing = pulsingId === f.friendId;
+    const hasUpdate = (f as any).hasUpdate;
+    const worldName = (f as any).latestWorldName;
+    const worldImageUrl = getFriendImageUrl(f.friendId);
+    const hasValidAvatar = f.friendAvatar && !brokenAvatars.has(f.friendId);
+    const sphereImageUrl = hasValidAvatar ? f.friendAvatar : worldImageUrl;
+
+    return (
+      <div
+        key={f.id}
+        className={`${styles.sphereItem} ${hasUpdate ? styles.sphereItemHasUpdate : ''}`}
+        style={{ animationDelay: `${globalIdx * 0.1}s` } as React.CSSProperties}
+        onClick={() => handleSphereClick(f.friendId)}
+        onTouchStart={() => handleTouchStart(f.friendId)}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchEnd}
+      >
+        <div className={styles.crystalBallContainer}>
+          {/* 外发光 */}
+          <div
+            className={styles.glowAura}
+            style={{ background: getGlowColor(globalIdx) }}
+          />
+          {/* 光环脉冲 */}
+          {hasUpdate && <div className={styles.sphereHalo} />}
+          {/* 通知小圆点 */}
+          {hasUpdate && <div className={styles.notificationDot} />}
+          {/* 水晶球主体 */}
+          <div className={`${styles.crystalSphere} ${isPulsing ? styles.crystalSpherePulse : ''}`}>
+            {sphereImageUrl ? (
+              <img
+                className={styles.crystalSphereImg}
+                src={sphereImageUrl}
+                alt={f.friendName}
+                onError={() => {
+                  setBrokenAvatars(prev => new Set(prev).add(f.friendId));
+                }}
+              />
+            ) : (
+              <div className={styles.crystalSphereEmoji}>
+                {getAvatarEmoji(f.friendId)}
+              </div>
+            )}
+          </div>
+          {/* "有更新" 标签 */}
+          {hasUpdate && (
+            <div className={styles.updateBadge}>
+              <span className={styles.updateBadgeText}>有更新</span>
+            </div>
+          )}
+        </div>
+        {/* 底座：名字 + 副标题 */}
+        <div className={styles.ballBase}>
+          <span className={styles.ballBaseName}>{displayName}</span>
+          {worldName && <span className={styles.ballBaseSub}>{worldName}</span>}
+          {hasRemark && !worldName && <span className={styles.ballBaseSub}>{f.friendName}</span>}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className={styles.page}>
-      {/* ── 星尘背景 ── */}
-      <div className={styles.starDust} />
+      {/* ── 星空背景 ── */}
+      <div ref={starFieldRef} className={styles.starField} />
 
-      {/* ── 页面头部 ── */}
-      <header className={styles.pageHeader}>
-        <div className={styles.pageHeaderLeft}>
-          <h2 className={styles.pageTitle}>好友领域</h2>
-          <p className={styles.pageSubtitle}>窥探挚友们的小小世界。</p>
-        </div>
-        <button
-          className={styles.topManageBtn}
-          onClick={() => navigate('/friends/manage')}
-        >
-          <span className={styles.topManageBtnIcon}>settings</span>
-          管理
-        </button>
-      </header>
-
-      {/* ── 搜索栏 ── */}
-      <section className={styles.searchSection}>
-        <div className={styles.searchBar}>
-          <div className={styles.searchInputWrap}>
-            <span className={styles.searchInputIcon}>search</span>
-            <input
-              className={styles.searchInput}
-              type="text"
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              placeholder="寻找共鸣的灵魂..."
-              onKeyDown={e => e.key === 'Enter' && handleAddFriend()}
-            />
-          </div>
+      {/* ── 主内容区 ── */}
+      <div className={styles.scrollContainer}>
+        {/* ── 头部 ── */}
+        <header className={styles.header}>
+          <h1 className={styles.title}>好友领域</h1>
           <button
-            className={styles.searchSubmit}
-            onClick={handleAddFriend}
-            disabled={loading || !searchQuery.trim()}
+            className={styles.headerBtn}
+            onClick={() => navigate('/friends/manage')}
           >
-            {loading ? '...' : '添加'}
+            <span className="material-symbols-outlined">settings</span>
           </button>
-        </div>
-        {feedback && (
-          <div className={`${styles.feedback} ${feedback.type === 'error' ? styles.feedbackError : styles.feedbackSuccess}`}>
-            {feedback.msg}
+        </header>
+
+        {/* ── 搜索栏 ── */}
+        <div className={styles.searchSection}>
+          <div className={styles.searchBar}>
+            <div className={styles.searchInputWrap}>
+              <span className={styles.searchInputIcon}>
+                <span className="material-symbols-outlined" style={{ fontSize: 20 }}>search</span>
+              </span>
+              <input
+                className={styles.searchInput}
+                type="text"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                placeholder="寻找共鸣的灵魂..."
+                onKeyDown={e => e.key === 'Enter' && handleAddFriend()}
+              />
+            </div>
+            <button
+              className={styles.searchSubmit}
+              onClick={handleAddFriend}
+              disabled={loading || !searchQuery.trim()}
+            >
+              {loading ? '...' : '添加'}
+            </button>
           </div>
-        )}
-      </section>
-
-      {/* ── 好友请求（可折叠） ── */}
-      {(pendingRequests.length > 0 || sentRequests.length > 0) && (
-        <section className={styles.requestSection}>
-          {pendingRequests.length > 0 && (
-            <>
-              <button
-                className={styles.sectionToggle}
-                onClick={toggleShowRequests}
-              >
-                <div className={styles.sectionToggleLeft}>
-                  <span className={styles.sectionToggleIcon}>mail</span>
-                  <span className={styles.sectionToggleTitle}>好友请求</span>
-                  <span className={styles.sectionBadge}>{pendingCount}</span>
-                </div>
-                <span className={`${styles.sectionToggleArrow} ${showRequests ? styles.sectionToggleArrowOpen : ''}`}>expand_more</span>
-              </button>
-              {showRequests && (
-                <div className={styles.requestList}>
-                  {pendingRequests.map((r, i) => (
-                    <div
-                      key={r.id}
-                      className={styles.requestItem}
-                      style={{ '--delay': `${i * 0.08}s` } as React.CSSProperties}
-                    >
-                      <div className={styles.requestLeft}>
-                        <img
-                          className={styles.requestAvatar}
-                          src={r.fromAvatar || ''}
-                          alt={r.fromName}
-                          onError={e => {
-                            (e.target as HTMLImageElement).style.display = 'none';
-                          }}
-                        />
-                        <div className={styles.requestInfo}>
-                          <span className={styles.requestName}>{r.fromName}</span>
-                          <span className={styles.requestMeta}>
-                            {r.message || '申请添加你为好友'}
-                          </span>
-                        </div>
-                      </div>
-                      <div className={styles.requestActions}>
-                        <button
-                          className={`${styles.actionBtn} ${styles.actionBtnAccept}`}
-                          onClick={() => handleAccept(r.id)}
-                          title="接受"
-                        >
-                          <span className={styles.actionBtnIcon}>check</span>
-                        </button>
-                        <button
-                          className={`${styles.actionBtn} ${styles.actionBtnReject}`}
-                          onClick={() => handleReject(r.id)}
-                          title="拒绝"
-                        >
-                          <span className={styles.actionBtnIcon}>close</span>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </>
+          {feedback && (
+            <div className={`${styles.feedback} ${feedback.type === 'error' ? styles.feedbackError : styles.feedbackSuccess}`}>
+              {feedback.msg}
+            </div>
           )}
+        </div>
 
-          {sentRequests.length > 0 && (
-            <>
-              <button
-                className={styles.sectionToggle}
-                onClick={() => setShowSent(v => !v)}
-                style={{ marginTop: 8 }}
-              >
-                <div className={styles.sectionToggleLeft}>
-                  <span className={styles.sectionToggleIcon}>send</span>
-                  <span className={styles.sectionToggleTitle}>已发送</span>
-                  <span className={styles.sectionBadge}>{sentRequests.length}</span>
-                </div>
-                <span className={`${styles.sectionToggleArrow} ${showSent ? styles.sectionToggleArrowOpen : ''}`}>expand_more</span>
-              </button>
-              {showSent && (
-                <div className={styles.sentList}>
-                  {sentRequests.map((r, i) => (
-                    <div
-                      key={r.id}
-                      className={styles.sentItem}
-                      style={{ '--delay': `${i * 0.08}s` } as React.CSSProperties}
-                    >
-                      <div className={styles.sentLeft}>
-                        <div className={styles.sentAvatar} />
-                        <div>
-                          <div className={styles.sentName}>{r.toName}</div>
-                          <div className={styles.sentTime}>
-                            {new Date(r.createdAt).toLocaleDateString('zh-CN')}
+        {/* ── 好友请求（可折叠） ── */}
+        {(pendingRequests.length > 0 || sentRequests.length > 0) && (
+          <section className={styles.requestSection}>
+            {pendingRequests.length > 0 && (
+              <>
+                <button
+                  className={styles.sectionToggle}
+                  onClick={toggleShowRequests}
+                >
+                  <div className={styles.sectionToggleLeft}>
+                    <span className={styles.sectionToggleIcon}>
+                      <span className="material-symbols-outlined" style={{ fontSize: 18 }}>mail</span>
+                    </span>
+                    <span className={styles.sectionToggleTitle}>好友请求</span>
+                    <span className={styles.sectionBadge}>{pendingCount}</span>
+                  </div>
+                  <span className={`${styles.sectionToggleArrow} ${showRequests ? styles.sectionToggleArrowOpen : ''}`}>
+                    <span className="material-symbols-outlined" style={{ fontSize: 18 }}>expand_more</span>
+                  </span>
+                </button>
+                {showRequests && (
+                  <div className={styles.requestList}>
+                    {pendingRequests.map((r, i) => (
+                      <div
+                        key={r.id}
+                        className={styles.requestItem}
+                        style={{ '--delay': `${i * 0.08}s` } as React.CSSProperties}
+                      >
+                        <div className={styles.requestLeft}>
+                          <img
+                            className={styles.requestAvatar}
+                            src={r.fromAvatar || ''}
+                            alt={r.fromName}
+                            onError={e => {
+                              (e.target as HTMLImageElement).style.display = 'none';
+                            }}
+                          />
+                          <div className={styles.requestInfo}>
+                            <span className={styles.requestName}>{r.fromName}</span>
+                            <span className={styles.requestMeta}>
+                              {r.message || '申请添加你为好友'}
+                            </span>
                           </div>
                         </div>
+                        <div className={styles.requestActions}>
+                          <button
+                            className={`${styles.actionBtn} ${styles.actionBtnAccept}`}
+                            onClick={() => handleAccept(r.id)}
+                            title="接受"
+                          >
+                            <span className="material-symbols-outlined" style={{ fontSize: 16 }}>check</span>
+                          </button>
+                          <button
+                            className={`${styles.actionBtn} ${styles.actionBtnReject}`}
+                            onClick={() => handleReject(r.id)}
+                            title="拒绝"
+                          >
+                            <span className="material-symbols-outlined" style={{ fontSize: 16 }}>close</span>
+                          </button>
+                        </div>
                       </div>
-                      <div className={styles.sentRight}>
-                        <span className={styles.sentStatus}>等待中</span>
-                        <button
-                          className={styles.cancelBtn}
-                          onClick={() => handleCancelSent(r.id)}
-                        >
-                          取消
-                        </button>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+
+            {sentRequests.length > 0 && (
+              <>
+                <button
+                  className={styles.sectionToggle}
+                  onClick={() => setShowSent(v => !v)}
+                  style={{ marginTop: 8 }}
+                >
+                  <div className={styles.sectionToggleLeft}>
+                    <span className={styles.sectionToggleIcon}>
+                      <span className="material-symbols-outlined" style={{ fontSize: 18 }}>send</span>
+                    </span>
+                    <span className={styles.sectionToggleTitle}>已发送</span>
+                    <span className={styles.sectionBadge}>{sentRequests.length}</span>
+                  </div>
+                  <span className={`${styles.sectionToggleArrow} ${showSent ? styles.sectionToggleArrowOpen : ''}`}>
+                    <span className="material-symbols-outlined" style={{ fontSize: 18 }}>expand_more</span>
+                  </span>
+                </button>
+                {showSent && (
+                  <div className={styles.sentList}>
+                    {sentRequests.map((r, i) => (
+                      <div
+                        key={r.id}
+                        className={styles.sentItem}
+                        style={{ '--delay': `${i * 0.08}s` } as React.CSSProperties}
+                      >
+                        <div className={styles.sentLeft}>
+                          <div className={styles.sentAvatar} />
+                          <div>
+                            <div className={styles.sentName}>{r.toName}</div>
+                            <div className={styles.sentTime}>
+                              {new Date(r.createdAt).toLocaleDateString('zh-CN')}
+                            </div>
+                          </div>
+                        </div>
+                        <div className={styles.sentRight}>
+                          <span className={styles.sentStatus}>等待中</span>
+                          <button
+                            className={styles.cancelBtn}
+                            onClick={() => handleCancelSent(r.id)}
+                          >
+                            取消
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+          </section>
+        )}
+
+        {/* ── 瀑布流水晶球 ── */}
+        <section>
+          <div className={styles.sectionLabel}>
+            我的好友 · {friends.length}
+            {searchQuery.trim() && filteredFriends.length !== friends.length && (
+              <span style={{ color: 'rgba(255,255,255,0.3)', fontWeight: 400, marginLeft: 6 }}>
+                筛选出 {filteredFriends.length} 位
+              </span>
+            )}
+          </div>
+
+          {filteredFriends.length === 0 ? (
+            <div className={styles.empty}>
+              <div className={styles.emptyCrystal}>🔮</div>
+              <div className={styles.emptyTitle}>
+                {friends.length === 0 ? '还没有好友' : '未找到匹配的好友'}
+              </div>
+              <div className={styles.emptyHint}>
+                {friends.length === 0
+                  ? '搜索 ID 或昵称来添加第一位朋友吧'
+                  : '试试其他关键词'}
+              </div>
+            </div>
+          ) : (
+            <div className={styles.waterfall}>
+              {/* 左列 */}
+              <div className={styles.waterfallCol}>
+                {leftCol.map((f, i) => renderSphere(f, i * 2))}
+              </div>
+              {/* 右列（下移错落） */}
+              <div className={`${styles.waterfallCol} ${styles.waterfallColRight}`}>
+                {rightCol.map((f, i) => renderSphere(f, i * 2 + 1))}
+              </div>
+            </div>
           )}
         </section>
-      )}
 
-      {/* ── 水晶球网格 ── */}
-      <section>
-        <div className={styles.sectionLabel}>
-          我的好友 · {friends.length}
-          {searchQuery.trim() && filteredFriends.length !== friends.length && (
-            <span style={{ color: 'var(--text-muted)', fontWeight: 400, marginLeft: 6 }}>
-              筛选出 {filteredFriends.length} 位
-            </span>
-          )}
-        </div>
-
-        {filteredFriends.length === 0 ? (
-          <div className={styles.empty}>
-            <div className={styles.emptyIcon}>🔮</div>
-            <div>
-              {friends.length === 0
-                ? <>还没有好友<br />搜索 ID 或昵称来添加第一位朋友吧</>
-                : <>未找到匹配的好友</>}
-            </div>
-          </div>
-        ) : (
-          <div className={styles.sphereGrid}>
-            {filteredFriends.map((f, idx) => {
-              const displayName = remarks[f.friendId] || f.friendName;
-              const hasRemark = !!remarks[f.friendId];
-              const isPulsing = pulsingId === f.friendId;
-              const hasUpdate = (f as any).hasUpdate;
-              const worldName = (f as any).latestWorldName;
-              const worldImageUrl = getFriendImageUrl(f.friendId);
-              const hasValidAvatar = f.friendAvatar && !brokenAvatars.has(f.friendId);
-              const sphereImageUrl = hasValidAvatar ? f.friendAvatar : worldImageUrl;
-
-              return (
-                <div
-                  key={f.id}
-                  className={`${styles.sphereItem} ${hasUpdate ? styles.sphereItemHasUpdate : ''}`}
-                  style={{ animationDelay: `${idx * 0.08}s` } as React.CSSProperties}
-                  onClick={() => handleSphereClick(f.friendId)}
-                  onTouchStart={() => handleTouchStart(f.friendId)}
-                  onTouchEnd={handleTouchEnd}
-                  onTouchCancel={handleTouchEnd}
-                >
-                  <div className={styles.crystalBallContainer}>
-                    {/* 外发光 */}
-                    <div
-                      className={styles.glowAura}
-                      style={{ background: getGlowColor(idx) }}
-                    />
-                    {/* 光环脉冲 */}
-                    {hasUpdate && <div className={styles.sphereHalo} />}
-                    {/* 通知小圆点 */}
-                    {hasUpdate && <div className={styles.notificationDot} />}
-                    {/* 水晶球主体 */}
-                    <div className={`${styles.crystalSphere} ${isPulsing ? styles.crystalSpherePulse : ''}`}>
-                      {sphereImageUrl ? (
-                        <img
-                          className={styles.crystalSphereImg}
-                          src={sphereImageUrl}
-                          alt={f.friendName}
-                          onError={() => {
-                            setBrokenAvatars(prev => new Set(prev).add(f.friendId));
-                          }}
-                        />
-                      ) : (
-                        <div className={styles.crystalSphereEmoji}>
-                          {getAvatarEmoji(f.friendId)}
-                        </div>
-                      )}
-                    </div>
-                    {/* "有更新" 标签 */}
-                    {hasUpdate && (
-                      <div className={styles.updateBadge}>
-                        <span className={styles.updateBadgeText}>有更新</span>
-                      </div>
-                    )}
-                  </div>
-                  <span className={styles.sphereName}>{displayName}</span>
-                  {worldName && (
-                    <span className={styles.sphereWorld}>{worldName}</span>
-                  )}
-                  {hasRemark && !worldName && (
-                    <span className={styles.sphereRemark}>{f.friendName}</span>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </section>
-
-      {/* 底部装饰提示 */}
-      {friends.length > 0 && (
-        <div className={styles.bottomHint}>
-          <p className={styles.bottomHintText}>向下滑动发现更多灵魂</p>
-          <div className={styles.bottomDots}>
-            <div className={styles.bottomDot} />
-            <div className={styles.bottomDot} style={{ opacity: 0.6 }} />
-            <div className={styles.bottomDot} style={{ opacity: 0.3 }} />
-          </div>
-        </div>
-      )}
+        {/* 底部留白 */}
+        <div className={styles.bottomSpacer} />
+      </div>
 
       {/* ── 好友管理弹窗 ── */}
       {managingFriend && (
@@ -517,7 +554,9 @@ export default function FriendList() {
                 className={styles.manageBtn}
                 onClick={() => handleEditRemark(managingFriend.friendId, managingFriend.friendName)}
               >
-                <span className={styles.manageBtnIcon}>edit</span>
+                <span className={styles.manageBtnIcon}>
+                  <span className="material-symbols-outlined" style={{ fontSize: 20 }}>edit</span>
+                </span>
                 <span className={styles.manageBtnLabel}>修改备注</span>
               </button>
               <button
@@ -530,14 +569,18 @@ export default function FriendList() {
                   }
                 }}
               >
-                <span className={styles.manageBtnIcon}>travel_explore</span>
+                <span className={styles.manageBtnIcon}>
+                  <span className="material-symbols-outlined" style={{ fontSize: 20 }}>travel_explore</span>
+                </span>
                 <span className={styles.manageBtnLabel}>访问世界</span>
               </button>
               <button
                 className={`${styles.manageBtn} ${styles.manageBtnDanger}`}
                 onClick={() => handleRemove(managingFriend.id)}
               >
-                <span className={styles.manageBtnIcon}>person_remove</span>
+                <span className={styles.manageBtnIcon}>
+                  <span className="material-symbols-outlined" style={{ fontSize: 20 }}>person_remove</span>
+                </span>
                 <span className={styles.manageBtnLabel}>移除好友</span>
               </button>
             </div>

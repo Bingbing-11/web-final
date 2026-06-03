@@ -22,20 +22,15 @@ if (typeof document !== 'undefined' && !document.getElementById(STAR_STYLE_ID)) 
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 
 /* ── 从渐变/颜色字符串提取光晕 ── */
-function glowFromColor(colorStr: string, isLarge: boolean): string {
+function glowFromColor(colorStr: string): string {
   const match = colorStr.match(/#[0-9a-fA-F]{6}/);
   if (!match) {
-    return isLarge
-      ? '0 0 60px rgba(215,186,255,0.4), 0 0 100px rgba(255,121,198,0.25)'
-      : '0 0 40px rgba(255,255,255,0.2)';
+    return '0 0 40px rgba(215,186,255,0.3), 0 0 60px rgba(215,186,255,0.15)';
   }
   const hex = match[0];
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
-  if (isLarge) {
-    return `0 0 60px rgba(${r},${g},${b},0.5), 0 0 100px rgba(${r},${g},${b},0.25)`;
-  }
   return `0 0 40px rgba(${r},${g},${b},0.4), 0 0 60px rgba(${r},${g},${b},0.2)`;
 }
 
@@ -96,6 +91,10 @@ export default function WorldHub() {
       (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
     );
   }, [filtered]);
+
+  /* 瀑布流：将世界分成左右两列 */
+  const leftCol = sorted.filter((_, i) => i % 2 === 0);
+  const rightCol = sorted.filter((_, i) => i % 2 === 1);
 
   /* ── 消息弹窗 ── */
   const [msgWorldId, setMsgWorldId] = useState<string | null>(null);
@@ -179,8 +178,48 @@ export default function WorldHub() {
     );
   }
 
-  const featured = sorted[0];
-  const others = sorted.slice(1);
+  /* ── 渲染单个水晶球 ── */
+  const renderBall = (w: typeof sorted[0]) => (
+    <div
+      key={w.id}
+      className={styles.card}
+      onClick={() => navigate(`/world/${w.id}`)}
+    >
+      <div className={styles.crystalBall}>
+        <div className={styles.crystalBallInner} style={{ boxShadow: glowFromColor(w.color) }}>
+          {w.imageUrl ? (
+            <img
+              src={w.imageUrl}
+              alt={w.name}
+              className={styles.crystalBallImage}
+            />
+          ) : (
+            <div className={styles.crystalBallFallback} style={{ background: w.color }}>
+              <span style={{ fontSize: 36 }}>{w.icon || '🔮'}</span>
+            </div>
+          )}
+          <div className={styles.crystalBallSheen} />
+        </div>
+      </div>
+      {/* 底座：名字 + 时间 + 星星 */}
+      <div className={styles.ballBase}>
+        <span className={styles.ballBaseName}>{w.name}</span>
+        <div className={styles.ballBaseRow}>
+          <span className={styles.ballBaseTime}>{formatTimeAgo(w.updatedAt)}</span>
+          <button
+            className={`${styles.iconBtn} ${styles.starBtn}`}
+            onClick={e => { e.stopPropagation(); setMsgWorldId(w.id); }}
+            title="留言"
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: 16, animation: 'starPulse 1.8s ease-in-out infinite' }}>star</span>
+            {(w.unreadCount ?? 0) > 0 && (
+              <span className={styles.badge}>{w.unreadCount}</span>
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className={styles.page}>
@@ -244,98 +283,17 @@ export default function WorldHub() {
           </div>
         )}
 
-        {/* ── Bento Grid ── */}
+        {/* ── 瀑布流水晶球 ── */}
         {!isSearchEmpty && (
-          <div className={styles.grid}>
-            {/* Featured 大卡 */}
-            {featured && (
-              <div
-                className={`${styles.card} ${styles.cardFeatured}`}
-                onClick={() => navigate(`/world/${featured.id}`)}
-              >
-                <div className={styles.crystalBall}>
-                  <div className={styles.crystalBallInner} style={{ boxShadow: glowFromColor(featured.color, true) }}>
-                    {featured.imageUrl ? (
-                      <img
-                        src={featured.imageUrl}
-                        alt={featured.name}
-                        className={styles.crystalBallImage}
-                      />
-                    ) : (
-                      <div className={styles.crystalBallFallback} style={{ background: featured.color }}>
-                        <span style={{ fontSize: 48 }}>{featured.icon || '🔮'}</span>
-                      </div>
-                    )}
-                    <div className={styles.crystalBallSheen} />
-                  </div>
-                </div>
-                {/* ── 水晶球底座：名字 + 时间 + 星星 ── */}
-                <div className={styles.ballBase}>
-                  <h2 className={styles.ballBaseName}>{featured.name}</h2>
-                  <div className={styles.ballBaseRow}>
-                    <span className={styles.ballBaseTime}>{formatTimeAgo(featured.updatedAt)}</span>
-                    {/* ⭐ 星星消息按钮 */}
-                    <button
-                      className={`${styles.iconBtn} ${styles.starBtn}`}
-                      onClick={e => { e.stopPropagation(); setMsgWorldId(featured.id); }}
-                      title="留言"
-                    >
-                      <span className="material-symbols-outlined" style={{ fontSize: 18, animation: 'starPulse 1.8s ease-in-out infinite' }}>star</span>
-                      {(featured.unreadCount ?? 0) > 0 && (
-                        <span className={styles.badge}>{featured.unreadCount}</span>
-                      )}
-                    </button>
-                  </div>
-                </div>
-                {featured.latestExcerpt && (
-                  <p className={styles.excerpt}>&ldquo;{featured.latestExcerpt}&rdquo;</p>
-                )}
-              </div>
-            )}
-
-            {/* 小卡列表 */}
-            {others.map(w => (
-              <div
-                key={w.id}
-                className={styles.card}
-                onClick={() => navigate(`/world/${w.id}`)}
-              >
-                <div className={styles.crystalBallSmall}>
-                  <div className={styles.crystalBallSmallInner} style={{ boxShadow: glowFromColor(w.color, false) }}>
-                    {w.imageUrl ? (
-                      <img
-                        src={w.imageUrl}
-                        alt={w.name}
-                        className={styles.crystalBallSmallImage}
-                      />
-                    ) : (
-                      <div className={styles.crystalBallSmallFallback} style={{ background: w.color }}>
-                        <span style={{ fontSize: 32 }}>{w.icon || '🔮'}</span>
-                      </div>
-                    )}
-                    <div className={styles.crystalBallSmallSheen} />
-                  </div>
-                </div>
-                {/* ── 小卡底座：名字 + 时间 + 星星 ── */}
-                <div className={styles.ballBaseSmall}>
-                  <h3 className={styles.ballBaseNameSmall}>{w.name}</h3>
-                  <div className={styles.ballBaseRowSmall}>
-                    <span className={styles.ballBaseTimeSmall}>{formatTimeAgo(w.updatedAt)}</span>
-                    {/* ⭐ 星星消息按钮 */}
-                    <button
-                      className={`${styles.iconBtn} ${styles.starBtn}`}
-                      onClick={e => { e.stopPropagation(); setMsgWorldId(w.id); }}
-                      title="留言"
-                    >
-                      <span className="material-symbols-outlined" style={{ fontSize: 16, animation: 'starPulse 1.8s ease-in-out infinite' }}>star</span>
-                      {(w.unreadCount ?? 0) > 0 && (
-                        <span className={styles.badge}>{w.unreadCount}</span>
-                      )}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
+          <div className={styles.waterfall}>
+            {/* 左列 */}
+            <div className={styles.waterfallCol}>
+              {leftCol.map(w => renderBall(w))}
+            </div>
+            {/* 右列（下移错落） */}
+            <div className={`${styles.waterfallCol} ${styles.waterfallColRight}`}>
+              {rightCol.map(w => renderBall(w))}
+            </div>
           </div>
         )}
 

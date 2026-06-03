@@ -1,84 +1,105 @@
 /* ===== FriendList 好友 - 星空水晶球 ===== */
 
 .page {
-  min-height: 100vh;
-  animation: pageIn 0.4s ease;
   position: relative;
-  z-index: 1;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #0b0e14, #2D1B4E, #1a1b2e, #0b0e14);
+  color: #e1e2eb;
+  overflow-x: hidden;
+  animation: pageIn 0.4s ease;
 }
 
-/* ── 星尘背景粒子 ── */
-.starDust {
+/* ===== 星空背景 ===== */
+.starField {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
   z-index: 0;
-  overflow: hidden;
 }
 
-.starDust::before,
-.starDust::after {
-  content: '';
+.star {
   position: absolute;
+  background: white;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(98, 95, 80, 0.06) 0%, transparent 70%);
+  opacity: 0.8;
+  box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.4);
+  animation: twinkle var(--duration, 3s) infinite ease-in-out;
 }
 
-.starDust::before {
-  width: 300px;
-  height: 300px;
-  top: -80px;
-  right: -60px;
-  animation: starDrift1 20s infinite ease-in-out;
+@keyframes twinkle {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.4); }
 }
 
-.starDust::after {
-  width: 200px;
-  height: 200px;
-  bottom: 20%;
-  left: -40px;
-  animation: starDrift2 25s infinite ease-in-out;
+/* ===== 滚动容器 ===== */
+.scrollContainer {
+  position: relative;
+  z-index: 10;
+  max-width: 448px;
+  margin: 0 auto;
+  min-height: 100vh;
+  overflow-y: auto;
+  padding-bottom: 128px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-/* ── 页面头部 ── */
-.pageHeader {
-  margin-bottom: 20px;
+.scrollContainer::-webkit-scrollbar {
+  display: none;
+}
+
+/* ===== 头部 ===== */
+.header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 48px 24px 12px;
 }
 
-.pageHeaderLeft {
+.title {
+  font-size: 28px;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  color: #f0eef6;
+  text-shadow: 0 0 10px rgba(215, 186, 255, 0.5);
+}
+
+.headerBtn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(215, 186, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background 0.2s ease;
+}
+
+.headerBtn:active {
+  background: rgba(215, 186, 255, 0.15);
+}
+
+/* ===== 搜索区域 ===== */
+.searchSection {
+  padding: 0 24px;
+  margin-bottom: 24px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-}
-
-.pageTitle {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--text);
-  letter-spacing: -0.01em;
-}
-
-.pageSubtitle {
-  font-size: 14px;
-  color: var(--text-muted);
-  font-weight: 400;
-}
-
-/* ── 搜索区域 ── */
-.searchSection {
-  margin-bottom: 24px;
-  position: relative;
-  z-index: 1;
+  gap: 12px;
 }
 
 .searchBar {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
-  position: relative;
 }
 
 .searchInputWrap {
@@ -91,115 +112,76 @@
 .searchInputIcon {
   position: absolute;
   left: 16px;
-  font-size: 18px;
-  color: var(--text-muted);
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.3);
   pointer-events: none;
-  font-family: 'Material Symbols Outlined';
 }
 
 .searchInput {
   width: 100%;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: var(--radius-pill);
   padding: 12px 16px 12px 44px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   font-size: 14px;
-  color: var(--text);
-  transition: var(--transition-fast);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  color: #e1e2eb;
+  outline: none;
+  font-family: inherit;
 }
 
 .searchInput::placeholder {
-  color: var(--text-muted);
-}
-
-.searchInput:focus {
-  border-color: var(--text-primary-dark);
-  box-shadow: 0 2px 12px rgba(98, 95, 80, 0.12);
-  background: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.3);
 }
 
 .searchSubmit {
   padding: 12px 18px;
-  border-radius: var(--radius-pill);
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  color: var(--text-primary-dark);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: rgba(215, 186, 255, 0.8);
   font-size: 13px;
   font-weight: 600;
   white-space: nowrap;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-  transition: var(--transition-fast);
+  transition: background 0.15s ease;
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
 .searchSubmit:active {
-  transform: scale(0.95);
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(215, 186, 255, 0.15);
 }
 
 .searchSubmit:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
 }
 
-/* ── 管理按钮（毛玻璃药丸） ── */
-.topManageBtn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-primary-dark);
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  cursor: pointer;
-  padding: 10px 16px;
-  border-radius: var(--radius-pill);
-  transition: var(--transition-fast);
-  -webkit-tap-highlight-color: transparent;
-  white-space: nowrap;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-}
-
-.topManageBtnIcon {
-  font-size: 18px;
-  font-family: 'Material Symbols Outlined';
-}
-
-.topManageBtn:active {
-  opacity: 0.6;
-  transform: scale(0.96);
-}
-
-/* ── 反馈提示 ── */
+/* ===== 反馈提示 ===== */
 .feedback {
-  margin-top: 8px;
+  margin-top: 4px;
   padding: 8px 14px;
-  border-radius: var(--radius-sm);
+  border-radius: 12px;
   font-size: 13px;
-  animation: slideDown 0.25s ease;
+  animation: fadeIn 0.25s ease;
 }
 
 .feedbackError {
-  background: rgba(186, 26, 26, 0.08);
-  color: var(--danger-dark);
+  background: rgba(255, 121, 121, 0.15);
+  color: #ff7979;
 }
 
 .feedbackSuccess {
-  background: rgba(107, 203, 119, 0.1);
-  color: var(--success-dark);
+  background: rgba(80, 250, 123, 0.12);
+  color: #50fa7b;
 }
 
-/* ── 好友请求/已发送（可折叠） ── */
+/* ===== 好友请求区域 ===== */
 .requestSection {
+  padding: 0 24px;
   margin-bottom: 24px;
 }
 
@@ -209,18 +191,17 @@
   justify-content: space-between;
   width: 100%;
   padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: var(--radius);
-  transition: var(--transition-fast);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  transition: background 0.15s ease;
   -webkit-tap-highlight-color: transparent;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
 }
 
 .sectionToggle:active {
-  transform: scale(0.98);
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .sectionToggleLeft {
@@ -231,36 +212,35 @@
 
 .sectionToggleIcon {
   font-size: 18px;
-  font-family: 'Material Symbols Outlined';
+  color: rgba(215, 186, 255, 0.8);
 }
 
 .sectionToggleTitle {
   font-size: 14px;
   font-weight: 600;
-  color: var(--text);
+  color: #e1e2eb;
 }
 
 .sectionBadge {
   font-size: 11px;
   font-weight: 600;
-  background: var(--text-primary-dark);
-  color: var(--text-inverse);
+  background: rgba(215, 186, 255, 0.2);
+  color: #d7baff;
   padding: 2px 8px;
-  border-radius: var(--radius-pill);
+  border-radius: 9999px;
 }
 
 .sectionToggleArrow {
   font-size: 18px;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.4);
   transition: transform 0.25s ease;
-  font-family: 'Material Symbols Outlined';
 }
 
 .sectionToggleArrowOpen {
   transform: rotate(180deg);
 }
 
-/* ── 请求列表 ── */
+/* ===== 请求列表 ===== */
 .requestList,
 .sentList {
   margin-top: 8px;
@@ -275,15 +255,14 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 14px;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
   animation: fadeInUp 0.3s ease;
   animation-delay: var(--delay, 0s);
   animation-fill-mode: both;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
 .requestLeft,
@@ -310,13 +289,13 @@
 .requestName {
   font-size: 14px;
   font-weight: 600;
-  color: var(--text);
+  color: #e1e2eb;
   display: block;
 }
 
 .requestMeta {
   font-size: 12px;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.4);
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -336,7 +315,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: var(--transition-fast);
+  transition: background 0.15s ease;
 }
 
 .actionBtn:active {
@@ -344,35 +323,36 @@
 }
 
 .actionBtnAccept {
-  background: rgba(107, 203, 119, 0.15);
+  background: rgba(80, 250, 123, 0.15);
+  color: #50fa7b;
 }
 
 .actionBtnReject {
-  background: rgba(186, 26, 26, 0.08);
+  background: rgba(255, 121, 121, 0.1);
+  color: #ff7979;
 }
 
 .actionBtnIcon {
   font-size: 16px;
-  font-family: 'Material Symbols Outlined';
 }
 
 .sentAvatar {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: var(--bg-hover);
+  background: rgba(255, 255, 255, 0.08);
   flex-shrink: 0;
 }
 
 .sentName {
   font-size: 14px;
   font-weight: 500;
-  color: var(--text);
+  color: #e1e2eb;
 }
 
 .sentTime {
   font-size: 11px;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.3);
 }
 
 .sentRight {
@@ -384,87 +364,106 @@
 
 .sentStatus {
   font-size: 12px;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .cancelBtn {
   font-size: 12px;
-  color: var(--danger);
+  color: #ff7979;
   padding: 4px 10px;
-  border-radius: var(--radius-pill);
-  background: rgba(186, 26, 26, 0.06);
-  transition: var(--transition-fast);
+  border-radius: 9999px;
+  background: rgba(255, 121, 121, 0.08);
+  transition: background 0.15s ease;
 }
 
 .cancelBtn:active {
   transform: scale(0.95);
 }
 
-/* ── 水晶球网格 ── */
+/* ===== 区块标题 ===== */
 .sectionLabel {
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 600;
-  color: var(--text-secondary);
-  margin-bottom: 20px;
-  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0 24px;
+  margin-bottom: 16px;
 }
 
-.sphereGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 28px 20px;
+/* ===== 瀑布流布局 ===== */
+.waterfall {
+  display: flex;
+  gap: 20px;
+  padding: 0 24px;
+  align-items: flex-start;
 }
 
-/* ── 单个水晶球卡片 ── */
+.waterfallCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* 右列向下偏移，制造错落感 */
+.waterfallColRight {
+  margin-top: 48px;
+}
+
+/* ===== 水晶球卡片 ===== */
 .sphereItem {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   -webkit-tap-highlight-color: transparent;
   animation: sphereFadeIn 0.5s ease both;
+  cursor: pointer;
+  transition: transform 0.25s ease;
 }
 
-/* ── 水晶球容器 ── */
+.sphereItem:active {
+  transform: scale(0.96);
+}
+
+/* ===== 水晶球容器 ===== */
 .crystalBallContainer {
   position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
+  width: 144px;
+  height: 144px;
 }
 
-/* ── 光晕脉冲 ── */
-.sphereHalo {
-  position: absolute;
-  inset: -6px;
-  border-radius: 50%;
-  border: 2px solid rgba(98, 95, 80, 0.25);
-  animation: haloGlow 3s infinite ease-in-out;
-  pointer-events: none;
-}
-
-/* ── 外发光 ── */
+/* ===== 外发光光晕 ===== */
 .glowAura {
   position: absolute;
-  inset: -12px;
+  inset: -16px;
   border-radius: 50%;
-  filter: blur(16px);
-  opacity: 0.25;
+  filter: blur(20px);
+  opacity: 0.35;
   pointer-events: none;
   z-index: -1;
 }
 
-/* ── 水晶球主体 ── */
+/* ===== 光环脉冲 ===== */
+.sphereHalo {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 2px solid rgba(215, 186, 255, 0.3);
+  animation: haloGlow 3s infinite ease-in-out;
+  pointer-events: none;
+}
+
+/* ===== 水晶球主体 ===== */
 .crystalSphere {
   position: relative;
-  width: 100%;
-  height: 100%;
+  width: 144px;
+  height: 144px;
   border-radius: 50%;
   overflow: hidden;
-  background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.15) 100%);
-  box-shadow:
-    inset 0 0 40px rgba(255,255,255,0.4),
-    0 10px 30px rgba(90, 90, 90, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -472,11 +471,11 @@
 .crystalSphere::after {
   content: '';
   position: absolute;
-  top: 10%;
-  left: 15%;
-  width: 30%;
-  height: 30%;
-  background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 80%);
+  top: 12%;
+  left: 16%;
+  width: 28%;
+  height: 28%;
+  background: radial-gradient(circle, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 80%);
   border-radius: 50%;
   pointer-events: none;
   z-index: 2;
@@ -487,19 +486,19 @@
   transform: scale(0.93);
 }
 
-/* 脉冲动画（点击跳转） */
+/* 脉冲动画 */
 .crystalSpherePulse {
   animation: spherePulse 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-/* ── 有更新的水晶球 ── */
+/* 有更新 */
 .sphereItemHasUpdate .crystalSphere {
   box-shadow:
-    inset 0 0 40px rgba(255,255,255,0.4),
-    0 10px 30px rgba(98, 95, 80, 0.12);
+    0 0 30px rgba(215, 186, 255, 0.2),
+    0 0 60px rgba(215, 186, 255, 0.1);
 }
 
-/* ── 水晶球图片 ── */
+/* ===== 水晶球图片 ===== */
 .crystalSphereImg {
   width: 100%;
   height: 100%;
@@ -508,29 +507,58 @@
   display: block;
 }
 
-/* ── 备用 Emoji ── */
+/* ===== 备用 Emoji ===== */
 .crystalSphereEmoji {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 36px;
+  font-size: 40px;
   position: relative;
   z-index: 1;
 }
 
-/* ── "有更新" 标签 ── */
+/* ===== 底座：名字 + 时间 ===== */
+.ballBase {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-align: center;
+}
+
+.ballBaseName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f0eef6;
+  line-height: 1.3;
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ballBaseSub {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ===== "有更新" 标签 ===== */
 .updateBadge {
   position: absolute;
   bottom: 8%;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(98, 95, 80, 0.2);
+  background: rgba(215, 186, 255, 0.15);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   padding: 3px 10px;
-  border-radius: var(--radius-pill);
+  border-radius: 9999px;
   z-index: 3;
   white-space: nowrap;
 }
@@ -538,65 +566,32 @@
 .updateBadgeText {
   font-size: 10px;
   font-weight: 700;
-  color: var(--text-primary-dark);
-  letter-spacing: 0.1em;
+  color: #d7baff;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-/* ── 通知小圆点 ── */
+/* ===== 通知小圆点 ===== */
 .notificationDot {
   position: absolute;
-  top: 12%;
-  right: 12%;
+  top: 10%;
+  right: 10%;
   width: 10px;
   height: 10px;
-  background: var(--text-primary-dark);
+  background: #d7baff;
   border-radius: 50%;
-  box-shadow: 0 0 8px rgba(98, 95, 80, 0.5);
+  box-shadow: 0 0 8px rgba(215, 186, 255, 0.6);
   animation: pulseGlow 2s infinite ease-in-out;
   z-index: 3;
 }
 
-/* ── 好友名 ── */
-.sphereName {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
-  text-align: center;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  transition: color 0.2s ease;
-}
-
-.sphereWorld {
-  font-size: 11px;
-  color: var(--text-muted);
-  text-align: center;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.sphereRemark {
-  font-size: 11px;
-  color: var(--text-muted);
-  text-align: center;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* ── 管理弹窗 ── */
+/* ===== 管理弹窗 ===== */
 .manageOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: rgba(11, 14, 20, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   z-index: 200;
   display: flex;
   align-items: flex-end;
@@ -607,8 +602,9 @@
 .manageSheet {
   width: 100%;
   max-width: 430px;
-  background: var(--bg-card);
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: rgba(45, 27, 78, 0.4);
+  border: 1px solid rgba(215, 186, 255, 0.3);
+  border-radius: 32px 32px 0 0;
   padding: 20px;
   animation: sheetUp 0.3s cubic-bezier(0.32, 0.72, 0, 1);
 }
@@ -617,14 +613,14 @@
   width: 36px;
   height: 4px;
   border-radius: 2px;
-  background: var(--border-medium);
+  background: rgba(255, 255, 255, 0.2);
   margin: 0 auto 16px;
 }
 
 .manageName {
   font-size: 16px;
   font-weight: 600;
-  color: var(--text);
+  color: #e1e2eb;
   text-align: center;
   margin-bottom: 16px;
 }
@@ -642,118 +638,131 @@
   align-items: center;
   gap: 6px;
   padding: 14px 8px;
-  border-radius: var(--radius);
-  background: var(--bg-inset);
-  transition: var(--transition-fast);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background 0.15s ease;
 }
 
 .manageBtn:active {
+  background: rgba(255, 255, 255, 0.12);
   transform: scale(0.95);
-  background: var(--bg-hover);
 }
 
 .manageBtnIcon {
   font-size: 20px;
+  color: rgba(215, 186, 255, 0.8);
 }
 
 .manageBtnLabel {
   font-size: 12px;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.6);
   font-weight: 500;
 }
 
 .manageBtnDanger {
-  background: rgba(186, 26, 26, 0.06);
+  background: rgba(255, 121, 121, 0.08);
+  border-color: rgba(255, 121, 121, 0.15);
 }
 
 .manageBtnDanger:active {
-  background: rgba(186, 26, 26, 0.12);
+  background: rgba(255, 121, 121, 0.15);
+}
+
+.manageBtnDanger .manageBtnIcon {
+  color: #ff7979;
+}
+
+.manageBtnDanger .manageBtnLabel {
+  color: rgba(255, 121, 121, 0.7);
 }
 
 .manageClose {
   width: 100%;
   padding: 12px;
-  border-radius: var(--radius);
-  background: var(--bg-hover);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   font-size: 14px;
   font-weight: 500;
-  color: var(--text-secondary);
-  transition: var(--transition-fast);
+  color: rgba(255, 255, 255, 0.5);
+  transition: background 0.15s ease;
 }
 
 .manageClose:active {
+  background: rgba(255, 255, 255, 0.1);
   transform: scale(0.98);
 }
 
-/* ── 底部提示 ── */
-.bottomHint {
-  margin-top: 32px;
-  text-align: center;
-  padding-bottom: 8px;
+/* ===== 底部留白 ===== */
+.bottomSpacer {
+  height: 80px;
 }
 
-.bottomHintText {
-  font-size: 11px;
-  color: var(--text-muted);
-  letter-spacing: 0.08em;
-  opacity: 0.6;
-}
-
-.bottomDots {
-  display: flex;
-  justify-content: center;
-  gap: 4px;
-  margin-top: 8px;
-}
-
-.bottomDot {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--text-muted);
-}
-
-/* ── 空状态 ── */
+/* ===== 空状态 ===== */
 .empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 24px;
   text-align: center;
-  padding: 40px 16px;
-  color: var(--text-muted);
-  font-size: 14px;
-  line-height: 1.6;
+  position: relative;
+  z-index: 10;
 }
 
-.emptyIcon {
-  font-size: 40px;
-  margin-bottom: 12px;
+.emptyCrystal {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(215,186,255,0.15) 0%, rgba(255,121,198,0.08) 50%, rgba(80,250,123,0.08) 100%);
+  box-shadow:
+    0 0 40px rgba(215, 186, 255, 0.15),
+    inset 0 0 20px rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  margin-bottom: 20px;
 }
 
-/* ── 动画 ── */
+.emptyTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 6px;
+}
+
+.emptyHint {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.3);
+  line-height: 1.5;
+}
+
+/* ===== 动画 ===== */
 @keyframes pageIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes starDrift1 {
-  0% { transform: translate(0, 0); }
-  50% { transform: translate(20px, 30px); }
-  100% { transform: translate(0, 0); }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes starDrift2 {
-  0% { transform: translate(0, 0); }
-  50% { transform: translate(-15px, -25px); }
-  100% { transform: translate(0, 0); }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes haloGlow {
   0% { transform: scale(1); opacity: 0.3; }
-  50% { transform: scale(1.06); opacity: 0.7; border-color: rgba(98, 95, 80, 0.5); }
+  50% { transform: scale(1.06); opacity: 0.7; border-color: rgba(215, 186, 255, 0.5); }
   100% { transform: scale(1); opacity: 0.3; }
 }
 
 @keyframes pulseGlow {
   0%, 100% { opacity: 0.6; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.2); }
+  50% { opacity: 1; transform: scale(1.3); }
 }
 
 @keyframes spherePulse {
@@ -763,18 +772,8 @@
 }
 
 @keyframes sphereFadeIn {
-  from { opacity: 0; transform: translateY(12px) scale(0.95); }
+  from { opacity: 0; transform: translateY(16px) scale(0.95); }
   to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-6px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes overlayIn {
@@ -785,50 +784,4 @@
 @keyframes sheetUp {
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
-}
-
-/* ── 深夜模式适配 ── */
-@media (prefers-color-scheme: dark) {
-  .searchInput,
-  .searchSubmit,
-  .topManageBtn,
-  .sectionToggle,
-  .requestItem,
-  .sentItem {
-    background: rgba(45, 45, 45, 0.7);
-    border-color: rgba(255, 255, 255, 0.08);
-  }
-
-  .searchInput:focus {
-    background: rgba(60, 60, 60, 0.9);
-  }
-
-  .crystalSphere {
-    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
-    box-shadow:
-      inset 0 0 30px rgba(255,255,255,0.1),
-      0 10px 30px rgba(0, 0, 0, 0.2);
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-
-  .crystalSphere::after {
-    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 80%);
-  }
-
-  .updateBadge {
-    background: rgba(255, 255, 255, 0.1);
-  }
-
-  .updateBadgeText {
-    color: #ccc6b5;
-  }
-
-  .notificationDot {
-    background: #ccc6b5;
-    box-shadow: 0 0 8px rgba(204, 198, 181, 0.4);
-  }
-
-  .sphereHalo {
-    border-color: rgba(204, 198, 181, 0.25);
-  }
 }
