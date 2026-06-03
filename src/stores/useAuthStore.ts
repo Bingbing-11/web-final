@@ -30,6 +30,21 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
   login: async (username: string, password: string) => {
     try {
+      /* Mock 模式：任意账号密码均可登录，返回模拟用户 */
+      if (import.meta.env.VITE_USE_MOCK === 'true') {
+        const mockUser = {
+          id: 'mock-001',
+          username,
+          nickname: '水晶球旅者',
+          avatar: null,
+          bio: '在水晶球世界里探索中…',
+          createdAt: new Date().toISOString(),
+        };
+        const mockToken = 'mock-token-' + Date.now();
+        api.tokenManager.save(mockToken, mockUser);
+        set({ currentUser: mockUser, isLoggedIn: true });
+        return true;
+      }
       const res: any = await api.post('/api/auth/login', { username, password });
       if (res.code === 200 && res.data) {
         api.tokenManager.save(res.data.token, res.data.user);
@@ -44,6 +59,21 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
   register: async (username: string, nickname: string, password: string) => {
     try {
+      /* Mock 模式：直接注册成功 */
+      if (import.meta.env.VITE_USE_MOCK === 'true') {
+        const mockUser = {
+          id: 'mock-002',
+          username,
+          nickname: nickname || '水晶球旅者',
+          avatar: null,
+          bio: '',
+          createdAt: new Date().toISOString(),
+        };
+        const mockToken = 'mock-token-' + Date.now();
+        api.tokenManager.save(mockToken, mockUser);
+        set({ currentUser: mockUser, isLoggedIn: true });
+        return { ok: true };
+      }
       const res: any = await api.post('/api/auth/register', { username, nickname, password });
       if (res.code === 200 && res.data) {
         api.tokenManager.save(res.data.token, res.data.user);
@@ -84,8 +114,20 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   },
 
   checkAuth: async () => {
-    if (!api.tokenManager.get()) {
+    const token = api.tokenManager.get();
+    if (!token) {
       set({ currentUser: null, isLoggedIn: false });
+      return;
+    }
+    /* Mock 模式：token 存在则直接恢复用户 */
+    if (import.meta.env.VITE_USE_MOCK === 'true') {
+      const user = api.tokenManager.getUser();
+      if (user) {
+        set({ currentUser: user, isLoggedIn: true });
+      } else {
+        api.tokenManager.clear();
+        set({ currentUser: null, isLoggedIn: false });
+      }
       return;
     }
     set({ isLoading: true });

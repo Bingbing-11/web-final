@@ -2,6 +2,8 @@ import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useWorldStore } from '../../stores/useWorldStore';
 import { useEntryStore } from '../../stores/useEntryStore';
+import { useResonanceStore } from '../../stores/useResonanceStore';
+import { useAuthStore } from '../../stores/useAuthStore';
 import { matchScenes } from '../../lib/crystal/sceneEngine';
 import { DEFAULT_CRYSTAL_PARAMS } from '../../lib/crystal/materialEngine';
 import CrystalCanvas from '../../components/crystal/CrystalCanvas';

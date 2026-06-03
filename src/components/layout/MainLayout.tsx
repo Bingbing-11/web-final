@@ -41,20 +41,8 @@ export default function MainLayout() {
 
   return (
     <div className={styles.layout}>
-      {/* ── Top Bar（仅首页显示） ── */}
-      {isHome && (
-        <header className={`${styles.topBar} ${scrolled ? styles.scrolled : ''}`}>
-          <div className={styles.topBarInner}>
-            <h1 className={styles.title}>水晶球世界</h1>
-            <button className={styles.addBtn} onClick={() => navigate('/world/create')}>
-              <span className="material-symbols-outlined" style={{ fontSize: 24 }}>add</span>
-            </button>
-          </div>
-        </header>
-      )}
-
       {/* ── Page Content ── */}
-      <main className={`${styles.main} ${!isHome ? styles.mainNoTop : ''}`}>
+      <main className={styles.main}>
         <Outlet />
       </main>
 
