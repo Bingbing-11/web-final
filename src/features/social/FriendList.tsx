@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/useAuthStore';
 import { useFriendStore } from '../../stores/useFriendStore';
 import { useLayoutStore } from '../../stores/useLayoutStore';
+import { mockFriendWorlds } from '../../mocks/mockWorlds';
 import styles from './FriendList.module.css';
 
 /* ── 好友备注（本地存储）── */
@@ -21,7 +22,16 @@ function saveRemarks(remarks: Record<string, string>) {
 }
 
 /* ── 好友头像 Emoji 映射 ── */
-const AVATAR_EMOJIS = ['🌍', '🌙', '🌊', '🌸', '🔮', '🦋', '✨', '🍃', '💎', '🎭', '🎪', '🌈'];
+const AVATAR_EMOJIS = ['🔮', '🌙', '🌊', '🌸', '✨', '🦋', '💎', '🍃', '🎭', '🌈', '🎪', '🐾'];
+
+const GLOW_COLORS = [
+  'rgba(98, 95, 80, 0.3)',
+  'rgba(160, 170, 190, 0.3)',
+  'rgba(140, 180, 160, 0.3)',
+  'rgba(200, 180, 140, 0.3)',
+  'rgba(180, 160, 140, 0.3)',
+  'rgba(190, 170, 130, 0.3)',
+];
 
 /* 境外不可达域名黑名单 */
 const BLOCKED_HOSTS = ['googleusercontent.com', 'lh3.google', 'googleapis.com'];
@@ -32,6 +42,16 @@ function getAvatarEmoji(friendId: string): string {
     hash = ((hash << 5) - hash + friendId.charCodeAt(i)) | 0;
   }
   return AVATAR_EMOJIS[Math.abs(hash) % AVATAR_EMOJIS.length];
+}
+
+function getGlowColor(index: number): string {
+  return GLOW_COLORS[index % GLOW_COLORS.length];
+}
+
+/** 根据 friendId 查找对应的 mockWorld imageUrl */
+function getFriendImageUrl(friendId: string): string | undefined {
+  const world = mockFriendWorlds.find(w => w.ownerId === friendId);
+  return world?.imageUrl;
 }
 
 /* ── 主组件 ── */
@@ -56,7 +76,7 @@ export default function FriendList() {
   const [loading, setLoading] = useState(false);
   const [remarks, setRemarks] = useState<Record<string, string>>(loadRemarks);
 
-  /* 实时搜索筛选（必须在 searchQuery / remarks useState 之后声明） */
+  /* 实时搜索筛选 */
   const filteredFriends = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     if (!q) return friends;
@@ -66,6 +86,7 @@ export default function FriendList() {
       return name.includes(q) || world.includes(q);
     });
   }, [friends, searchQuery, remarks]);
+
   const showRequests = useLayoutStore(s => s.showFriendRequests);
   const toggleShowRequests = useLayoutStore(s => s.toggleFriendRequests);
   const [showSent, setShowSent] = useState(false);
@@ -90,7 +111,7 @@ export default function FriendList() {
     };
   }, []);
 
-  /* 头像预检：境外/不可用图片直接跳过，显示 emoji */
+  /* 头像预检：境外/不可用图片直接跳过 */
   useEffect(() => {
     friends.forEach(f => {
       if (f.friendAvatar && !brokenAvatars.has(f.friendId)) {
@@ -180,7 +201,7 @@ export default function FriendList() {
     [remarks],
   );
 
-  /* 点击水晶球：脉冲 → 跳转到好友世界详情 */
+  /* 点击水晶球：脉冲 -> 跳转到好友世界详情 */
   const handleSphereClick = useCallback((friendId: string) => {
     if (manageFriend) return;
     if (navigator.vibrate) navigator.vibrate(10);
@@ -195,7 +216,7 @@ export default function FriendList() {
     }, 400);
   }, [manageFriend, navigate, friends]);
 
-  /* 长按 → 打开管理菜单 */
+  /* 长按 -> 打开管理菜单 */
   const handleTouchStart = useCallback((friendId: string) => {
     if (longPressTimer.current) clearTimeout(longPressTimer.current);
     longPressTimer.current = setTimeout(() => {
@@ -216,25 +237,44 @@ export default function FriendList() {
 
   return (
     <div className={styles.page}>
+      {/* ── 星尘背景 ── */}
+      <div className={styles.starDust} />
+
+      {/* ── 页面头部 ── */}
+      <header className={styles.pageHeader}>
+        <div className={styles.pageHeaderLeft}>
+          <h2 className={styles.pageTitle}>好友领域</h2>
+          <p className={styles.pageSubtitle}>窥探挚友们的小小世界。</p>
+        </div>
+        <button
+          className={styles.topManageBtn}
+          onClick={() => navigate('/friends/manage')}
+        >
+          <span className={styles.topManageBtnIcon}>settings</span>
+          管理
+        </button>
+      </header>
+
       {/* ── 搜索栏 ── */}
       <section className={styles.searchSection}>
         <div className={styles.searchBar}>
           <div className={styles.searchInputWrap}>
-            <span className={styles.searchInputIcon}>🔍</span>
+            <span className={styles.searchInputIcon}>search</span>
             <input
               className={styles.searchInput}
               type="text"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              placeholder="寻找共鸣的灵魂…"
+              placeholder="寻找共鸣的灵魂..."
               onKeyDown={e => e.key === 'Enter' && handleAddFriend()}
             />
           </div>
           <button
-            className={styles.topManageBtn}
-            onClick={() => navigate('/friends/manage')}
+            className={styles.searchSubmit}
+            onClick={handleAddFriend}
+            disabled={loading || !searchQuery.trim()}
           >
-            管理
+            {loading ? '...' : '添加'}
           </button>
         </div>
         {feedback && (
@@ -254,11 +294,11 @@ export default function FriendList() {
                 onClick={toggleShowRequests}
               >
                 <div className={styles.sectionToggleLeft}>
-                  <span className={styles.sectionToggleIcon}>📨</span>
+                  <span className={styles.sectionToggleIcon}>mail</span>
                   <span className={styles.sectionToggleTitle}>好友请求</span>
                   <span className={styles.sectionBadge}>{pendingCount}</span>
                 </div>
-                <span className={`${styles.sectionToggleArrow} ${showRequests ? styles.sectionToggleArrowOpen : ''}`}>▼</span>
+                <span className={`${styles.sectionToggleArrow} ${showRequests ? styles.sectionToggleArrowOpen : ''}`}>expand_more</span>
               </button>
               {showRequests && (
                 <div className={styles.requestList}>
@@ -290,14 +330,14 @@ export default function FriendList() {
                           onClick={() => handleAccept(r.id)}
                           title="接受"
                         >
-                          <span className={styles.actionBtnIcon}>✅</span>
+                          <span className={styles.actionBtnIcon}>check</span>
                         </button>
                         <button
                           className={`${styles.actionBtn} ${styles.actionBtnReject}`}
                           onClick={() => handleReject(r.id)}
                           title="拒绝"
                         >
-                          <span className={styles.actionBtnIcon}>❌</span>
+                          <span className={styles.actionBtnIcon}>close</span>
                         </button>
                       </div>
                     </div>
@@ -315,11 +355,11 @@ export default function FriendList() {
                 style={{ marginTop: 8 }}
               >
                 <div className={styles.sectionToggleLeft}>
-                  <span className={styles.sectionToggleIcon}>📤</span>
+                  <span className={styles.sectionToggleIcon}>send</span>
                   <span className={styles.sectionToggleTitle}>已发送</span>
                   <span className={styles.sectionBadge}>{sentRequests.length}</span>
                 </div>
-                <span className={`${styles.sectionToggleArrow} ${showSent ? styles.sectionToggleArrowOpen : ''}`}>▼</span>
+                <span className={`${styles.sectionToggleArrow} ${showSent ? styles.sectionToggleArrowOpen : ''}`}>expand_more</span>
               </button>
               {showSent && (
                 <div className={styles.sentList}>
@@ -356,7 +396,7 @@ export default function FriendList() {
         </section>
       )}
 
-      {/* ── 好友水晶球网格 ── */}
+      {/* ── 水晶球网格 ── */}
       <section>
         <div className={styles.sectionLabel}>
           我的好友 · {friends.length}
@@ -378,46 +418,63 @@ export default function FriendList() {
           </div>
         ) : (
           <div className={styles.sphereGrid}>
-            {filteredFriends.map((f) => {
+            {filteredFriends.map((f, idx) => {
               const displayName = remarks[f.friendId] || f.friendName;
               const hasRemark = !!remarks[f.friendId];
               const isPulsing = pulsingId === f.friendId;
               const hasUpdate = (f as any).hasUpdate;
               const worldName = (f as any).latestWorldName;
+              const worldImageUrl = getFriendImageUrl(f.friendId);
+              const hasValidAvatar = f.friendAvatar && !brokenAvatars.has(f.friendId);
+              const sphereImageUrl = hasValidAvatar ? f.friendAvatar : worldImageUrl;
 
               return (
                 <div
                   key={f.id}
-                  className={styles.sphereItem}
+                  className={`${styles.sphereItem} ${hasUpdate ? styles.sphereItemHasUpdate : ''}`}
+                  style={{ animationDelay: `${idx * 0.08}s` } as React.CSSProperties}
                   onClick={() => handleSphereClick(f.friendId)}
                   onTouchStart={() => handleTouchStart(f.friendId)}
                   onTouchEnd={handleTouchEnd}
                   onTouchCancel={handleTouchEnd}
                 >
-                  <div className={styles.sphereWrap}>
+                  <div className={styles.crystalBallContainer}>
+                    {/* 外发光 */}
+                    <div
+                      className={styles.glowAura}
+                      style={{ background: getGlowColor(idx) }}
+                    />
+                    {/* 光环脉冲 */}
                     {hasUpdate && <div className={styles.sphereHalo} />}
-                    <div className={`${styles.sphere} ${isPulsing ? styles.spherePulse : ''}`}>
-                      <div className={styles.sphereContent}>
-                        {f.friendAvatar && !brokenAvatars.has(f.friendId) ? (
-                          <img
-                            className={styles.sphereAvatar}
-                            src={f.friendAvatar}
-                            alt={f.friendName}
-                            onError={() => {
-                              setBrokenAvatars(prev => new Set(prev).add(f.friendId));
-                            }}
-                          />
-                        ) : (
-                          <span className={styles.sphereEmoji}>
-                            {getAvatarEmoji(f.friendId)}
-                          </span>
-                        )}
-                      </div>
+                    {/* 通知小圆点 */}
+                    {hasUpdate && <div className={styles.notificationDot} />}
+                    {/* 水晶球主体 */}
+                    <div className={`${styles.crystalSphere} ${isPulsing ? styles.crystalSpherePulse : ''}`}>
+                      {sphereImageUrl ? (
+                        <img
+                          className={styles.crystalSphereImg}
+                          src={sphereImageUrl}
+                          alt={f.friendName}
+                          onError={() => {
+                            setBrokenAvatars(prev => new Set(prev).add(f.friendId));
+                          }}
+                        />
+                      ) : (
+                        <div className={styles.crystalSphereEmoji}>
+                          {getAvatarEmoji(f.friendId)}
+                        </div>
+                      )}
                     </div>
+                    {/* "有更新" 标签 */}
+                    {hasUpdate && (
+                      <div className={styles.updateBadge}>
+                        <span className={styles.updateBadgeText}>有更新</span>
+                      </div>
+                    )}
                   </div>
                   <span className={styles.sphereName}>{displayName}</span>
                   {worldName && (
-                    <span className={styles.sphereWorld}>{displayName} 的 {worldName}</span>
+                    <span className={styles.sphereWorld}>{worldName}</span>
                   )}
                   {hasRemark && !worldName && (
                     <span className={styles.sphereRemark}>{f.friendName}</span>
@@ -435,8 +492,8 @@ export default function FriendList() {
           <p className={styles.bottomHintText}>向下滑动发现更多灵魂</p>
           <div className={styles.bottomDots}>
             <div className={styles.bottomDot} />
-            <div className={`${styles.bottomDot}`} style={{ opacity: 0.6 }} />
-            <div className={`${styles.bottomDot}`} style={{ opacity: 0.3 }} />
+            <div className={styles.bottomDot} style={{ opacity: 0.6 }} />
+            <div className={styles.bottomDot} style={{ opacity: 0.3 }} />
           </div>
         </div>
       )}
@@ -460,7 +517,7 @@ export default function FriendList() {
                 className={styles.manageBtn}
                 onClick={() => handleEditRemark(managingFriend.friendId, managingFriend.friendName)}
               >
-                <span className={styles.manageBtnIcon}>✏️</span>
+                <span className={styles.manageBtnIcon}>edit</span>
                 <span className={styles.manageBtnLabel}>修改备注</span>
               </button>
               <button
@@ -473,14 +530,14 @@ export default function FriendList() {
                   }
                 }}
               >
-                <span className={styles.manageBtnIcon}>🌍</span>
+                <span className={styles.manageBtnIcon}>travel_explore</span>
                 <span className={styles.manageBtnLabel}>访问世界</span>
               </button>
               <button
                 className={`${styles.manageBtn} ${styles.manageBtnDanger}`}
                 onClick={() => handleRemove(managingFriend.id)}
               >
-                <span className={styles.manageBtnIcon}>👋</span>
+                <span className={styles.manageBtnIcon}>person_remove</span>
                 <span className={styles.manageBtnLabel}>移除好友</span>
               </button>
             </div>
