@@ -235,26 +235,6 @@ export default function WorldHub() {
                 className={`${styles.card} ${styles.cardFeatured}`}
                 onClick={() => navigate(`/world/${featured.id}`)}
               >
-                <div className={styles.cardHeader}>
-                  <div className={styles.cardHeaderLeft}>
-                    <span className={styles.featuredTag}>最活跃</span>
-                    <h2 className={styles.cardTitleLg}>{featured.name}</h2>
-                  </div>
-                  <div className={styles.cardHeaderRight}>
-                    <span className={styles.cardTime}>{formatTimeAgo(featured.updatedAt)}</span>
-                    {/* ⭐ 星星消息按钮（带动画 + 未读条数） */}
-                    <button
-                      className={`${styles.iconBtn} ${styles.starBtn}`}
-                      onClick={e => { e.stopPropagation(); setMsgWorldId(featured.id); }}
-                      title="留言"
-                    >
-                      <span className="material-symbols-outlined" style={{ fontSize: 20, animation: 'starPulse 1.8s ease-in-out infinite' }}>star</span>
-                      {(featured.unreadCount ?? 0) > 0 && (
-                        <span className={styles.badge}>{featured.unreadCount}</span>
-                      )}
-                    </button>
-                  </div>
-                </div>
                 <div className={styles.crystalBall}>
                   <div className={styles.crystalBallInner}>
                     {featured.imageUrl ? (
@@ -269,6 +249,24 @@ export default function WorldHub() {
                       </div>
                     )}
                     <div className={styles.crystalBallSheen} />
+                  </div>
+                </div>
+                {/* ── 水晶球底座：名字 + 时间 + 星星 ── */}
+                <div className={styles.ballBase}>
+                  <h2 className={styles.ballBaseName}>{featured.name}</h2>
+                  <div className={styles.ballBaseRow}>
+                    <span className={styles.ballBaseTime}>{formatTimeAgo(featured.updatedAt)}</span>
+                    {/* ⭐ 星星消息按钮 */}
+                    <button
+                      className={`${styles.iconBtn} ${styles.starBtn}`}
+                      onClick={e => { e.stopPropagation(); setMsgWorldId(featured.id); }}
+                      title="留言"
+                    >
+                      <span className="material-symbols-outlined" style={{ fontSize: 18, animation: 'starPulse 1.8s ease-in-out infinite' }}>star</span>
+                      {(featured.unreadCount ?? 0) > 0 && (
+                        <span className={styles.badge}>{featured.unreadCount}</span>
+                      )}
+                    </button>
                   </div>
                 </div>
                 {featured.latestExcerpt && (
@@ -300,23 +298,24 @@ export default function WorldHub() {
                     <div className={styles.crystalBallSmallSheen} />
                   </div>
                 </div>
-                <div className={styles.cardFooter}>
-                  <h3 className={styles.cardTitleSm}>{w.name}</h3>
-                  <div className={styles.cardActions}>
-                    {/* ⭐ 星星消息按钮（小卡版） */}
+                {/* ── 小卡底座：名字 + 时间 + 星星 ── */}
+                <div className={styles.ballBaseSmall}>
+                  <h3 className={styles.ballBaseNameSmall}>{w.name}</h3>
+                  <div className={styles.ballBaseRowSmall}>
+                    <span className={styles.ballBaseTimeSmall}>{formatTimeAgo(w.updatedAt)}</span>
+                    {/* ⭐ 星星消息按钮 */}
                     <button
                       className={`${styles.iconBtn} ${styles.starBtn}`}
                       onClick={e => { e.stopPropagation(); setMsgWorldId(w.id); }}
                       title="留言"
                     >
-                      <span className="material-symbols-outlined" style={{ fontSize: 18, animation: 'starPulse 1.8s ease-in-out infinite' }}>star</span>
+                      <span className="material-symbols-outlined" style={{ fontSize: 16, animation: 'starPulse 1.8s ease-in-out infinite' }}>star</span>
                       {(w.unreadCount ?? 0) > 0 && (
                         <span className={styles.badge}>{w.unreadCount}</span>
                       )}
                     </button>
                   </div>
                 </div>
-                <span className={styles.cardTimeSm}>{formatTimeAgo(w.updatedAt)}</span>
               </div>
             ))}
           </div>
