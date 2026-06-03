@@ -265,7 +265,7 @@ export const mockFriendWorlds: World[] = [
   },
   {
     id: 'friend-u3-world',
-    name: '云端漫步',
+    name: '我跟他的日常',
     description: '在云层之上行走，脚下是人间，头顶是永恒',
     ownerId: 'u3',
     icon: '☁️',

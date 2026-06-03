@@ -525,9 +525,6 @@
   height: 256px;
   border-radius: 50%;
   overflow: hidden;
-  box-shadow:
-    0 0 60px rgba(215, 186, 255, 0.4),
-    0 0 60px rgba(255, 121, 198, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -571,7 +568,6 @@
   height: 144px;
   border-radius: 50%;
   overflow: hidden;
-  box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 

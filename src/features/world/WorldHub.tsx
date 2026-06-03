@@ -21,6 +21,24 @@ if (typeof document !== 'undefined' && !document.getElementById(STAR_STYLE_ID)) 
 /* ── Mock 开关 ── */
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 
+/* ── 从渐变/颜色字符串提取光晕 ── */
+function glowFromColor(colorStr: string, isLarge: boolean): string {
+  const match = colorStr.match(/#[0-9a-fA-F]{6}/);
+  if (!match) {
+    return isLarge
+      ? '0 0 60px rgba(215,186,255,0.4), 0 0 100px rgba(255,121,198,0.25)'
+      : '0 0 40px rgba(255,255,255,0.2)';
+  }
+  const hex = match[0];
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  if (isLarge) {
+    return `0 0 60px rgba(${r},${g},${b},0.5), 0 0 100px rgba(${r},${g},${b},0.25)`;
+  }
+  return `0 0 40px rgba(${r},${g},${b},0.4), 0 0 60px rgba(${r},${g},${b},0.2)`;
+}
+
 /* ── 时间格式化 ── */
 function formatTimeAgo(dateStr: string): string {
   const diff = Date.now() - new Date(dateStr).getTime();
@@ -236,7 +254,7 @@ export default function WorldHub() {
                 onClick={() => navigate(`/world/${featured.id}`)}
               >
                 <div className={styles.crystalBall}>
-                  <div className={styles.crystalBallInner}>
+                  <div className={styles.crystalBallInner} style={{ boxShadow: glowFromColor(featured.color, true) }}>
                     {featured.imageUrl ? (
                       <img
                         src={featured.imageUrl}
@@ -283,7 +301,7 @@ export default function WorldHub() {
                 onClick={() => navigate(`/world/${w.id}`)}
               >
                 <div className={styles.crystalBallSmall}>
-                  <div className={styles.crystalBallSmallInner}>
+                  <div className={styles.crystalBallSmallInner} style={{ boxShadow: glowFromColor(w.color, false) }}>
                     {w.imageUrl ? (
                       <img
                         src={w.imageUrl}
