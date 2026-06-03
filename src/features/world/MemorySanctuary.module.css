@@ -269,13 +269,45 @@
   pointer-events: none;
 }
 
-/* 暖调复古滤镜 */
+/* ── 尘封记忆滤镜层 ── */
+/* 深琥珀岁月滤镜 + 降低对比度 + multiply 混合 → 泛黄老照片质感 */
 .sphereSepia {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: rgba(180, 140, 80, 0.12);
+  background: linear-gradient(
+    170deg,
+    rgba(160, 120, 50, 0.18) 0%,
+    rgba(180, 130, 40, 0.28) 40%,
+    rgba(140, 95, 35, 0.22) 70%,
+    rgba(120, 80, 30, 0.15) 100%
+  );
   mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* 棕褐色调覆盖层（backdrop-sepia 岁月氛围） */
+.sphereSepiaOverlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  backdrop-filter: sepia(0.55) saturate(0.6) brightness(0.85) contrast(0.85);
+  -webkit-backdrop-filter: sepia(0.55) saturate(0.6) brightness(0.85) contrast(0.85);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* 尘封纹理：微弱噪点 + 暗角增强岁月感 */
+.sphereDust {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      ellipse at 50% 50%,
+      transparent 40%,
+      rgba(100, 75, 30, 0.15) 100%
+    );
   pointer-events: none;
 }
 

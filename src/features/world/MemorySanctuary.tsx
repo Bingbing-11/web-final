@@ -11,7 +11,6 @@ const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 const HALL_THEMES = [
   { color: '#d7baff', label: '第一展厅' },
   { color: '#ffafd7', label: '第二展厅' },
-  { color: '#FFB86C', label: '第三展厅' },
 ] as const;
 
 /* ── 将封存世界分成展厅（每厅 2 个） ── */
@@ -162,7 +161,10 @@ export default function MemorySanctuary() {
                           )}
                           <div className={styles.sphereReflection} />
                           <div className={styles.sphereOverlay} />
+                          {/* 尘封记忆滤镜 */}
                           <div className={styles.sphereSepia} />
+                          <div className={styles.sphereSepiaOverlay} />
+                          <div className={styles.sphereDust} />
                         </div>
                       </div>
                       {/* ── 名称 ── */}
