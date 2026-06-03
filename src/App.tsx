@@ -10,6 +10,7 @@ import WorldDetail from './features/world/WorldDetail';
 import FriendWorldDetail from './features/world/FriendWorldDetail';
 import WorldSettings from './features/world/WorldSettings';
 import TemplePage from './features/world/TemplePage';
+import MemorySanctuary from './features/world/MemorySanctuary';
 import PermissionsPage from './features/world/PermissionsPage';
 import EntryEditor from './features/entry/EntryEditor';
 import EntryDetail from './features/entry/EntryDetail';
@@ -24,7 +25,6 @@ import SettingsPage from './features/settings/SettingsPage';
 import EditProfilePage from './features/settings/EditProfilePage';
 import HelpPage from './features/settings/HelpPage';
 import NotificationsPage from './features/settings/NotificationsPage';
-import MemorySanctuary from './features/memorySanctuary/MemorySanctuary';
 
 export default function App() {
   return (

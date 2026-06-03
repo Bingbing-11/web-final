@@ -5,6 +5,7 @@ export interface World {
   ownerId: string;
   icon?: string;
   color: string;
+  imageUrl?: string;
   isSealed: boolean;
   sealedAt?: string;
   createdAt: string;

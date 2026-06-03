@@ -90,6 +90,7 @@ function getPageTitle(pathname: string): string {
   if (pathname.startsWith('/resonance')) return '共鸣池';
   if (pathname.startsWith('/timecapsule') || pathname.startsWith('/time')) return '时光机';
   if (pathname.startsWith('/settings')) return '我的';
+  if (pathname.startsWith('/memory-sanctuary')) return '记忆圣殿';
   if (pathname.startsWith('/world/')) return '世界详情';
   return '';
 }
