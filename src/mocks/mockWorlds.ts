@@ -278,7 +278,7 @@ export const mockFriendWorlds: World[] = [
   },
   {
     id: 'friend-u4-world',
-    name: '鹿鸣谷',
+    name: '这些超好吃',
     description: '山谷深处传来鹿鸣，每一声都是大地的私语',
     ownerId: 'u4',
     icon: '🦌',

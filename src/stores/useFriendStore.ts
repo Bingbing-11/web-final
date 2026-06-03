@@ -63,7 +63,7 @@ export const useFriendStore = create<FriendState>()((set, get) => ({
             { id: 'f1', userId: '', friendId: 'u1', friendName: '小星', friendUsername: 'xiaoxing', friendAvatar: '', addedAt: '2025-01-15', sharedWorlds: ['friend-u1-world'], hasUpdate: true, latestWorldName: '雪山' },
             { id: 'f2', userId: '', friendId: 'u2', friendName: '阿月', friendUsername: 'ayue', friendAvatar: '', addedAt: '2025-02-20', sharedWorlds: ['friend-u2-world'], hasUpdate: false, latestWorldName: '月光森林' },
             { id: 'f3', userId: '', friendId: 'u3', friendName: '流云', friendUsername: 'liuyun', friendAvatar: '', addedAt: '2025-03-10', sharedWorlds: ['friend-u3-world'], hasUpdate: true, latestWorldName: '我跟他的日常' },
-            { id: 'f4', userId: '', friendId: 'u4', friendName: '小鹿', friendUsername: 'xiaolu', friendAvatar: '', addedAt: '2025-04-05', sharedWorlds: ['friend-u4-world'], hasUpdate: false, latestWorldName: '鹿鸣谷' },
+            { id: 'f4', userId: '', friendId: 'u4', friendName: '小鹿', friendUsername: 'xiaolu', friendAvatar: '', addedAt: '2025-04-05', sharedWorlds: ['friend-u4-world'], hasUpdate: false, latestWorldName: '这些超好吃' },
             { id: 'f5', userId: '', friendId: 'u5', friendName: '木子', friendUsername: 'muzi', friendAvatar: '', addedAt: '2025-04-18', sharedWorlds: ['friend-u5-world'], hasUpdate: false, latestWorldName: '林间小屋' },
             { id: 'f6', userId: '', friendId: 'u6', friendName: '晴天', friendUsername: 'qingtian', friendAvatar: '', addedAt: '2025-05-01', sharedWorlds: ['friend-u6-world'], hasUpdate: true, latestWorldName: '向日葵田' },
           ];
@@ -78,7 +78,7 @@ export const useFriendStore = create<FriendState>()((set, get) => ({
         { id: 'f1', userId: '', friendId: 'u1', friendName: '小星', friendUsername: 'xiaoxing', friendAvatar: '', addedAt: '2025-01-15', sharedWorlds: ['friend-u1-world'], hasUpdate: true, latestWorldName: '雪山' },
         { id: 'f2', userId: '', friendId: 'u2', friendName: '阿月', friendUsername: 'ayue', friendAvatar: '', addedAt: '2025-02-20', sharedWorlds: ['friend-u2-world'], hasUpdate: false, latestWorldName: '月光森林' },
         { id: 'f3', userId: '', friendId: 'u3', friendName: '流云', friendUsername: 'liuyun', friendAvatar: '', addedAt: '2025-03-10', sharedWorlds: ['friend-u3-world'], hasUpdate: true, latestWorldName: '我跟他的日常' },
-        { id: 'f4', userId: '', friendId: 'u4', friendName: '小鹿', friendUsername: 'xiaolu', friendAvatar: '', addedAt: '2025-04-05', sharedWorlds: ['friend-u4-world'], hasUpdate: false, latestWorldName: '鹿鸣谷' },
+        { id: 'f4', userId: '', friendId: 'u4', friendName: '小鹿', friendUsername: 'xiaolu', friendAvatar: '', addedAt: '2025-04-05', sharedWorlds: ['friend-u4-world'], hasUpdate: false, latestWorldName: '这些超好吃' },
         { id: 'f5', userId: '', friendId: 'u5', friendName: '木子', friendUsername: 'muzi', friendAvatar: '', addedAt: '2025-04-18', sharedWorlds: ['friend-u5-world'], hasUpdate: false, latestWorldName: '林间小屋' },
         { id: 'f6', userId: '', friendId: 'u6', friendName: '晴天', friendUsername: 'qingtian', friendAvatar: '', addedAt: '2025-05-01', sharedWorlds: ['friend-u6-world'], hasUpdate: true, latestWorldName: '向日葵田' },
       ];
