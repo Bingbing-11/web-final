@@ -233,9 +233,12 @@ export default function WorldDetail() {
           <span className="material-symbols-outlined">arrow_back</span>
         </button>
         <h1 className={styles.topBarTitle}>{world.name}</h1>
-        <button className={styles.addBtn} onClick={handleAddEntry} aria-label="写日记">
-          <span className="material-symbols-outlined">add</span>
-        </button>
+        {/* 封存世界：隐藏加号按钮 */}
+        {!world.isSealed && (
+          <button className={styles.addBtn} onClick={handleAddEntry} aria-label="写日记">
+            <span className="material-symbols-outlined">add</span>
+          </button>
+        )}
       </header>
 
       {/* ── 搜索栏（移动端聚焦展开） ── */}
@@ -377,16 +380,18 @@ export default function WorldDetail() {
                           </button>
                         </div>
 
-                        {/* ── 操作按钮组：编辑 ── */}
-                        <div className={styles.diaryActions}>
-                          <button
-                            className={styles.diaryActionBtn}
-                            onClick={() => handleEditEntry(entry.id)}
-                          >
-                            <span className="material-symbols-outlined" style={{ fontSize: 15 }}>edit</span>
-                            编辑
-                          </button>
-                        </div>
+                        {/* ── 操作按钮组：编辑（封存世界隐藏） ── */}
+                        {!world.isSealed && (
+                          <div className={styles.diaryActions}>
+                            <button
+                              className={styles.diaryActionBtn}
+                              onClick={() => handleEditEntry(entry.id)}
+                            >
+                              <span className="material-symbols-outlined" style={{ fontSize: 15 }}>edit</span>
+                              编辑
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </>
                   )}

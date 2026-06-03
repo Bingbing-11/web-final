@@ -488,6 +488,325 @@ export const mockEntries: Entry[] = [
     updatedAt: new Date(now - 91 * day).toISOString(),
     readCount: 5,
   },
+
+  /* ════════════════ sealed-1 美梦 ☁️ ════════════════ */
+  {
+    id: 'entry-s1-1',
+    worldId: 'sealed-1',
+    userId: 'mock-user',
+    title: '会飞的鱼',
+    content: `昨晚做了一个很奇怪的梦。
+鱼在天上飞，云在水里流，整片天空倒过来成了海洋。
+
+我站在一朵云上，脚下是蓬松的白色，远处有群鲸鱼在云层间游动。
+它们甩尾巴的时候会抖落一串露珠，落在我手心变成小小的星星。
+
+醒来之后特别安静，
+像那个梦还留在枕头里，等我翻个身就能接着做下去。`,
+    mode: 'normal',
+    status: 'published',
+    emotion: '奇幻',
+    emotionHue: 270,
+    keywords: ['梦', '鱼', '天空'],
+    createdAt: new Date(now - 3 * day).toISOString(),
+    updatedAt: new Date(now - 3 * day).toISOString(),
+    readCount: 8,
+  },
+  {
+    id: 'entry-s1-2',
+    worldId: 'sealed-1',
+    userId: 'mock-user',
+    title: '糖果小镇',
+    content: `梦到了一个全是糖果的小镇。
+马路是焦糖铺的，路灯是棒棒糖，河水是融化了的巧克力。
+
+每栋房子的屋顶上都长着棉花糖树，
+风一吹就会飘下粉色的"雪花"，落在舌尖是甜的。
+
+镇上的人走路都是弹跳着走的，
+因为地面太软了，走起来像踩在弹簧上。
+
+闹钟响了的时候我正坐在屋顶吃云朵味的冰淇淋，
+很不舍得醒来。`,
+    mode: 'normal',
+    status: 'published',
+    emotion: '甜蜜',
+    emotionHue: 320,
+    keywords: ['梦', '糖果', '童话'],
+    createdAt: new Date(now - 5 * day).toISOString(),
+    updatedAt: new Date(now - 5 * day).toISOString(),
+    readCount: 6,
+  },
+  {
+    id: 'entry-s1-3',
+    worldId: 'sealed-1',
+    userId: 'mock-user',
+    title: '透明的猫',
+    content: `梦到我养了一只透明的猫。
+能看到它体内流动的光，像装着一小瓶银河。
+
+晚上睡觉的时候它蜷在我枕头旁边，身体发出淡淡的蓝色荧光。
+我伸手摸它的毛，触感像触摸到了月光。
+
+它偶尔会突然消失，然后从天花板上掉下来，抖抖毛又若无其事地走开。
+就像它知道这只是一个梦，所以可以不遵守任何物理规则。
+
+最喜欢这种在梦里才有的自由。`,
+    mode: 'normal',
+    status: 'published',
+    emotion: '温柔',
+    emotionHue: 220,
+    keywords: ['梦', '猫', '荧光'],
+    createdAt: new Date(now - 7 * day).toISOString(),
+    updatedAt: new Date(now - 7 * day).toISOString(),
+    readCount: 11,
+  },
+
+  /* ════════════════ sealed-2 落日沙滩 🏖️ ════════════════ */
+  {
+    id: 'entry-s2-1',
+    worldId: 'sealed-2',
+    userId: 'mock-user',
+    title: '退潮后的贝壳',
+    content: `退潮后的沙滩像被谁翻过了一遍，露出一层闪亮的水膜。
+走了十几步捡到三枚贝壳，一枚白得像瓷器，一枚带着淡紫色的纹路，还有一枚特别小，指甲盖那么大，不知道是什么品种。
+
+把它们捧在手里对着夕阳看，光线穿过贝壳薄薄的边缘变成了琥珀色。
+忽然觉得，大海是不是把夕阳的颜色偷偷藏了一些在这些小东西里。
+
+装进口袋带回家，放在窗台上。
+也许有一天打开窗，它们会听到海的声音。`,
+    mode: 'normal',
+    status: 'published',
+    emotion: '宁静',
+    emotionHue: 30,
+    keywords: ['海滩', '贝壳', '黄昏'],
+    createdAt: new Date(now - 10 * day).toISOString(),
+    updatedAt: new Date(now - 10 * day).toISOString(),
+    readCount: 9,
+  },
+  {
+    id: 'entry-s2-2',
+    worldId: 'sealed-2',
+    userId: 'mock-user',
+    title: '冲浪的人',
+    content: `下午在沙滩上看到一个冲浪的人。
+他不是在冲浪板上，是赤脚踩着浪跑的。
+每一次浪涌上来，他就跳起来，在浪尖上悬停一秒，然后落回水里。
+
+我在沙滩上看了他很久。
+他不在乎有没有人看，也不在乎姿势好不好看。
+每一次落水都笑着浮出水面，甩甩头发，等下一道浪。
+
+太阳开始落下去的时候他终于上岸了，朝我笑了一下。
+我也朝他笑了，虽然我不知道他为什么笑，也许他也不知道。
+
+有些快乐就是这样的——没有理由，只是因为浪来了。`,
+    mode: 'normal',
+    status: 'published',
+    emotion: '自由',
+    emotionHue: 50,
+    keywords: ['海滩', '冲浪', '傍晚'],
+    createdAt: new Date(now - 12 * day).toISOString(),
+    updatedAt: new Date(now - 12 * day).toISOString(),
+    readCount: 14,
+  },
+  {
+    id: 'entry-s2-3',
+    worldId: 'sealed-2',
+    userId: 'mock-user',
+    title: '沙堡',
+    content: `堆了一个沙堡，花了一个多小时。
+有城墙、有塔楼、有护城河（真的灌了海水进去）。
+
+还没来得及欣赏，一道大浪卷过来就全没了。
+只剩下一滩湿沙，和几根我插上去当旗子的干草。
+
+愣了一下，然后笑了。
+大概就是这个世界的道理吧——你花很多时间搭建的东西，可能一个瞬间就消失了。
+
+但搭的过程是真的开心过。
+这就够了。`,
+    mode: 'normal',
+    status: 'published',
+    emotion: '释然',
+    emotionHue: 40,
+    keywords: ['沙滩', '沙堡', '感悟'],
+    createdAt: new Date(now - 14 * day).toISOString(),
+    updatedAt: new Date(now - 14 * day).toISOString(),
+    readCount: 7,
+  },
+
+  /* ════════════════ sealed-3 我的碎碎念 💭 ════════════════ */
+  {
+    id: 'entry-s3-1',
+    worldId: 'sealed-3',
+    userId: 'mock-user',
+    title: '关于迟到',
+    content: `今天又迟到了三分钟。
+闹钟响了没听到，地铁晚了两分钟，等红灯等了一分钟。
+三分钟就这么被拆成了三份。
+
+但我不会告诉任何人这三分钟的去向。
+因为在成人的世界里，"闹钟没听到"是最不可原谅的理由，
+虽然它是最诚实的。`,
+    mode: 'normal',
+    status: 'published',
+    emotion: '无奈',
+    emotionHue: 0,
+    keywords: ['日常', '迟到', '碎碎念'],
+    createdAt: new Date(now - 17 * day).toISOString(),
+    updatedAt: new Date(now - 17 * day).toISOString(),
+    readCount: 4,
+  },
+  {
+    id: 'entry-s3-2',
+    worldId: 'sealed-3',
+    userId: 'mock-user',
+    title: '便利店的魔法',
+    content: `深夜十一点去便利店买泡面。
+选了番茄味因为那是最安全的选项——不会好吃到让人惊喜，也不会难吃到让人生气。
+
+付钱的时候店员在整理货架，没看我。
+我反而松了口气。深夜买东西不需要社交，
+这也是便利店的魔法之一吧。
+
+走出便利店的时候风有点凉。
+忽然觉得，一碗泡面和一阵凉风，就是一个人的深夜食堂了。`,
+    mode: 'normal',
+    status: 'published',
+    emotion: '平静',
+    emotionHue: 200,
+    keywords: ['深夜', '便利店', '独处'],
+    createdAt: new Date(now - 19 * day).toISOString(),
+    updatedAt: new Date(now - 19 * day).toISOString(),
+    readCount: 10,
+  },
+  {
+    id: 'entry-s3-3',
+    worldId: 'sealed-3',
+    userId: 'mock-user',
+    title: '和植物说话',
+    content: `给阳台的绿萝浇水的时候，随口说了句"最近还好吗"。
+说完自己也愣了一下——什么时候开始跟植物聊天了？
+
+大概是没有人可以说话的时候吧。
+但也不是孤独。
+绿萝不会评价我的话，不会给建议，不会敷衍地说"嗯嗯"。
+它只是安安静静地待在那里，叶片被水打湿了，在灯下亮亮的。
+
+我觉得这比很多聊天都让人舒服。`,
+    mode: 'normal',
+    status: 'published',
+    emotion: '释怀',
+    emotionHue: 140,
+    keywords: ['植物', '独处', '碎碎念'],
+    createdAt: new Date(now - 21 * day).toISOString(),
+    updatedAt: new Date(now - 21 * day).toISOString(),
+    readCount: 13,
+  },
+  {
+    id: 'entry-s3-4',
+    worldId: 'sealed-3',
+    userId: 'mock-user',
+    title: '星期一的数学',
+    content: `星期一的早晨是世界上最不合理的发明。
+闹钟、洗漱、早餐、地铁——每一个环节都在考验一个人对生活的热爱。
+
+在地铁上看到对面有个人也在打瞌睡，手机滑了一下差点砸到脸。
+我们对视了一眼，同时笑了。
+不需要解释什么，那个眼神里的意思很清楚：
+"是，我也是。"
+
+世界最小的共鸣，发生在星期一早上的地铁里。`,
+    mode: 'normal',
+    status: 'published',
+    emotion: '微暖',
+    emotionHue: 35,
+    keywords: ['星期一', '地铁', '碎碎念'],
+    createdAt: new Date(now - 23 * day).toISOString(),
+    updatedAt: new Date(now - 23 * day).toISOString(),
+    readCount: 18,
+  },
+
+  /* ════════════════ sealed-4 漂亮衣服 👗 ════════════════ */
+  {
+    id: 'entry-s4-1',
+    worldId: 'sealed-4',
+    userId: 'mock-user',
+    title: '那条蓝色的裙子',
+    content: `在二手集市看到了一条蓝色的连衣裙。
+天蓝色，带小白点，像把晴朗的天空穿在身上。
+
+试穿的时候转了一圈，裙摆像花朵一样打开。
+卖家阿姨说："这条裙子就该穿在年轻人身上。"
+我问她以前是谁的，她说是她女儿的，后来女儿出国了，带不走那么多衣服。
+
+我买了下来。
+不是因为多好看，是因为它替一个人保管过一段年轻的日子。
+现在轮到我了。`,
+    mode: 'normal',
+    status: 'published',
+    emotion: '温柔',
+    emotionHue: 210,
+    keywords: ['裙子', '二手', '故事'],
+    createdAt: new Date(now - 26 * day).toISOString(),
+    updatedAt: new Date(now - 26 * day).toISOString(),
+    readCount: 15,
+  },
+  {
+    id: 'entry-s4-2',
+    worldId: 'sealed-4',
+    userId: 'mock-user',
+    title: '外婆的旗袍',
+    content: `翻出了外婆年轻时穿的一件旗袍。
+藏青色丝绒面料，盘扣是手工编的，小到精致得不像是人手能做到的。
+
+旗袍很小，外婆那时候的腰细得让人吃惊。
+扣子一颗颗解开的时候，闻到一股淡淡的樟脑丸味道，混着一点丝绒特有的气息。
+
+外婆看到我拿着旗袍愣了一下，然后笑了：
+"这件啊，你外公开拖拉机来接我那天我穿的就是它。"
+
+我没有穿，只是挂在了衣柜最里面。
+怕穿坏了，更怕把它弄丢了。`,
+    mode: 'normal',
+    status: 'published',
+    emotion: '感动',
+    emotionHue: 350,
+    keywords: ['旗袍', '外婆', '旧时光'],
+    createdAt: new Date(now - 28 * day).toISOString(),
+    updatedAt: new Date(now - 28 * day).toISOString(),
+    readCount: 20,
+  },
+  {
+    id: 'entry-s4-3',
+    worldId: 'sealed-4',
+    userId: 'mock-user',
+    title: '永远买不完的 wishlist',
+    content: `在手机备忘录里有一个叫"漂亮衣服"的清单。
+已经记了四十七条，真正买回来的只有十一条。
+
+每次看到好看的衣服就截图保存，备注栏写着：
+"等瘦了买"、"等发工资买"、"等有场合穿再买"。
+这些"等"加起来，就是一件又一件没有穿上的衣服。
+
+今天翻到第一条，是去年三月记的。
+备注写的是"明天就买"。
+我看了很久，然后把"明天"改成了"今天"。
+
+下单的时候心跳得比平时快。
+不是因为衣服多好看，是因为我终于没有再等了。`,
+    mode: 'normal',
+    status: 'published',
+    emotion: '小确幸',
+    emotionHue: 320,
+    keywords: ['购物', '愿望清单', '碎碎念'],
+    createdAt: new Date(now - 30 * day).toISOString(),
+    updatedAt: new Date(now - 30 * day).toISOString(),
+    readCount: 12,
+  },
+
   /* ════════════════ 好友世界日记 (friend world entries) ════════════════ */
 
   /* ─── friend-u1-world 雪山 (小星) ─── */

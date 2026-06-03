@@ -149,8 +149,8 @@ export default function MemorySanctuary() {
                       key={w.id}
                       className={`${styles.item} ${itemIdx % 2 === 1 ? styles.itemOffset : ''}`}
                     >
-                      {/* ── 玻璃水晶球 ── */}
-                      <div className={styles.sphere}>
+                      {/* ── 玻璃水晶球（点击进入世界详情） ── */}
+                      <div className={styles.sphere} onClick={() => navigate(`/world/${w.id}`)}>
                         <div className={styles.sphereInner}>
                           {w.imageUrl ? (
                             <img src={w.imageUrl} alt={w.name} className={styles.sphereImg} />
