@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "name": "我的碎碎念",
+    "file": "我的碎碎念.png",
+    "ext": ".png",
+    "size": 1449051,
+    "path": "C:/Users/Lenovo/web-final/记忆圣殿页面图片/我的碎碎念.png"
+  },
+  {
+    "id": 2,
+    "name": "漂亮衣服",
+    "file": "漂亮衣服.png",
+    "ext": ".png",
+    "size": 1667323,
+    "path": "C:/Users/Lenovo/web-final/记忆圣殿页面图片/漂亮衣服.png"
+  },
+  {
+    "id": 3,
+    "name": "美梦",
+    "file": "美梦.png",
+    "ext": ".png",
+    "size": 1408842,
+    "path": "C:/Users/Lenovo/web-final/记忆圣殿页面图片/美梦.png"
+  },
+  {
+    "id": 4,
+    "name": "落日沙滩",
+    "file": "落日沙滩.png",
+    "ext": ".png",
+    "size": 1086637,
+    "path": "C:/Users/Lenovo/web-final/记忆圣殿页面图片/落日沙滩.png"
+  }
+]
