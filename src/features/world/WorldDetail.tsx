@@ -375,7 +375,7 @@ export default function WorldDetail() {
                           </button>
                         </div>
 
-                        {/* ── 操作按钮组：编辑 + 流入共鸣池 ── */}
+                        {/* ── 操作按钮组：编辑 ── */}
                         <div className={styles.diaryActions}>
                           <button
                             className={styles.diaryActionBtn}
@@ -383,13 +383,6 @@ export default function WorldDetail() {
                           >
                             <span className="material-symbols-outlined" style={{ fontSize: 15 }}>edit</span>
                             编辑
-                          </button>
-                          <button
-                            className={styles.diaryActionBtn}
-                            onClick={() => handleFlowToResonance(entry)}
-                          >
-                            <span className="material-symbols-outlined" style={{ fontSize: 15 }}>stream</span>
-                            流入共鸣池
                           </button>
                         </div>
                       </div>
