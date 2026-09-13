@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useWorldStore } from '../../stores/useWorldStore';
 import { mockWorlds } from '../../mocks/mockWorlds';
 import styles from './MemorySanctuary.module.css';
+import { USE_MOCK } from '../../config/env';
 
-/* ── Mock 开关 ── */
-const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
+/* ── 数据源开关：由 src/config/env 统一提供（默认走本地演示数据） ── */
 
 /* ── 展厅主题色 ── */
 const HALL_THEMES = [

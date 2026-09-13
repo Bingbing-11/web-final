@@ -1,6 +1,7 @@
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect, useMemo } from 'react';
 import { useLayoutStore } from '../../stores/useLayoutStore';
+import DemoBadge from '../common/DemoBadge';
 import styles from './MainLayout.module.css';
 
 export default function MainLayout() {
@@ -80,6 +81,8 @@ export default function MainLayout() {
         ))}
       </nav>
       )}
+
+      <DemoBadge />
     </div>
   );
 }

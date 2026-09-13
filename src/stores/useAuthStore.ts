@@ -1,6 +1,7 @@
 import { create } from 'zustand';
-import type { User } from '../types/user';
+import type { User, UserSettings } from '../types/user';
 import * as api from '../lib/api';
+import { USE_MOCK } from '../config/env';
 
 interface ProfileStats {
   memoriesCount: number;
@@ -21,6 +22,18 @@ interface AuthState {
   fetchStats: () => Promise<void>;
 }
 
+/**
+ * 演示用户的默认偏好设置
+ * 与 UserSettings 契约保持一致，避免 mock 用户因缺字段而类型不完整
+ */
+const MOCK_USER_SETTINGS: UserSettings = {
+  theme: 'auto',
+  nightMode: false,
+  nightModeStart: 22,
+  nightModeEnd: 6,
+  language: 'zh-CN',
+};
+
 export const useAuthStore = create<AuthState>()((set, get) => ({
   currentUser: api.tokenManager.getUser(),
   isLoggedIn: !!api.tokenManager.get(),
@@ -31,14 +44,15 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   login: async (username: string, password: string) => {
     try {
       /* Mock 模式：任意账号密码均可登录，返回模拟用户 */
-      if (import.meta.env.VITE_USE_MOCK === 'true') {
+      if (USE_MOCK) {
         const mockUser = {
           id: 'mock-001',
           username,
           nickname: '水晶球旅者',
-          avatar: null,
+          avatar: undefined,
           bio: '在水晶球世界里探索中…',
           createdAt: new Date().toISOString(),
+          settings: { ...MOCK_USER_SETTINGS },
         };
         const mockToken = 'mock-token-' + Date.now();
         api.tokenManager.save(mockToken, mockUser);
@@ -60,14 +74,15 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   register: async (username: string, nickname: string, password: string) => {
     try {
       /* Mock 模式：直接注册成功 */
-      if (import.meta.env.VITE_USE_MOCK === 'true') {
+      if (USE_MOCK) {
         const mockUser = {
           id: 'mock-002',
           username,
           nickname: nickname || '水晶球旅者',
-          avatar: null,
+          avatar: undefined,
           bio: '',
           createdAt: new Date().toISOString(),
+          settings: { ...MOCK_USER_SETTINGS },
         };
         const mockToken = 'mock-token-' + Date.now();
         api.tokenManager.save(mockToken, mockUser);
@@ -120,7 +135,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       return;
     }
     /* Mock 模式：token 存在则直接恢复用户 */
-    if (import.meta.env.VITE_USE_MOCK === 'true') {
+    if (USE_MOCK) {
       const user = api.tokenManager.getUser();
       if (user) {
         set({ currentUser: user, isLoggedIn: true });
@@ -152,7 +167,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     set({ statsLoading: true });
     try {
       /* Mock 模式：直接返回模拟数据 */
-      if (import.meta.env.VITE_USE_MOCK === 'true') {
+      if (USE_MOCK) {
         set({
           profileStats: {
             memoriesCount: 42,

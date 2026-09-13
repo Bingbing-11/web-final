@@ -5,8 +5,9 @@ import {
   ResonanceCluster,
   ClusterNode,
 } from '../../mocks/mockResonanceClusters';
+import { USE_MOCK } from '../../config/env';
 
-const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
+/* ── 数据源开关：由 src/config/env 统一提供（默认走本地演示数据） ── */
 
 /* ── Modal data ── */
 interface ModalData {

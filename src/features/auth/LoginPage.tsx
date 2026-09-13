@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/useAuthStore';
+import { IS_DEMO } from '../../config/env';
 import styles from './LoginPage.module.css';
 
 /* ── 水晶球辉光视差 ── */
@@ -20,8 +21,9 @@ function useCrystalParallax(glowRef: React.RefObject<HTMLDivElement | null>) {
 
 /* ── 主组件 ── */
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  /* 演示模式下预填一组可用凭据，省去访客「该用什么账号」的困惑 */
+  const [email, setEmail] = useState(IS_DEMO ? 'demo@crystal.app' : '');
+  const [password, setPassword] = useState(IS_DEMO ? '123456' : '');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -124,6 +126,13 @@ export default function LoginPage() {
 
             {/* 错误提示 */}
             {error && <div className={styles.error}>{error}</div>}
+
+            {/* 演示模式提示 */}
+            {IS_DEMO && (
+              <div className={styles.demoHint}>
+                演示模式：任意邮箱 + 任意密码均可登录，已为你预填
+              </div>
+            )}
 
             {/* 登录按钮 */}
             <button

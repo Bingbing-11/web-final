@@ -201,6 +201,20 @@
   margin-top: -4px;
 }
 
+/* ===== 演示模式提示 ===== */
+.demoHint {
+  font-size: 12px;
+  line-height: 1.6;
+  text-align: center;
+  color: var(--text);
+  opacity: 0.75;
+  padding: 8px 12px;
+  border-radius: 16px;
+  background: rgba(255, 212, 121, 0.1);
+  border: 1px dashed rgba(255, 212, 121, 0.35);
+  margin-top: -4px;
+}
+
 /* ===== 登录按钮 ===== */
 .submitBtn {
   width: 100%;

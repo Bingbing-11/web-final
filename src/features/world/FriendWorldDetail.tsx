@@ -10,6 +10,7 @@ import CrystalCanvas from '../../components/crystal/CrystalCanvas';
 import type { Entry } from '../../types/entry';
 import type { Comment } from '../../types/comment';
 import { allMockComments } from '../../mocks/mockComments';
+import { USE_MOCK } from '../../config/env';
 import styles from './WorldDetail.module.css';
 
 /* ── 正文截断行数 ── */
@@ -44,7 +45,7 @@ export default function FriendWorldDetail() {
 
   /* ── 留言状态 ── */
   const [comments, setComments] = useState<Comment[]>(() =>
-    import.meta.env.DEV ? allMockComments : []
+    USE_MOCK ? allMockComments : []
   );
   const [commentInput, setCommentInput] = useState('');
   const [replyTo, setReplyTo] = useState<Comment | null>(null);

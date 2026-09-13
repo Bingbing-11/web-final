@@ -4,6 +4,7 @@ import { useAuthStore } from '../../stores/useAuthStore';
 import { useWorldStore } from '../../stores/useWorldStore';
 import { mockWorlds, mockMessagesMap } from '../../mocks/mockWorlds';
 import styles from './WorldHub.module.css';
+import { USE_MOCK } from '../../config/env';
 
 /* ── 星星动画注入（仅一次） ── */
 const STAR_STYLE_ID = 'star-pulse-style';
@@ -18,8 +19,7 @@ if (typeof document !== 'undefined' && !document.getElementById(STAR_STYLE_ID)) 
   document.head.appendChild(style);
 }
 
-/* ── Mock 开关 ── */
-const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
+/* ── 数据源开关：由 src/config/env 统一提供（默认走本地演示数据） ── */
 
 /* ── 从渐变/颜色字符串提取光晕 ── */
 function glowFromColor(colorStr: string): string {
