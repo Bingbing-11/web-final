@@ -4,19 +4,15 @@
 > **无需后端、无需配置，克隆下来直接就能跑。**
 
 移动端优先的 React 单页应用：每个用户拥有多个「世界」，在世界里写日记、把不愿留存的记忆「写完即焚」、把沉淀下来的记忆封存进「记忆圣殿」，并让匿名的心事流入「共鸣池」，等待频率相同的人。
-【世界广场】
-<img width="254" height="437" alt="image" src="https://github.com/user-attachments/assets/90760870-5ac8-4647-9a8a-1eb370721d3c" />
-【写日记页】
-<img width="259" height="440" alt="image" src="https://github.com/user-attachments/assets/0b588d40-ae70-41f4-ac74-9e63906dc57d" />
-【共鸣池】
-<img width="255" height="440" alt="image" src="https://github.com/user-attachments/assets/7bce0411-c746-4a8f-9d16-e51708298945" />
-<img width="186" height="287" alt="image" src="https://github.com/user-attachments/assets/f479a553-5f64-4b3c-bfa2-66744cad7bd0" />
-【时光机】
-<img width="267" height="433" alt="image" src="https://github.com/user-attachments/assets/2d7d68c0-d697-4e03-b6bb-088d77bfb18a" />
 
+<p align="center">
+  <img src="image.png" width="400" alt="alt text"><br>
+  <img src="image-1.png" width="400" alt="alt text"><br>
+  <img src="image-2.png" width="400" alt="alt text"><br>
+  <img src="image-3.png" width="400" alt="alt text"><br>
+  <img src="image-4.png" width="400" alt="alt text">
+</p>
 
-
-![alt text](image.png)![alt text](image-1.png)![alt text](image-2.png)![alt text](image-3.png)![alt text](image-4.png)
 
 ---
 
