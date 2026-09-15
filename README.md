@@ -5,6 +5,8 @@
 
 移动端优先的 React 单页应用：每个用户拥有多个「世界」，在世界里写日记、把不愿留存的记忆「写完即焚」、把沉淀下来的记忆封存进「记忆圣殿」，并让匿名的心事流入「共鸣池」，等待频率相同的人。
 
+![alt text](image.png)![alt text](image-1.png)![alt text](image-2.png)![alt text](image-3.png)![alt text](image-4.png)
+
 ---
 
 ## 快速开始
